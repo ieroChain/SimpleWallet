@@ -46,7 +46,7 @@ namespace SimpleWallet
             }
         }
 
-        void configure()
+        void configure(bool enable = true)
         {
             if (String.IsNullOrEmpty(tbName.Text))
             {
@@ -77,7 +77,7 @@ namespace SimpleWallet
                 return;
             }
 
-            result = api.editComfigureFile(tbName.Text, tbIP.Text, tbPrivKey.Text, split[0], split[1], oldName, isNew);
+            result = api.editComfigureFile("ENABLE",tbName.Text, tbIP.Text, tbPrivKey.Text, split[0], split[1], oldName, isNew);
 
             if (result == Types.ConfigureResult.FAIL)
             {
@@ -85,19 +85,13 @@ namespace SimpleWallet
             }
             else if (result == Types.ConfigureResult.OK)
             {
-                DialogResult result2 = MessageBox.Show("Configure success, close the window now?", "", MessageBoxButtons.YesNo);
-                if (result2 == DialogResult.Yes)
-                {
-                    this.Close();
-                }
+                MessageBox.Show("Configure success");
+                this.Close();
             }
             else if (result == Types.ConfigureResult.REINDEX)
             {
-                DialogResult result2 = MessageBox.Show("Configure success. However your data need reindex to work with masternode", "", MessageBoxButtons.YesNo);
-                if (result2 == DialogResult.Yes)
-                {
-                    this.Close();
-                }
+                MessageBox.Show("Configure success. However your data need reindex to work with masternode");
+                this.Close();
             }
             else if (result == Types.ConfigureResult.DUPLICATE)
             {

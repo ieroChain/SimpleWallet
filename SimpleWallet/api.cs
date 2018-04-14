@@ -16,6 +16,48 @@ using System.Net;
 
 namespace SimpleWallet
 {
+    public class VerticalTabControl : TabControl
+    {
+        public VerticalTabControl()
+        {
+            this.Alignment = TabAlignment.Left;
+            this.DrawMode = TabDrawMode.OwnerDrawFixed;
+            this.SizeMode = TabSizeMode.Fixed;
+            this.ItemSize = new Size(this.Font.Height * 3 / 2, 75);
+        }
+        public override Font Font
+        {
+            get { return base.Font; }
+            set
+            {
+                base.Font = value;
+                this.ItemSize = new Size(value.Height * 3 / 2, base.ItemSize.Height);
+            }
+        }
+        protected override void OnDrawItem(DrawItemEventArgs e)
+        {
+            using (SolidBrush _textBrush = new SolidBrush(this.ForeColor))
+            {
+                TabPage _tabPage = this.TabPages[e.Index];
+                Rectangle _tabBounds = this.GetTabRect(e.Index);
+
+                if (e.State != DrawItemState.Selected) e.DrawBackground();
+                else
+                {
+                    using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, Color.Transparent, Color.Transparent, 90f))
+                    {
+                        e.Graphics.FillRectangle(brush, e.Bounds);
+                    }
+                }
+
+                StringFormat _stringFlags = new StringFormat();
+                _stringFlags.Alignment = StringAlignment.Center;
+                _stringFlags.LineAlignment = StringAlignment.Center;
+                e.Graphics.DrawString(_tabPage.Text, this.Font, _textBrush, _tabBounds, new StringFormat(_stringFlags));
+            }
+        }
+    }
+
     public class TransparentLabel : Label
     {
         public TransparentLabel()
@@ -145,6 +187,21 @@ namespace SimpleWallet
             }
         }
 
+        public List<Types.AddressBook> readAddressBook()
+        {
+            List<Types.AddressBook> rtn = new List<Types.AddressBook>();
+            if (!File.Exists(Types.addressLabel))
+                File.Create(Types.addressLabel).Close();
+            String data = File.ReadAllText(Types.addressLabel);
+            dynamic parse = JsonConvert.DeserializeObject<Types.ListAddressBook>(data);
+            if (parse != null && parse.addressbook != null)
+            {
+                rtn = new List<Types.AddressBook>(parse.addressbook);
+            }
+            rtn = rtn.OrderBy(o => o.label).ToList();
+            return rtn;
+        }
+
         String getRandomString(int length)
         {
             String rtn = "";
@@ -198,13 +255,17 @@ namespace SimpleWallet
             }
         }
 
-        public Types.ConfigureResult editComfigureFile(String aliasName, String IP, String privKey, String txHash, String txIndex, String oldName, bool isNew = true)
+        public Types.ConfigureResult editComfigureFile(String status, String aliasName, String IP, String privKey, String txHash, String txIndex, String oldName, bool isNew = true)
         {
             Types.ConfigureResult result = Types.ConfigureResult.OK;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                              + "\\Snowgem";
             String confFile = appdata + "\\snowgem.conf";
             String mnFile = appdata + "\\masternode.conf";
+            if (aliasName.StartsWith("#"))
+            {
+                aliasName = aliasName.Substring(1, aliasName.Length - 1);
+            }
 
             List<Types.Masternode> mns = getMasternodes();
             if (oldName != aliasName && mns.FindIndex(f => f.alias == aliasName) != -1)
@@ -287,7 +348,7 @@ namespace SimpleWallet
                                 mns.RemoveAt(index);
                             }
                         }
-                        mns.Add(new Types.Masternode(aliasName, IP + ":16113", privKey, txHash, txIndex));
+                        mns.Add(new Types.Masternode(status, aliasName, IP + ":16113", privKey, txHash, txIndex));
 
                         List<String> data = new List<string>();
                         foreach(Types.Masternode m in mns)
@@ -307,6 +368,114 @@ namespace SimpleWallet
             return result;
         }
 
+        public Types.ConfigureResult changeStatus(String status, String aliasName, String IP, String privKey, String txHash, String txIndex, bool isDisableAll)
+        {
+            Types.ConfigureResult result = Types.ConfigureResult.OK;
+            String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+                             + "\\Snowgem";
+            String confFile = appdata + "\\snowgem.conf";
+            String mnFile = appdata + "\\masternode.conf";
+
+            if(aliasName.StartsWith("#"))
+            {
+                aliasName = aliasName.Substring(1, aliasName.Length - 1);
+            }
+            List<Types.Masternode> mns = getMasternodes();
+            try
+            {
+                if (!File.Exists(confFile))
+                {
+                    result = Types.ConfigureResult.FAIL;
+                }
+                else
+                {
+                    int index = 0;
+                    if (status == "ENABLE" || isDisableAll)
+                    {
+                        //config file
+                        List<String> text = File.ReadAllLines(confFile).ToList();
+                        text.RemoveAll(String.IsNullOrEmpty);
+                        index = text.FindIndex(x => x.StartsWith("port"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("port=16113");
+                        index = text.FindIndex(x => x.StartsWith("listen"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("listen=1");
+                        index = text.FindIndex(x => x.StartsWith("server"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("server=1");
+                        index = text.FindIndex(x => x.StartsWith("masternode="));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("masternode=" + (isDisableAll ? "0" : "1"));
+                        index = text.FindIndex(x => x.StartsWith("masternodeaddr"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("masternodeaddr=" + IP);
+                        index = text.FindIndex(x => x.StartsWith("externalip"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("externalip=" + IP);
+                        index = text.FindIndex(x => x.StartsWith("masternodeprivkey"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("masternodeprivkey=" + privKey);
+                        index = text.FindIndex(x => x.StartsWith("txindex"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        else
+                        {
+                            result = Types.ConfigureResult.REINDEX;
+                        }
+                        text.Add("txindex=1");
+
+                        File.WriteAllLines(confFile, text.ToArray());
+                    }
+
+                    index = mns.FindIndex(f => f.alias == aliasName);
+                    if (index > -1)
+                    {
+                        mns.RemoveAt(index);
+                    }
+
+                    mns.Add(new Types.Masternode(status, aliasName, IP, privKey, txHash, txIndex));
+
+                    List<String> data = new List<string>();
+                    foreach (Types.Masternode m in mns)
+                    {
+                        data.Add(m.ToString());
+                    }
+
+                    File.WriteAllLines(mnFile, data);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result = Types.ConfigureResult.FAIL;
+            }
+            return result;
+        }
+
         public List<Types.Masternode> getMasternodes()
         {
             List<Types.Masternode> rtn = new List<Types.Masternode>();
@@ -318,9 +487,16 @@ namespace SimpleWallet
             data.RemoveAll(String.IsNullOrEmpty);
             foreach (String s in data)
             {
-                if (s[0] == '#')
-                    continue;
-                List<String> temp = s.Split(' ').ToList();
+                List<String> temp = new List<string>();
+                String strTmp = s;
+                if (strTmp[0] == '#')
+                {
+                    strTmp = strTmp.Substring(1, s.Length - 1);
+                    temp.Add("DISABLE");
+                }
+                else
+                    temp.Add("ENABLE");
+                temp.AddRange(strTmp.Split(' ').ToList());
                 temp.RemoveAll(String.IsNullOrEmpty);
                 rtn.Add(new Types.Masternode(temp));
             }
@@ -686,6 +862,11 @@ namespace SimpleWallet
 
         public Dictionary<String, String> shieldCoin(String from, String to, String utxo, String fee, bool defaultFee)
         {
+            if(Convert.ToDouble(utxo) > 500)
+            {
+                utxo = "500";
+            }
+
             Dictionary<String, String> strDict = new Dictionary<String, String>();
             List<String> command = new List<String> { "z_shieldcoinbase", from, to, defaultFee ? "0.0001" : fee, utxo};
             String data = "";
@@ -790,6 +971,14 @@ namespace SimpleWallet
             return ret;
         }
 
+        public String getTransaction(string txid)
+        {
+            String data = "";
+            List<String> command = new List<String> { "gettransaction", txid };
+            String ret = Task.Run(() => exec.executeGetTransaction(command, data)).Result;
+            return ret;
+        }
+
         public String startMasternode(String name)
         {
             String data = "";
@@ -802,6 +991,14 @@ namespace SimpleWallet
         {
             String data = "";
             List<String> command = new List<String> { "startalias ", name };
+            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
+            return ret;
+        }
+
+        public String startAll()
+        {
+            String data = "";
+            List<String> command = new List<String> { "startmasternode", "many", "false" };
             String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
             return ret;
         }

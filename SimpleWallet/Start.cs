@@ -60,6 +60,8 @@ namespace SimpleWallet
         List<Types.AddressBook> book = new List<Types.AddressBook>();
 
         bool isAuto = false;
+        bool isMNChange = false;
+        Types.RightClickData rightClick = new Types.RightClickData();
         List<String> oldTx = new List<String>();
         Api api = Api.Instance;
         Types type = new Types();
@@ -73,10 +75,10 @@ namespace SimpleWallet
             dtgAddress.Columns[0].Width = dtgAddress.Width / 10;
             dtgAddress.Columns[0].ReadOnly = true;
             dtgAddress.Columns[1].Name = "Address";
-            dtgAddress.Columns[1].Width = dtgAddress.Width * 7/ 10;
+            dtgAddress.Columns[1].Width = dtgAddress.Width * 7 / 10;
             dtgAddress.Columns[1].ReadOnly = true;
             dtgAddress.Columns[2].Name = "Amount";
-            dtgAddress.Columns[2].Width = dtgAddress.Width * 2/ 10;
+            dtgAddress.Columns[2].Width = dtgAddress.Width * 2 / 10;
             dtgAddress.Columns[2].ReadOnly = true;
             dtgAddress.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             //gAddress.Rows[0].Cells[1].Value = "Loading...";
@@ -98,31 +100,30 @@ namespace SimpleWallet
             dtgTransactions.Columns[4].HeaderText = "Send to";
             dtgTransactions.Columns[4].Width = dtgTransactions.Width * 4 / 10;
             dtgTransactions.Columns[4].ReadOnly = true;
-
-            dtgAddressBook.RowHeadersVisible = false;
-            dtgAddressBook.Columns[0].HeaderText = "Label";
-            dtgAddressBook.Columns[0].Width = dtgAddressBook.Width * 4 / 10;
-            dtgAddressBook.Columns[0].ReadOnly = true;
-            dtgAddressBook.Columns[1].HeaderText = "Address";
-            dtgAddressBook.Columns[1].Width = dtgAddressBook.Width * 6 / 10;
-            dtgAddressBook.Columns[1].ReadOnly = true;
+            dtgTransactions.Columns[5].HeaderText = "Txid";
+            dtgTransactions.Columns[5].Width = dtgTransactions.Width * 4 / 10;
+            dtgTransactions.Columns[5].ReadOnly = true;
+            dtgTransactions.Columns[5].Visible = false;
 
             dtgMasternode.RowHeadersVisible = false;
-            dtgMasternode.Columns[0].HeaderText = "Alias";
+            dtgMasternode.Columns[0].HeaderText = "Status";
             dtgMasternode.Columns[0].Width = dtgMasternode.Width * 1 / 10;
             dtgMasternode.Columns[0].ReadOnly = true;
-            dtgMasternode.Columns[1].HeaderText = "Address";
-            dtgMasternode.Columns[1].Width = dtgMasternode.Width * 2 / 10;
+            dtgMasternode.Columns[1].HeaderText = "Alias";
+            dtgMasternode.Columns[1].Width = dtgMasternode.Width * 1 / 10;
             dtgMasternode.Columns[1].ReadOnly = true;
-            dtgMasternode.Columns[2].HeaderText = "Private Key";
-            dtgMasternode.Columns[2].Width = dtgMasternode.Width * 3 / 10;
+            dtgMasternode.Columns[2].HeaderText = "Address";
+            dtgMasternode.Columns[2].Width = dtgMasternode.Width * 3 / 2 / 10;
             dtgMasternode.Columns[2].ReadOnly = true;
-            dtgMasternode.Columns[3].HeaderText = "Transaction ID";
-            dtgMasternode.Columns[3].Width = dtgMasternode.Width * 3 / 10;
+            dtgMasternode.Columns[3].HeaderText = "Private Key";
+            dtgMasternode.Columns[3].Width = dtgMasternode.Width * 5 / 2 / 10;
             dtgMasternode.Columns[3].ReadOnly = true;
-            dtgMasternode.Columns[4].HeaderText = "Index ID";
-            dtgMasternode.Columns[4].Width = dtgMasternode.Width * 1 / 10;
+            dtgMasternode.Columns[4].HeaderText = "Transaction ID";
+            dtgMasternode.Columns[4].Width = dtgMasternode.Width * 3 / 10;
             dtgMasternode.Columns[4].ReadOnly = true;
+            dtgMasternode.Columns[5].HeaderText = "Index ID";
+            dtgMasternode.Columns[5].Width = dtgMasternode.Width - dtgMasternode.Width *(3 / 5 + 3 / 10);
+            dtgMasternode.Columns[5].ReadOnly = true;
 
             dtgGlobalMN.Columns[0].HeaderText = "Rank";
             dtgGlobalMN.Columns[0].Width = dtgGlobalMN.Width * 1 / 18;
@@ -155,11 +156,7 @@ namespace SimpleWallet
 
             cbUnit.SelectedIndex = 0;
 
-#if !DEBUG
-            tcMain.TabPages.Remove(tpDebug);
-#endif
             tcMain.TabPages.Remove(tpMasternode);
-            tcMain.TabPages.Remove(tpAddressBock);
             tcMain.TabPages.Remove(tpOverview);
             tcMain.TabPages.Remove(tpSend);
             tcMain.TabPages.Remove(tpReceive);
@@ -168,7 +165,6 @@ namespace SimpleWallet
             tcMain.TabPages.Add(tpSend);
             tcMain.TabPages.Add(tpReceive);
             tcMain.TabPages.Add(tpTransactions);
-            tcMain.TabPages.Add(tpAddressBock);
             tcMain.TabPages.Add(tpMasternode);
         }
 
@@ -179,30 +175,30 @@ namespace SimpleWallet
 
             lbBestHash.Invoke(new Action(() => lbBestHash.Text = bestHash));
 
-			//block time
-			String curr = bestTime;
-			if (!String.IsNullOrEmpty(curr))
-			{
-				DateTime blkTime = UnixTimeStampToDateTime(Convert.ToInt32(curr));
-				String temp = blkTime.ToString("yyyy/MM/dd HH:mm:ss");
-				Task.Factory.StartNew(() => { lbBestHash.Invoke(new Action(() => lbBestTime.Text = temp)); });
-				int time = Convert.ToInt32(curr);
-				int unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-				int sub = time - startTime;
-				int total = unixTimestamp - startTime;
-				int percent = (int)((float)sub / (float)total * 10000);
-				if (percent > 9998)
-				{
-					pbPercent.Invoke(new Action(() => pbPercent.Value = pbPercent.Maximum));
-					Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.synced)); });
-				}
-				else
-				{
-					pbPercent.Invoke(new Action(() => pbPercent.Value = percent));
-					Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.notsynced)); });
-				}
-			}
-			
+            //block time
+            String curr = bestTime;
+            if (!String.IsNullOrEmpty(curr))
+            {
+                DateTime blkTime = UnixTimeStampToDateTime(Convert.ToInt32(curr));
+                String temp = blkTime.ToString("yyyy/MM/dd HH:mm:ss");
+                Task.Factory.StartNew(() => { lbBestHash.Invoke(new Action(() => lbBestTime.Text = temp)); });
+                int time = Convert.ToInt32(curr);
+                int unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                int sub = time - startTime;
+                int total = unixTimestamp - startTime;
+                int percent = (int)((float)sub / (float)total * 10000);
+                if (percent > 9998)
+                {
+                    pbPercent.Invoke(new Action(() => pbPercent.Value = pbPercent.Maximum));
+                    Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.synced)); });
+                }
+                else
+                {
+                    pbPercent.Invoke(new Action(() => pbPercent.Value = percent));
+                    Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.notsynced)); });
+                }
+            }
+
             //connection
             populateConnections(connections);
             //balance
@@ -227,15 +223,14 @@ namespace SimpleWallet
             //populate balance
             populateBalance(walletDic);
 
-            //populate addressbook
-            populateAddressBook(readAddressBook());
-
             dtgTransactions.Invoke(new Action(() => dtgTransactions.Visible = false));
 
-            book = readAddressBook();
+            book = api.readAddressBook();
+
+            loadAddressBook(book);
 
             populateMasternodes();
-            
+
             populateMasternodeList(readMasternodeList(checkMasternodeList()));
 
             this.Text = Types.version;
@@ -265,7 +260,6 @@ namespace SimpleWallet
                 btnTurnOffMNMode.Invoke(new Action(() => btnTurnOffMNMode.Enabled = false));
             }
 
-            dtgAddressBook.DataError += Dtg_DataError;
             Task.Run(() => startSync());
             Task.Run(() => startCheckMasternodeList());
             //Task.Run(() => startCheckBalance());
@@ -291,7 +285,7 @@ namespace SimpleWallet
             {
                 try
                 {
-                    if(count == 15)
+                    if (count == 15)
                     {
                         shouldGetWallet = true; // should get wallet at least 1 time per 120 sec
                     }
@@ -351,7 +345,7 @@ namespace SimpleWallet
                         int percent = (int)((float)sub / (float)total * 10000);
                         if (percent > 9998)
                         {
-                            if(isSynced == false)
+                            if (isSynced == false)
                             {
                                 isSynced = true;
                                 shouldGetWallet = true;
@@ -383,12 +377,12 @@ namespace SimpleWallet
                     //unconfirmed
                     lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = parse.unconfirmedbalance));
 
-                    if(addresses.Count > 0)
+                    if (addresses.Count > 0)
                     {
                         addressBalanceChange.AddRange(addresses);
                     }
 
-                    if(addressBalanceChange.Count > 0)
+                    if (addressBalanceChange.Count > 0)
                     {
                         startCheckBalance(addressBalanceChange);
                         addressBalanceChange.Clear();
@@ -397,15 +391,7 @@ namespace SimpleWallet
                 }
                 catch (Exception ex)
                 {
-                    if(data.Contains("EOF"))
-                    {
-                        if(shouldRestart)
-                        {
-                            return;
-                        }
-                        //MessageBox.Show("Couldn't connect to SnowGem server, please restart the wallet");
-                        this.Close();
-                    }
+
                 }
                 Thread.Sleep(8000);
             }
@@ -416,7 +402,7 @@ namespace SimpleWallet
             try
             {
                 addresses = addresses.Distinct().ToList();
-                foreach(String a in addresses)
+                foreach (String a in addresses)
                 {
                     //get current balance of the address
                     String balance = Task.Run(() => api.getAddressBalance(a)).Result;
@@ -447,7 +433,7 @@ namespace SimpleWallet
         void startCheckMasternodeList()
         {
             int count = 60;
-            while(true)
+            while (true)
             {
                 if (count > 0 && !shouldUpdateMN)
                 {
@@ -480,13 +466,13 @@ namespace SimpleWallet
                     dtgGlobalMN.DataSource = new BindingList<Types.MasternodeDetailConverted>(mnc);
                 }));
 
-            
+
         }
 
         List<Types.MasternodeDetailConverted> ConvertMasternodeDetail(List<Types.MasternodeDetail> mnd)
         {
             List<Types.MasternodeDetailConverted> rtn = new List<Types.MasternodeDetailConverted>();
-            foreach(Types.MasternodeDetail m in mnd)
+            foreach (Types.MasternodeDetail m in mnd)
             {
                 rtn.Add(new Types.MasternodeDetailConverted(m.rank.ToString(), m.addr, m.version.ToString(), m.status,
                    SecondsToString(m.activetime),
@@ -506,7 +492,7 @@ namespace SimpleWallet
 
                 dtgAddress.AllowUserToAddRows = false;
 
-                
+
                 row = dtgAddress.Rows
                 .Cast<DataGridViewRow>()
                 .Where(r => r.Cells[1].Value.ToString().Equals(address))
@@ -560,7 +546,7 @@ namespace SimpleWallet
             try
             {
                 dynamic parse = JsonConvert.DeserializeObject<Types.Transaction>(" { " + txs[3]);
-                if(parse.address == null)
+                if (parse.address == null)
                 {
                     parse.address = "Private address";
                 }
@@ -642,8 +628,8 @@ namespace SimpleWallet
                 tsVisible(lbValue4, true);
                 tsVisible(lbAddress4, true);
             }
-            catch(Exception ex)
-            { 
+            catch (Exception ex)
+            {
                 //the number of transaction is < 4
             }
         }
@@ -745,7 +731,7 @@ namespace SimpleWallet
 
         String getTxImgLoc(bool isOut)
         {
-            if(isOut)
+            if (isOut)
             {
                 return outImg;
             }
@@ -759,122 +745,6 @@ namespace SimpleWallet
         {
             dtg.Invoke(new Action(() => dtg.Sort(dtg.Columns[sortName], ListSortDirection.Ascending)));
         }
-
-        void populateAddressBook(List<Types.AddressBook> datas)
-        {
-
-            dtgAddressBook.Invoke(new Action(() =>
-            {
-                dtgAddressBook.AutoGenerateColumns = true;
-                dtgAddressBook.DataSource = new BindingList<Types.AddressBook>(datas);
-            }));
-
-            loadWallet();
-        }
-
-        void addAddressBook(Types.AddressBook input)
-        {
-            String label = input.label;
-
-            DataGridViewRow row = new DataGridViewRow();
-            try
-            {
-                row = dtgAddressBook.Rows
-                .Cast<DataGridViewRow>()
-                .Where(r => r.Cells[0].Value.ToString().Equals(label))
-                .First();
-
-                MessageBox.Show("Duplicated label");
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    book.Add(new Types.AddressBook(label, input.address));
-                    saveAddressBook(book);
-                    loadAddressBook(book);
-                    book.Sort(delegate(Types.AddressBook x, Types.AddressBook y)
-                    {
-                        return x.label.CompareTo(y.label);
-                    });
-                    dtgAddressBook.Invoke(new Action(() =>
-                    {
-                        dtgAddressBook.AutoGenerateColumns = true;
-                        dtgAddressBook.DataSource = new BindingList<Types.AddressBook>(book);
-                    }));
-                }
-                catch (Exception ex1)
-                {
-                    if (shouldRestart)
-                    {
-                        return;
-                    }
-                    addTextToRtb(rtbError, "Exception: " + ex.Message + "\n");
-                }
-            }
-        }
-
-        void editAddressBook(Types.AddressBook input, DataGridView dtg, int index, string oldLabel)
-        {
-            try
-            {
-                DataGridViewRow row = new DataGridViewRow();
-                row = dtgAddressBook.Rows
-                .Cast<DataGridViewRow>()
-                .Where(r => r.Cells[0].Value.ToString().Equals(input.label))
-                .First();
-
-                if (row.Index != index)
-                {
-                    MessageBox.Show("Duplicated label");
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            book.RemoveAll(x => x.label == oldLabel);
-            book.Add(new Types.AddressBook(input.label, input.address));
-            book.Sort(delegate(Types.AddressBook x, Types.AddressBook y)
-            {
-                return x.label.CompareTo(y.label);
-            });
-            dtgAddressBook.Invoke(new Action(() =>
-            {
-                dtgAddressBook.AutoGenerateColumns = true;
-                dtgAddressBook.DataSource = new BindingList<Types.AddressBook>(book);
-            }));
-            saveAddressBook(book);
-            Task.Run(() => loadAddressBook(book));
-        }
-
-        void saveAddressBook(List<Types.AddressBook> addr)
-        {
-            addr.Sort(delegate(Types.AddressBook x, Types.AddressBook y)
-            {
-                return x.label.CompareTo(y.label);
-            });
-            Dictionary<String, List<Types.AddressBook>> jsonData = new Dictionary<String, List<Types.AddressBook>>();
-            jsonData["addressbook"] = addr;
-            String json = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
-            File.WriteAllText(Types.addressLabel, json);
-        }
-
-        List<Types.AddressBook> readAddressBook()
-        {
-            List<Types.AddressBook> rtn = new List<Types.AddressBook>();
-            if (!File.Exists(Types.addressLabel))
-                File.Create(Types.addressLabel).Close();
-            String data = File.ReadAllText(Types.addressLabel);
-            dynamic parse = JsonConvert.DeserializeObject<Types.ListAddressBook>(data);
-            if (parse != null && parse.addressbook != null)
-            {
-                rtn = new List<Types.AddressBook>(parse.addressbook);
-            }
-            rtn = rtn.OrderBy(o => o.label).ToList();
-            return rtn;
-        }
-
         List<Types.MasternodeDetail> readMasternodeList(String mns)
         {
             mns = "{\n" +
@@ -887,14 +757,24 @@ namespace SimpleWallet
                 dynamic parse = JsonConvert.DeserializeObject<Types.MasternodeList>(mns);
                 rtn = parse.masternodelist;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             { }
 
             List<Types.MasternodeDetail> temp = new List<Types.MasternodeDetail>();
+            foreach (String addr in walletDic.Keys)
+            {
+                int index = rtn.FindIndex(f => f.addr == addr);
+                if (index > -1)
+                {
+                    temp.Add(new Types.MasternodeDetail(rtn[index]));
+                    rtn.RemoveAt(index);
+                }
+            }
+
             foreach (Types.Masternode m in mn)
             {
                 int index = rtn.FindIndex(f => f.txhash == m.txHash);
-                if(index > -1)
+                if (index > -1)
                 {
                     temp.Add(new Types.MasternodeDetail(rtn[index]));
                     rtn.RemoveAt(index);
@@ -930,12 +810,12 @@ namespace SimpleWallet
                 outputs + "\n" +
                 "}";
             List<Types.Outputs> rtn = new List<Types.Outputs>();
-                        try
+            try
             {
-            dynamic parse = JsonConvert.DeserializeObject<Types.OutputsList>(outputs);
-            rtn = parse.outputslist;
-                            }
-                                        catch(Exception ex)
+                dynamic parse = JsonConvert.DeserializeObject<Types.OutputsList>(outputs);
+                rtn = parse.outputslist;
+            }
+            catch (Exception ex)
             { }
             return rtn;
         }
@@ -977,7 +857,25 @@ namespace SimpleWallet
 
             if (mn.Count > 0)
             {
-                dtgMasternode.Invoke(new Action(() => dtgMasternode.DataSource = mn));
+                dtgMasternode.Invoke(new Action(() =>
+                    {
+                        dtgMasternode.DataSource = mn;
+                    }));
+            }
+        }
+
+        void changeMNColor(DataGridView dtg)
+        {
+            foreach (DataGridViewRow row in dtg.Rows)
+            {
+                if (row.Cells[0].Value.ToString() == "DISABLE")
+                {
+                    dtg.Invoke(new Action(() => row.DefaultCellStyle.BackColor = Color.LightGray));
+                }
+                else
+                {
+                    dtg.Invoke(new Action(() => row.DefaultCellStyle.BackColor = Color.Empty));
+                }
             }
         }
 
@@ -1004,13 +902,13 @@ namespace SimpleWallet
                 bool shouldClear = false;
                 for (int i = 0; i < data.Keys.Count; i++)
                 {
-                    if(!oldData.Keys.Contains(data.Keys.ElementAt(i)))
+                    if (!oldData.Keys.Contains(data.Keys.ElementAt(i)))
                     {
                         shouldClear = true;
                         break;
                     }
                 }
-                if(shouldClear)
+                if (shouldClear)
                 {
                     dtgAddress.Invoke(new Action(() => dtgAddress.Rows.Clear()));
                     for (int i = 0; i < data.Keys.Count; i++)
@@ -1036,7 +934,7 @@ namespace SimpleWallet
         void loadAddressBook(List<Types.AddressBook> book)
         {
             cbbClear(cbbAddress);
-            foreach(Types.AddressBook a in book)
+            foreach (Types.AddressBook a in book)
             {
                 cbbAdd(cbbAddress, a.label);
             }
@@ -1047,19 +945,37 @@ namespace SimpleWallet
             lock (lockObj)
             {
                 String selectedAddress = "";
+                String selectedShieldFromAddress = "";
+                String selectedShieldToAddress = "";
                 object slItem = getSelectedItem(cbbFrom);
                 if (slItem != null)
                 {
                     selectedAddress = slItem.ToString().Split(new String[] { " - " }, StringSplitOptions.None)[0];
                 }
+                slItem = getSelectedItem(cbbShieldFrom);
+                if (slItem != null)
+                {
+                    selectedShieldFromAddress = slItem.ToString().Split(new String[] { " - " }, StringSplitOptions.None)[0];
+                }
+                slItem = getSelectedItem(cbbShieldTo);
+                if (slItem != null)
+                {
+                    selectedShieldToAddress = slItem.ToString().Split(new String[] { " - " }, StringSplitOptions.None)[0];
+                }
                 cbbClear(cbbFrom);
+                cbbClear(cbbShieldFrom);
+                cbbClear(cbbShieldTo);
                 if (walletDic.Keys.Count > 0)
                 {
                     btnEnable(btnSend, true);
                     btnEnable(btnSendMany, true);
                     double output;
                     int selectedIdx = 0;
+                    int selectedShieldFromIdx = -1;
+                    int selectedShieldToIdx = -1;
                     int count = 0;
+                    int countShieldFrom = 0;
+                    int countShieldTo = 0;
                     foreach (String wallet in walletDic.Keys.ToList())
                     {
                         if ((Double.TryParse(walletDic[wallet], out output) && Convert.ToDouble(walletDic[wallet]) != 0) ||
@@ -1071,11 +987,38 @@ namespace SimpleWallet
                                 selectedIdx = count;
                             }
                             count++;
+
+                            if (wallet.StartsWith("s"))
+                            {
+                                if (selectedShieldFromAddress == wallet)
+                                {
+                                    selectedShieldFromIdx = countShieldFrom;
+                                }
+                                cbbAdd(cbbShieldFrom, wallet + " - " + walletDic[wallet]);
+                                countShieldFrom++;
+                            }
+                            else if (wallet.StartsWith("zc"))
+                            {
+                                if (selectedShieldToAddress == wallet)
+                                {
+                                    selectedShieldToIdx = countShieldTo;
+                                }
+                                cbbAdd(cbbShieldTo, wallet);
+                                countShieldTo++;
+                            }
                         }
                     }
                     if (cbbFrom.Items.Count > 0)
                     {
                         cbbSelectedIndex(cbbFrom, selectedIdx);
+                    }
+                    if (cbbShieldFrom.Items.Count > 0)
+                    {
+                        cbbSelectedIndex(cbbShieldFrom, selectedShieldFromIdx);
+                    }
+                    if (cbbShieldTo.Items.Count > 0)
+                    {
+                        cbbSelectedIndex(cbbShieldTo, selectedShieldToIdx);
                     }
                 }
                 else
@@ -1107,15 +1050,15 @@ namespace SimpleWallet
         void populateTransactions(List<Types.Transaction> datas, out List<String> addresses)
         {
             addresses = new List<String>();
-  
+
             List<Types.TransactionConverted> txold = new List<Types.TransactionConverted>(txconvert);
             txconvert = ConvertTransactionDetail(datas);
 
-            foreach(Types.TransactionConverted t in txconvert)
+            foreach (Types.TransactionConverted t in txconvert)
             {
 
                 IEnumerable<Types.TransactionConverted> item = txold.Where(x => x.address == t.address && x.amount == t.amount && x.time == t.time && x.category == t.category);
-                if(item.ToList().Count == 0)
+                if (item.ToList().Count == 0)
                 {
                     addressBalanceChange.Add(t.address);
                 }
@@ -1140,7 +1083,7 @@ namespace SimpleWallet
                 String amount = t.amount.TrimStart('-');
                 rtn.Add(new Types.TransactionConverted(t.category == "send" ? "<==" : "==>",
                                             Convert.ToInt32(t.confirmations) >= 5 ? "YES" : "NO (" + t.confirmations + ")",
-                                            amount, strTime, t.address == null ? "Private address" : t.address));
+                                            amount, strTime, t.address == null ? "Private address" : t.address, t.txid));
             }
             return rtn;
         }
@@ -1183,7 +1126,7 @@ namespace SimpleWallet
             Dictionary<String, String> strDict = api.checkWallet(tbPayTo.Text);
             if (String.IsNullOrEmpty(tbPayTo.Text) || !Api.checkResult(strDict))
             {
-                MessageBox.Show("Destination wallet is invalid","Error");
+                MessageBox.Show("Destination wallet is invalid", "Error");
                 return;
             }
             ((Button)sender).Enabled = false;
@@ -1214,14 +1157,25 @@ namespace SimpleWallet
             }
             else
             {
-                MessageBox.Show(Api.getMessage(strDict));
+                string err = Api.getMessage(strDict);
+
+                if (err.Contains("bad-txns-oversize"))
+                {
+                    err += "\nGo to https://snowgem.org/faq to get help.";
+                    ErrorMessage errMsg = new ErrorMessage(err);
+                    errMsg.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show(err);
+                }
             }
             ((Button)sender).Enabled = true;
         }
 
         private void cbbFrom_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void tpSend_Enter(object sender, EventArgs e)
@@ -1231,7 +1185,7 @@ namespace SimpleWallet
 
         private void cbFee_CheckedChanged(object sender, EventArgs e)
         {
-            if(((CheckBox) sender).Checked)
+            if (((CheckBox)sender).Checked)
             {
                 tbFee.Enabled = false;
             }
@@ -1243,7 +1197,7 @@ namespace SimpleWallet
 
         private void Start_FormClosed(object sender, FormClosedEventArgs e)
         {
-            
+
         }
 
         private void btnNewAddress_Click(object sender, EventArgs e)
@@ -1277,6 +1231,7 @@ namespace SimpleWallet
             //    MessageBox.Show("Please wait 5 seconds before starting the wallet to close");
             //    return;
             //}
+            this.Visible = false;
             this.Hide();
             scr.ShowDialog();
         }
@@ -1310,7 +1265,7 @@ namespace SimpleWallet
                     MessageBox.Show("Your keys were saved to: " + Api.getMessage(strDict));
                 }
             }
-            
+
         }
 
         private void importPrivateKeysToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1335,7 +1290,7 @@ namespace SimpleWallet
                     MessageBox.Show("The private key has also been copied to the clipboard. Your keys is: " + Api.getMessage(strDict));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Could not export private key, please select your address");
             }
@@ -1401,7 +1356,7 @@ namespace SimpleWallet
 
         object getSelectedItem(ComboBox cbb)
         {
-            return cbb.Invoke(new Func<object>(() => 
+            return cbb.Invoke(new Func<object>(() =>
             {
                 return cbb.SelectedItem;
             }));
@@ -1453,7 +1408,7 @@ namespace SimpleWallet
 
         void pbImage(PictureBox pb, Bitmap bmp)
         {
-                pb.Invoke(new Action(() => pb.Image = bmp));
+            pb.Invoke(new Action(() => pb.Image = bmp));
         }
 
         private void btnSendMany_Click(object sender, EventArgs e)
@@ -1476,9 +1431,8 @@ namespace SimpleWallet
         {
             if (((DataGridView)(sender)).CurrentCell.Value != null)
             {
-                String text = ((DataGridView)(sender)).CurrentCell.Value.ToString();
-                Clipboard.SetText(text);
-                MessageBox.Show("Copied \"" + text + "\" to clipboard");
+                QrCode qr = new QrCode(((DataGridView)(sender)).CurrentCell.Value.ToString());
+                qr.ShowDialog();
             }
         }
 
@@ -1537,14 +1491,14 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
         private void btnNewAddressBook_Click(object sender, EventArgs e)
         {
-            NewLabel newLb = new NewLabel();
-            newLb.ShowDialog();
-            if(newLb.edit)
-            {
-                String name = newLb.name;
-                String address = newLb.address;
-                addAddressBook(new Types.AddressBook(name, address));
-            }
+            //NewLabel newLb = new NewLabel();
+            //newLb.ShowDialog();
+            //if(newLb.edit)
+            //{
+            //    String name = newLb.name;
+            //    String address = newLb.address;
+            //    addAddressBook(new Types.AddressBook(name, address));
+            //}
         }
 
         private void dtgAdressBook_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -1566,8 +1520,11 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
         private void cbbAddress_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = book.FindIndex(f => f.label == ((ComboBox)sender).SelectedItem.ToString());
-            tbPayTo.Text = book[index].address;
+            if (((ComboBox)sender).SelectedIndex > -1)
+            {
+                int index = book.FindIndex(f => f.label == ((ComboBox)sender).SelectedItem.ToString());
+                tbPayTo.Text = book[index].address;
+            }
         }
 
         private void tbPayTo_Leave(object sender, EventArgs e)
@@ -1589,7 +1546,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             List<String> split = peers.Split(new String[] { "    \"addr\": \"", "\",", "\n" }, StringSplitOptions.None).ToList();
             split.RemoveAll(String.IsNullOrEmpty);
             String peerstr = "";
-            foreach(String s in split)
+            foreach (String s in split)
             {
                 peerstr += s + "\n";
             }
@@ -1616,14 +1573,14 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 }
                 else
                 {
-                    for (int i = 0; i < outputList.Count; i++)
+                    for (int i = outputList.Count - 1; i >= 0; i--)
                     {
-                        Masternode mn = new Masternode("Outputs " + i, outputList[i].txhash + " " + outputList[i].outputidx);
+                        Masternode mn = new Masternode("Outputs " + (outputList.Count - i), outputList[i].txhash + " " + outputList[i].outputidx);
                         mn.ShowDialog();
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Could not get any outputs, please wait");
             }
@@ -1635,24 +1592,16 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             cf.ShowDialog();
             if (cf.result == Types.ConfigureResult.OK || cf.result == Types.ConfigureResult.REINDEX)
             {
-                String text = " these changes";
                 if (cf.result == Types.ConfigureResult.REINDEX)
                 {
-                    text = "reindexing wallet";
                     File.WriteAllText(Types.startCommandsFile, "-reindex");
-                }
-                
-
-                DialogResult result = MessageBox.Show("Your configuration has changed. Please restart your wallet for" + text, "Restart the wallet?", MessageBoxButtons.YesNo);
-                if(result == DialogResult.Yes)
-                {
-                    canClose = true;
-                    shouldRestart = true;
-                    this.Close();
-                }
-                else
-                {
-                    shouldRestart = false;
+                    DialogResult result2 = MessageBox.Show("Restart the wallet?", "", MessageBoxButtons.YesNo);
+                    if (result2 == DialogResult.Yes)
+                    {
+                        canClose = true;
+                        shouldRestart = true;
+                        this.Close();
+                    }
                 }
             }
             populateMasternodes();
@@ -1662,7 +1611,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         {
             int rowIndex = -1;
             String aliasName = "";
-            if(dtgMasternode.CurrentCell != null)
+            if (dtgMasternode.CurrentCell != null)
             {
                 rowIndex = dtgMasternode.CurrentCell.RowIndex;
             }
@@ -1671,15 +1620,15 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 MessageBox.Show("You must choose a Masternode");
                 return;
             }
-            if(rowIndex > -1)
+            if (rowIndex > -1)
             {
-                if(dtgMasternode.Rows[rowIndex].Cells[0].Value == null)
+                if (dtgMasternode.Rows[rowIndex].Cells[1].Value == null)
                 {
                     MessageBox.Show("Masternode cannot be null");
                     return;
                 }
 
-                aliasName = dtgMasternode.Rows[rowIndex].Cells[0].Value.ToString();
+                aliasName = dtgMasternode.Rows[rowIndex].Cells[1].Value.ToString();
                 if (String.IsNullOrEmpty(aliasName))
                 {
                     MessageBox.Show("Masternode cannot be empty");
@@ -1689,7 +1638,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
                 dynamic parse = JsonConvert.DeserializeObject<Types.StartMNResponse>(rtn);
 
-                if(parse.detail[0].result == "successful")
+                if (parse.detail[0].result == "successful")
                 {
                     MessageBox.Show("Start successfully");
                 }
@@ -1715,7 +1664,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             }
             if (rowIndex > -1)
             {
-                Object obj = dtgMasternode.Rows[rowIndex].Cells[0].Value;
+                Object obj = dtgMasternode.Rows[rowIndex].Cells[1].Value;
                 if (obj != null && !String.IsNullOrEmpty(obj.ToString()))
                 {
                     aliasName = obj.ToString();
@@ -1756,7 +1705,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
         private void copyMasternodeDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(File.Exists(api.appdata + "masternode.conf"))
+            if (File.Exists(api.appdata + "masternode.conf"))
             {
                 Clipboard.SetText(File.ReadAllText(api.appdata + "masternode.conf"));
                 MessageBox.Show("Copied");
@@ -1783,15 +1732,15 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         private void enableAutoBackupWalletToolStripMenuItem_Click(object sender, EventArgs e)
         {
             String enableFile = Path.GetTempPath() + "\\autoBackup.dat";
-            if(!File.Exists(enableFile))
+            if (!File.Exists(enableFile))
             {
                 File.WriteAllText(enableFile, "1");
-            
+
             }
 
             String read = File.ReadAllText(enableFile);
 
-            if(read == "1")
+            if (read == "1")
             {
                 ((ToolStripMenuItem)sender).Text = "Enable auto backup wallet";
                 File.WriteAllText(enableFile, "0");
@@ -1817,7 +1766,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
                     row.DefaultCellStyle.BackColor = Color.LightGreen;
                 }
-                catch (Exception ex) {  }
+                catch (Exception ex) { }
             }
 
             foreach (Types.AddressBook b in book)
@@ -1831,7 +1780,21 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
                     row.DefaultCellStyle.BackColor = Color.LightGreen;
                 }
-                catch (Exception ex) {  }
+                catch (Exception ex) { }
+            }
+
+            foreach (string s in walletDic.Keys)
+            {
+                try
+                {
+                    row = ((DataGridView)sender).Rows
+                    .Cast<DataGridViewRow>()
+                    .Where(r => r.Cells[1].Value.ToString().Equals(s))
+                    .First();
+
+                    row.DefaultCellStyle.BackColor = Color.LightGreen;
+                }
+                catch (Exception ex) { }
             }
             return;
         }
@@ -1871,7 +1834,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
         private void btnSearch_MouseHover(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btnSearch_MouseEnter(object sender, EventArgs e)
@@ -1886,7 +1849,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btnTurnOffMNMode_Click(object sender, EventArgs e)
@@ -1896,10 +1859,10 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             if (index >= 0)
             {
                 String[] split = data[index].Split('=');
-                if(split.Length >=2)
+                if (split.Length >= 2)
                 {
                     data.RemoveAt(index);
-                    if(split[1] == "1")
+                    if (split[1] == "1")
                     {
                         data.Add("masternode=0");
                         btnTurnOffMNMode.Invoke(new Action(() => btnTurnOffMNMode.Text = "Turn On MN Mode"));
@@ -1928,42 +1891,39 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
         private void btnShield_Click(object sender, EventArgs e)
         {
-            Dictionary<String, String> strDict = api.checkWallet(tbPayTo.Text);
-            if (String.IsNullOrEmpty(tbPayTo.Text) || !Api.checkResult(strDict))
+            if (cbbShieldFrom.SelectedIndex == -1)
             {
-                MessageBox.Show("Destination wallet is invalid","Error");
+                MessageBox.Show("Please select shielding wallet ");
                 return;
             }
-            if(String.IsNullOrEmpty(tbShieldFrom.Text))
+            if (cbbShieldFrom.SelectedIndex == -1)
             {
-                MessageBox.Show("Shield address is empty");
+                MessageBox.Show("Please select destination wallet");
                 return;
             }
-            if (String.IsNullOrEmpty(tbShieldTo.Text))
-            {
-                MessageBox.Show("Shield destination address is empty");
-                return;
-            } 
 
             if (String.IsNullOrEmpty(tbShieldUtxo.Text))
             {
                 MessageBox.Show("Shield utxo is empty");
                 return;
             }
+
             ((Button)sender).Enabled = false;
 
-            strDict = api.checkWallet(tbPayTo.Text);
-            strDict = Task.Run(() => api.shieldCoin(tbShieldFrom.Text, tbShieldTo.Text, tbShieldUtxo.Text,
+            String from = cbbShieldFrom.SelectedItem.ToString().Split(new String[] { " - " }, StringSplitOptions.None)[0];
+            String to = cbbShieldTo.SelectedItem.ToString();
+            Dictionary<String, String> strDict = api.checkWallet(tbPayTo.Text);
+            strDict = Task.Run(() => api.shieldCoin(from, to, tbShieldUtxo.Text,
                 tbShieldFee.Text, cbShieldDefaultFee.Checked)).Result;
 
-            SendingCoin send = new SendingCoin(strDict);
+            SendingCoin send = new SendingCoin(strDict, Types.TransactionType.SHIELD_COIN);
             send.ShowDialog();
             strDict = send.data;
 
             if (Api.checkResult(strDict))
             {
-                addressBalanceChange.Add(tbShieldFrom.Text);
-                addressBalanceChange.Add(tbShieldTo.Text);
+                addressBalanceChange.Add(from);
+                addressBalanceChange.Add(to);
                 shouldGetTransaction = true;
                 shouldGetWallet = true;
                 MessageBox.Show("Success\n" + strDict["message"]);
@@ -1988,74 +1948,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             }
         }
 
-        private void btnDeleteAddressLabel_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (dtgAddressBook.CurrentCell != null && dtgAddressBook.Rows[dtgAddressBook.CurrentCell.RowIndex].Cells[0].Value != null)
-                {
-                    String name = dtgAddressBook.Rows[dtgAddressBook.CurrentCell.RowIndex].Cells[0].Value.ToString();
-                    if (!String.IsNullOrEmpty(name))
-                    {
-                        DialogResult dialogResult = MessageBox.Show(@"Do you want to delete " + name, "ATTENTION!!!", MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            List<String> data = File.ReadAllLines(Types.addressLabel).ToList();
-                            int index = data.FindIndex(x => x.StartsWith(name));
-                            if (index >= 0)
-                            {
-                                data.RemoveAt(index);
-                            }
-                            File.WriteAllLines(Types.addressLabel, data);
-                            //populate addressbook
-                            populateAddressBook(readAddressBook());
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Cannot delete empty String");
-                }
-            }
-            catch (Exception ex) { }
-        }
-
-        private void tbShieldFrom_Enter(object sender, EventArgs e)
-        {
-            if (tbShieldFrom.Text == "Public address")
-            {
-                tbShieldFrom.Text = "";
-                tbShieldFrom.ForeColor = Color.Black;
-            }
-        }
-
-        private void tbShieldFrom_Leave(object sender, EventArgs e)
-        {
-            if (tbShieldFrom.Text == "")
-            {
-                tbShieldFrom.Text = "Public address";
-                tbShieldFrom.ForeColor = Color.Gray;
-            }
-        }
-
-        private void tbShieldTo_Enter(object sender, EventArgs e)
-        {
-            if (tbShieldTo.Text == "Private address")
-            {
-                tbShieldTo.Text = "";
-                tbShieldTo.ForeColor = Color.Black;
-            }
-        }
-
-        private void tbShieldTo_Leave(object sender, EventArgs e)
-        {
-            if (tbShieldTo.Text == "")
-            {
-                tbShieldTo.Text = "Private address";
-                tbShieldTo.ForeColor = Color.Gray;
-            }
-        }
-
         private void tbShieldUtxo_Enter(object sender, EventArgs e)
         {
             if (tbShieldUtxo.Text == "utxo to shield")
@@ -2071,36 +1963,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             {
                 tbShieldUtxo.Text = "utxo to shield";
                 tbShieldUtxo.ForeColor = Color.Gray;
-            }
-        }
-
-        private void dtgMasternode_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                Types.CtxMenuType type = Types.CtxMenuType.MASTERNODE;
-                ContextMenu ctxMenu = new ContextMenu();
-                if (((DataGridView)sender).Name == "dtgMasternode")
-                {
-                    type = Types.CtxMenuType.MASTERNODE;
-                }
-                else if (((DataGridView)sender).Name == "dtgAddressBook")
-                {
-                    type = Types.CtxMenuType.ADDRESS_BOOK;
-                }
-                ctxMenu.MenuItems.Add(new CustomMenuItem("Copy", ctxMenu_Copy, type));
-                ctxMenu.MenuItems.Add(new CustomMenuItem("Edit", ctxMenu_Edit, type));
-                ctxMenu.MenuItems.Add(new CustomMenuItem("Delete", ctxMenu_Delete, type));
-
-                int currentMouseOverRow = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
-                int currentMouseOverColumn = ((DataGridView)sender).HitTest(e.X, e.Y).ColumnIndex;
-                if (currentMouseOverRow >= 0 && currentMouseOverColumn >= 0)
-                {
-                    ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[currentMouseOverRow].Cells[currentMouseOverColumn];
-                }
-
-                ctxMenu.Show(((DataGridView)sender), new Point(e.X, e.Y));
-
             }
         }
 
@@ -2122,18 +1984,98 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 {
                     type = Types.CtxMenuType.MASTERNODE_GLOBAL;
                 }
-
-                ctxMenu.MenuItems.Add(new CustomMenuItem("Copy", ctxMenu_Copy, type));
-
-                int currentMouseOverRow = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
-                int currentMouseOverColumn = ((DataGridView)sender).HitTest(e.X, e.Y).ColumnIndex;
-                if (currentMouseOverRow >= 0 && currentMouseOverColumn >= 0)
+                else if (((DataGridView)sender).Name == "dtgMasternode")
                 {
-                    ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[currentMouseOverRow].Cells[currentMouseOverColumn];
+                    type = Types.CtxMenuType.MASTERNODE;
                 }
 
-                ctxMenu.Show(((DataGridView)sender), new Point(e.X, e.Y));
+                //ctxMenu.MenuItems.Add(new CustomMenuItem("Copy", ctxMenu_Copy, type));
 
+                //if (type == Types.CtxMenuType.WALLET)
+                //{
+                //    ctxMenu.MenuItems.Add(new CustomMenuItem("View QR code", ctxMenu_ViewQrCode, type));
+                //}
+                //else if (type == Types.CtxMenuType.TRANSACTIONS)
+                //{
+                //    ctxMenu.MenuItems.Add(new CustomMenuItem("View transaction detail", ctxMenu_ViewDetailTx, type));
+                //}
+                //else if (type == Types.CtxMenuType.MASTERNODE)
+                //{
+                //rightClick.isClicked = true;
+                //rightClick.type = type;
+                //int currentMouseOverRow1 = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
+                //int currentMouseOverColumn1 = ((DataGridView)sender).HitTest(e.X, e.Y).ColumnIndex;
+                //rightClick.rowIdx = currentMouseOverRow1;
+                //rightClick.colIdx = currentMouseOverColumn1;
+                //rightClick.x = e.X;
+                //rightClick.y = e.Y;
+                //return;
+                //String status = dtgMasternode.CurrentRow.Cells[0].Value.ToString();
+                //String text = "";
+                //if(status == "ENABLE")
+                //{
+                //    text = "Disable";
+                //}
+                //else
+                //{
+                //    text = "Enable";
+                //}
+                //ctxMenu.MenuItems.Add(new CustomMenuItem("Copy alias data", ctxMenu_CopyAlias, type));
+                //ctxMenu.MenuItems.Add(new CustomMenuItem("Edit alias data", ctxMenu_Edit, type));
+                //ctxMenu.MenuItems.Add(new CustomMenuItem(text, ctxMenu_StatusAlias, type));
+                //ctxMenu.MenuItems.Add(new CustomMenuItem("Delete", ctxMenu_Delete, type));
+                //}
+
+                //int currentMouseOverRow = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
+                //int currentMouseOverColumn = ((DataGridView)sender).HitTest(e.X, e.Y).ColumnIndex;
+                //if (currentMouseOverRow >= 0 && currentMouseOverColumn >= 0)
+                //{
+                //    ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[currentMouseOverRow].Cells[currentMouseOverColumn];
+                //}
+
+                //ctxMenu.Show(((DataGridView)sender), new Point(e.X, e.Y));
+
+                rightClick.isClicked = true;
+                rightClick.type = type;
+                int currentMouseOverRow1 = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
+                int currentMouseOverColumn1 = ((DataGridView)sender).HitTest(e.X, e.Y).ColumnIndex;
+                rightClick.rowIdx = currentMouseOverRow1;
+                rightClick.colIdx = currentMouseOverColumn1;
+                rightClick.x = e.X;
+                rightClick.y = e.Y;
+
+
+            }
+        }
+
+        private void ctxMenu_ViewQrCode(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.WALLET)
+            {
+                if (dtgAddress.CurrentCell != null && dtgAddress.CurrentCell.Value != null)
+                {
+                    QrCode qr = new QrCode(dtgAddress.Rows[dtgAddress.CurrentRow.Index].Cells[1].Value.ToString());
+                    qr.ShowDialog();
+                }
+            }
+        }
+
+        private void ctxMenu_ViewDetailTx(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.TRANSACTIONS)
+            {
+                if (dtgTransactions.CurrentCell != null && dtgTransactions.CurrentCell.Value != null)
+                {
+                    //get transaction data
+                    DataGridView dtg = dtgTransactions;
+                    int index = dtg.CurrentRow.Index;
+                    string txid = dtg.Rows[index].Cells[5].Value.ToString();
+                    string data = Task.Run(() => api.getTransaction(txid)).Result;
+                    TransactionDetail txDetail = new TransactionDetail(data);
+                    txDetail.ShowDialog();
+                }
             }
         }
 
@@ -2156,14 +2098,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                     Clipboard.SetText(text);
                 }
             }
-            else if (item.type == Types.CtxMenuType.ADDRESS_BOOK)
-            {
-                if (dtgAddressBook.CurrentCell != null && dtgAddressBook.CurrentCell.Value != null)
-                {
-                    String text = dtgAddressBook.CurrentCell.Value.ToString();
-                    Clipboard.SetText(text);
-                }
-            }
             else if (item.type == Types.CtxMenuType.WALLET)
             {
                 if (dtgAddress.CurrentCell != null && dtgAddress.CurrentCell.Value != null)
@@ -2182,6 +2116,138 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             }
         }
 
+        private void ctxMenu_StatusAlias(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.MASTERNODE)
+            {
+                if (dtgMasternode.CurrentCell != null && dtgMasternode.CurrentCell.Value != null)
+                {
+                    int index = dtgMasternode.CurrentRow.Index;
+                    String status = dtgMasternode.Rows[index].Cells[0].Value.ToString();
+                    String text = "";
+                    if (status == "ENABLE")
+                    {
+                        text = "DISABLE";
+                    }
+                    else
+                    {
+                        text = "ENABLE";
+                    }
+                    string aliasName = dtgMasternode.Rows[index].Cells[1].Value.ToString();
+                    string IP = dtgMasternode.Rows[index].Cells[2].Value.ToString();
+                    string privKey = dtgMasternode.Rows[index].Cells[3].Value.ToString();
+                    string txHash = dtgMasternode.Rows[index].Cells[4].Value.ToString();
+                    string txIndex = dtgMasternode.Rows[index].Cells[5].Value.ToString();
+
+                    int countEnable = 0;
+                    foreach (DataGridViewRow row in dtgMasternode.Rows)
+                    {
+                        if (row.Cells[0].Value.ToString() == "ENABLE")
+                        {
+                            countEnable++;
+                        }
+                    }
+
+                    bool isDisableAll = false;
+                    if(countEnable == 1)
+                    {
+                        isDisableAll = true;
+                    }
+
+                    Types.ConfigureResult result = api.changeStatus(text, aliasName, IP, privKey, txHash, txIndex, isDisableAll);
+
+                    if (result == Types.ConfigureResult.OK || result == Types.ConfigureResult.REINDEX)
+                    {
+                        DialogResult dialogResult = MessageBox.Show("Your configuration has changed. Please restart your wallet to update", "Restart the wallet?", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            canClose = true;
+                            shouldRestart = true;
+                            this.Close();
+                        }
+                    }
+                    populateMasternodes();
+                }
+            }
+        }
+
+        private void ctxMenu_EnableAllAlias(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.MASTERNODE)
+            {
+                foreach (DataGridViewRow row in dtgMasternode.Rows)
+                {
+                    String status = row.Cells[0].Value.ToString();
+                    String text = "ENABLE";
+                    string aliasName = row.Cells[1].Value.ToString();
+                    string IP = row.Cells[2].Value.ToString();
+                    string privKey = row.Cells[3].Value.ToString();
+                    string txHash = row.Cells[4].Value.ToString();
+                    string txIndex = row.Cells[5].Value.ToString();
+
+                    Types.ConfigureResult result = api.changeStatus(text, aliasName, IP, privKey, txHash, txIndex, false);
+                }
+                DialogResult dialogResult = MessageBox.Show("Your configuration has changed. Please restart your wallet to update", "Restart the wallet?", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    canClose = true;
+                    shouldRestart = true;
+                    this.Close();
+                }
+                populateMasternodes();
+            }
+        }
+
+        private void ctxMenu_DisableAllAlias(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.MASTERNODE)
+            {
+                foreach (DataGridViewRow row in dtgMasternode.Rows)
+                {
+                    String status = row.Cells[0].Value.ToString();
+                    String text = "DISABLE";
+                    string aliasName = row.Cells[1].Value.ToString();
+                    string IP = row.Cells[2].Value.ToString();
+                    string privKey = row.Cells[3].Value.ToString();
+                    string txHash = row.Cells[4].Value.ToString();
+                    string txIndex = row.Cells[5].Value.ToString();
+
+                    Types.ConfigureResult result = api.changeStatus(text, aliasName, IP, privKey, txHash, txIndex, true);
+                }
+                DialogResult dialogResult = MessageBox.Show("Your configuration has changed. Please restart your wallet to update", "Restart the wallet?", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    canClose = true;
+                    shouldRestart = true;
+                    this.Close();
+                }
+                populateMasternodes();
+            }
+        }
+
+        private void ctxMenu_CopyAlias(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.MASTERNODE)
+            {
+                if (dtgMasternode.CurrentCell != null && dtgMasternode.CurrentCell.Value != null)
+                {
+                    int index = dtgMasternode.CurrentRow.Index;
+                    string aliasName = dtgMasternode.Rows[index].Cells[1].Value.ToString();
+                    string IP = dtgMasternode.Rows[index].Cells[2].Value.ToString();
+                    string privKey = dtgMasternode.Rows[index].Cells[3].Value.ToString();
+                    string txHash = dtgMasternode.Rows[index].Cells[4].Value.ToString();
+                    string txIndex = dtgMasternode.Rows[index].Cells[5].Value.ToString();
+                    Types.Masternode mn = new Types.Masternode("ENABLE", aliasName, IP, privKey, txHash, txIndex);
+                    String text = mn.ToString();
+                    Clipboard.SetText(text);
+                }
+            }
+        }
+
         private void ctxMenu_Edit(Object sender, System.EventArgs e)
         {
             CustomMenuItem item = sender as CustomMenuItem;
@@ -2191,13 +2257,14 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 DataGridView dtg = dtgMasternode;
                 int index = dtg.CurrentRow.Index;
 
-                String alias = dtg.CurrentRow.Cells[0].Value.ToString();
-                String ip = dtg.CurrentRow.Cells[1].Value.ToString().Split(':')[0];
-                String privKey = dtg.CurrentRow.Cells[2].Value.ToString();
-                String txhash = dtg.CurrentRow.Cells[3].Value.ToString();
-                String txIndex = dtg.CurrentRow.Cells[4].Value.ToString();
+                String status = dtg.CurrentRow.Cells[0].Value.ToString();
+                String alias = dtg.CurrentRow.Cells[1].Value.ToString();
+                String ip = dtg.CurrentRow.Cells[2].Value.ToString().Split(':')[0];
+                String privKey = dtg.CurrentRow.Cells[3].Value.ToString();
+                String txhash = dtg.CurrentRow.Cells[4].Value.ToString();
+                String txIndex = dtg.CurrentRow.Cells[5].Value.ToString();
 
-                ConfigureMasternode cf = new ConfigureMasternode(new Types.Masternode(alias, ip, privKey, txhash, txIndex), false);
+                ConfigureMasternode cf = new ConfigureMasternode(new Types.Masternode(status, alias, ip, privKey, txhash, txIndex), false);
                 cf.ShowDialog();
                 if (cf.result == Types.ConfigureResult.OK || cf.result == Types.ConfigureResult.REINDEX)
                 {
@@ -2224,19 +2291,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 populateMasternodes();
 
             }
-            else if (item.type == Types.CtxMenuType.ADDRESS_BOOK)
-            {
-                DataGridView dtg = dtgAddressBook;
-                int index = dtg.CurrentRow.Index;
-                String label = dtg.Rows[index].Cells[0].Value.ToString();
-                String address = dtg.Rows[index].Cells[1].Value.ToString();
-                NewLabel newLb = new NewLabel(label, address);
-                newLb.ShowDialog();
-                if (newLb.edit)
-                {
-                    editAddressBook(new Types.AddressBook(newLb.name, newLb.address), dtg, index, label);
-                }
-            }
         }
 
         private void ctxMenu_Delete(Object sender, System.EventArgs e)
@@ -2247,29 +2301,30 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             {
                 try
                 {
-                    if (dtgMasternode.CurrentCell != null && dtgMasternode.Rows[dtgMasternode.CurrentCell.RowIndex].Cells[0].Value != null)
+                    if (dtgMasternode.CurrentCell != null && dtgMasternode.Rows[dtgMasternode.CurrentCell.RowIndex].Cells[1].Value != null)
                     {
-                        String name = dtgMasternode.Rows[dtgMasternode.CurrentCell.RowIndex].Cells[0].Value.ToString();
+                        String name = dtgMasternode.Rows[dtgMasternode.CurrentCell.RowIndex].Cells[1].Value.ToString();
+                        String tdix = dtgMasternode.Rows[dtgMasternode.CurrentCell.RowIndex].Cells[4].Value.ToString();
                         if (!String.IsNullOrEmpty(name))
                         {
                             DialogResult dialogResult = MessageBox.Show(@"Do you want to delete " + name, "ATTENTION!!!", MessageBoxButtons.YesNo);
                             if (dialogResult == DialogResult.Yes)
                             {
                                 List<String> data = File.ReadAllLines(Types.mnLocation).ToList();
-                                int index = data.FindIndex(x => x.StartsWith(name));
+                                int index = data.FindIndex(x => x.Contains(tdix));
                                 if (index >= 0)
                                 {
                                     data.RemoveAt(index);
                                 }
                                 File.WriteAllLines(Types.mnLocation, data);
 
-                                dialogResult = MessageBox.Show("Your configuration has changed. Please restart your wallet to update", "Restart the wallet?", MessageBoxButtons.YesNo);
-                                if (dialogResult == DialogResult.Yes)
-                                {
-                                    canClose = true;
-                                    shouldRestart = true;
-                                    this.Close();
-                                }
+                                //dialogResult = MessageBox.Show("Your configuration has changed. Please restart your wallet to update", "Restart the wallet?", MessageBoxButtons.YesNo);
+                                //if (dialogResult == DialogResult.Yes)
+                                //{
+                                //    canClose = true;
+                                //    shouldRestart = true;
+                                //    this.Close();
+                                //}
                             }
                         }
                     }
@@ -2279,51 +2334,9 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                     }
                     populateMasternodes();
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     MessageBox.Show("Delete Masternode error");
-                }
-            }
-            else if(item.type == Types.CtxMenuType.ADDRESS_BOOK)
-            {
-                try
-                {
-                    if (dtgAddressBook.CurrentCell != null && dtgAddressBook.Rows[dtgAddressBook.CurrentCell.RowIndex].Cells[0].Value != null)
-                    {
-                        String name = dtgAddressBook.Rows[dtgAddressBook.CurrentCell.RowIndex].Cells[0].Value.ToString();
-                        if (!String.IsNullOrEmpty(name))
-                        {
-                            DialogResult dialogResult = MessageBox.Show(@"Do you want to delete " + name, "ATTENTION!!!", MessageBoxButtons.YesNo);
-                            if (dialogResult == DialogResult.Yes)
-                            {
-                                int index = book.FindIndex(x => x.label == name);
-                                if (index >= 0)
-                                {
-                                    book.RemoveAt(index);
-                                }
-                                book.Sort(delegate(Types.AddressBook x, Types.AddressBook y)
-                                {
-                                    return x.label.CompareTo(y.label);
-                                });
-                                dtgAddressBook.Invoke(new Action(() =>
-                                {
-                                    dtgAddressBook.AutoGenerateColumns = true;
-                                    dtgAddressBook.DataSource = new BindingList<Types.AddressBook>(book);
-                                }));
-                                saveAddressBook(book);
-                                //populate addressbook
-                                populateAddressBook(book);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Cannot delete empty String");
-                    }
-                }
-                catch (Exception ex) 
-                {
-                    MessageBox.Show("Delete label error");
                 }
             }
         }
@@ -2332,6 +2345,123 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         {
         }
 
+        private void tcMain_DrawItem(object sender, DrawItemEventArgs e)
+        {
+        }
+
+        private void dtgTransactions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (((DataGridView)(sender)).CurrentCell.Value != null)
+            {
+                //get transaction data
+                DataGridView dtg = (DataGridView)(sender);
+                int index = dtg.CurrentRow.Index;
+                string txid = dtg.Rows[index].Cells[5].Value.ToString();
+                string data = Task.Run(() => api.getTransaction(txid)).Result;
+                TransactionDetail txDetail = new TransactionDetail(data);
+                txDetail.ShowDialog();
+            }
+        }
+
+        private void btnAddressBook_Click(object sender, EventArgs e)
+        {
+            AddressBook addrBook = new AddressBook(book);
+            addrBook.ShowDialog();
+            book = new List<Types.AddressBook>(addrBook.book);
+            Task.Run(() => loadAddressBook(book));
+            loadWallet();
+        }
+
+        private void dtg_Paint(object sender, PaintEventArgs e)
+        {
+            ContextMenu ctxMenu = new ContextMenu();
+            if (rightClick.isClicked)
+            {
+                rightClick.isClicked = false;
+                ctxMenu.MenuItems.Add(new CustomMenuItem("Copy", ctxMenu_Copy, rightClick.type));
+
+                if (rightClick.type == Types.CtxMenuType.WALLET)
+                {
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("View QR code", ctxMenu_ViewQrCode, rightClick.type));
+                }
+                else if (rightClick.type == Types.CtxMenuType.TRANSACTIONS)
+                {
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("View transaction detail", ctxMenu_ViewDetailTx, rightClick.type));
+                }
+                else if (rightClick.type == Types.CtxMenuType.MASTERNODE)
+                {
+                    String status = dtgMasternode.Rows[rightClick.rowIdx].Cells[0].Value.ToString();
+                    String text = "";
+                    if (status == "ENABLE")
+                    {
+                        text = "Disable";
+                    }
+                    else
+                    {
+                        text = "Enable";
+                    }
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("Copy alias data", ctxMenu_CopyAlias, rightClick.type));
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("Edit alias data", ctxMenu_Edit, rightClick.type));
+                    ctxMenu.MenuItems.Add(new CustomMenuItem(text, ctxMenu_StatusAlias, rightClick.type));
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("Enable all", ctxMenu_EnableAllAlias, rightClick.type));
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("Disable all", ctxMenu_DisableAllAlias, rightClick.type));
+                    ctxMenu.MenuItems.Add(new CustomMenuItem("Delete", ctxMenu_Delete, rightClick.type));
+                }
+                if (rightClick.rowIdx >= 0 && rightClick.colIdx >= 0)
+                {
+                    ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[rightClick.rowIdx].Cells[rightClick.colIdx];
+                }
+
+                ctxMenu.Show(((DataGridView)sender), new Point(rightClick.x, rightClick.y));
+
+            }
+            if (((DataGridView)sender).Name == "dtgMasternode")
+            {
+                changeMNColor((DataGridView)sender);
+            }
+        }
+
+        private void dtg_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenu ctxMenu = new ContextMenu();
+                Types.CtxMenuType type = Types.CtxMenuType.WALLET;
+                if (((DataGridView)sender).Name == "dtgAddress")
+                {
+                    type = Types.CtxMenuType.WALLET;
+                }
+                else if (((DataGridView)sender).Name == "dtgTransactions")
+                {
+                    type = Types.CtxMenuType.TRANSACTIONS;
+                }
+                else if (((DataGridView)sender).Name == "dtgGlobalMN")
+                {
+                    type = Types.CtxMenuType.MASTERNODE_GLOBAL;
+                }
+                else if (((DataGridView)sender).Name == "dtgMasternode")
+                {
+                    type = Types.CtxMenuType.MASTERNODE;
+                }
+
+                rightClick.isClicked = true;
+                rightClick.type = type;
+                int currentMouseOverRow1 = ((DataGridView)sender).HitTest(e.X, e.Y).RowIndex;
+                int currentMouseOverColumn1 = ((DataGridView)sender).HitTest(e.X, e.Y).ColumnIndex;
+                rightClick.rowIdx = currentMouseOverRow1;
+                rightClick.colIdx = currentMouseOverColumn1;
+                rightClick.x = e.X;
+                rightClick.y = e.Y;
+
+            }
+        }
+
+        private void btnStartAll_Click(object sender, EventArgs e)
+        {
+            String rtn = api.startAll();
+            ErrorMessage errMsg = new ErrorMessage(rtn);
+            errMsg.ShowDialog();
+        }
     }
 
     public class CustomMenuItem : MenuItem
