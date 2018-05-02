@@ -16,7 +16,7 @@ namespace SimpleWallet
     public partial class SendingCoin : Form
     {
         public Dictionary<String, String> data = new Dictionary<String, String>();
-        String labelText = "";
+        //String labelText = "";
         Api api = Api.Instance;
         public bool result = false;
         BackgroundWorker sendBgr = new BackgroundWorker();
@@ -31,6 +31,20 @@ namespace SimpleWallet
 
             this.data = data;
             this.type = type;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case 0x84:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    return;
+            }
+
+            base.WndProc(ref m);
         }
 
         private void SendingCoin_Load(object sender, EventArgs e)

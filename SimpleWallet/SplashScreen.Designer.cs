@@ -33,8 +33,6 @@
             this.pbProcess = new System.Windows.Forms.ProgressBar();
             this.ttSplash = new System.Windows.Forms.ToolTip(this.components);
             this.lbCurrentStatus = new SimpleWallet.TransparentLabel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pbProcess
@@ -52,39 +50,29 @@
             // lbCurrentStatus
             // 
             this.lbCurrentStatus.BackColor = System.Drawing.Color.Transparent;
-            this.lbCurrentStatus.ForeColor = System.Drawing.Color.Lime;
-            this.lbCurrentStatus.Location = new System.Drawing.Point(0, 328);
+            this.lbCurrentStatus.ForeColor = System.Drawing.Color.Gold;
+            this.lbCurrentStatus.Location = new System.Drawing.Point(0, 268);
             this.lbCurrentStatus.Name = "lbCurrentStatus";
             this.lbCurrentStatus.Opacity = 0;
-            this.lbCurrentStatus.Size = new System.Drawing.Size(668, 19);
+            this.lbCurrentStatus.Size = new System.Drawing.Size(668, 26);
             this.lbCurrentStatus.TabIndex = 4;
             this.lbCurrentStatus.Text = "Status";
             this.lbCurrentStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbCurrentStatus.TransparentBackColor = System.Drawing.Color.Blue;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = global::SimpleWallet.Properties.Resources.splash;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(668, 356);
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
-            // 
             // SplashScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Gray;
+            this.BackColor = System.Drawing.Color.Black;
+            this.BackgroundImage = global::SimpleWallet.Properties.Resources.logo512;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(668, 356);
             this.Controls.Add(this.lbCurrentStatus);
             this.Controls.Add(this.pbProcess);
-            this.Controls.Add(this.pictureBox1);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.Lime;
+            this.ForeColor = System.Drawing.Color.Gold;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -94,7 +82,6 @@
             this.Text = "SplashScreen";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SplashScreen_FormClosed);
             this.Load += new System.EventHandler(this.SplashScreen_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -104,6 +91,5 @@
         private System.Windows.Forms.ProgressBar pbProcess;
         private System.Windows.Forms.ToolTip ttSplash;
         private TransparentLabel lbCurrentStatus;
-        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

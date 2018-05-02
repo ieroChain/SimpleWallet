@@ -48,6 +48,20 @@ namespace SimpleWallet
 
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case 0x84:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    return;
+            }
+
+            base.WndProc(ref m);
+        }
+
         void startWallet_RunWorkerCompleted(Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             if (Api.checkResult(result))
@@ -71,24 +85,33 @@ namespace SimpleWallet
         {
             beginning(e);
 
-            //get data
-            String data = api.getAllData(Types.GetAllDataType.ALL);
-            dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(data);
+                Types.AllData dataimport = new Types.AllData();
+                dataimport = api.getAllData();
 
-            start.bestHash = parse.bestblockhash;
-            start.bestTime = parse.besttime;
-            start.connections = parse.connectionCount;
-            start.totalbalance = parse.totalbalance;
-            start.unconfirmedbalance = parse.unconfirmedbalance;
-            start.privatebalance = parse.privatebalance;
-            start.lockedbalance = parse.lockedbalance;
-            start.transparentbalance = parse.transparentbalance;
-            start.listtransactions = new List<Types.Transaction>(parse.listtransactions);
-            List<Dictionary<String, String>> addressbalance = parse.addressbalance;
-            if (addressbalance != null && addressbalance.Count > 0)
-            {
-                start.walletDic = new Dictionary<String, String>(parse.addressbalance[0]);
-            }
+                //connections
+                start.connections = dataimport.connectionCount;
+                
+                //balance info
+                start.privatebalance = dataimport.privatebalance;
+                start.transparentbalance = dataimport.transparentbalance;
+                start.totalbalance = dataimport.totalbalance;
+                start.unconfirmedbalance = dataimport.unconfirmedbalance;
+
+                //blockhash info
+                start.bestHash = dataimport.bestblockhash;
+
+                //bestblock time
+                start.bestTime = dataimport.time;
+                
+                //transaction list
+                start.listtransactions = dataimport.listtransactions;
+
+                //Address List
+                if (dataimport.addressbalance != null && dataimport.addressbalance.Count > 0)
+                {
+                    start.walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
+                }
+
 
         }
 
@@ -101,7 +124,7 @@ namespace SimpleWallet
             }
 
             String walletDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-            "\\Snowgem\\wallet.dat";
+            "\\zero\\wallet.zero";
 
             if (!File.Exists(walletDir))
             {
@@ -207,7 +230,7 @@ namespace SimpleWallet
 
         void ErrorOccurs(object sender, DeamonErrorEventArgs e)
         {
-            if (!e.errMessage.Contains("Snowgem is probably already running"))
+            if (!e.errMessage.Contains("Zero is probably already running"))
             {
                 api.stopWallet();
 
@@ -271,6 +294,7 @@ namespace SimpleWallet
         {
 
         }
+
 
     }
 }

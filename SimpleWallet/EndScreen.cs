@@ -80,5 +80,6 @@ namespace SimpleWallet
             endWallet.RunWorkerAsync();
             await Task.Run(() => api.stopWallet());
         }
+
     }
 }

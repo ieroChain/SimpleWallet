@@ -16,6 +16,41 @@ using System.Net;
 
 namespace SimpleWallet
 {
+    public class TestColorTable : ProfessionalColorTable
+    {
+        public override Color MenuItemSelectedGradientBegin 
+        {
+            get { return Color.DimGray; }
+        }
+        public override Color MenuItemSelectedGradientEnd
+        {
+            get { return Color.DimGray; }
+        }
+        public override Color MenuItemPressedGradientBegin 
+        {
+            get { return Color.DimGray; }
+        }
+        public override Color MenuItemPressedGradientEnd
+        {
+            get { return Color.DimGray; }
+        }
+        public override Color MenuBorder  //added for changing the menu border
+        {
+            get { return Color.Gold; }
+        }
+        public override Color MenuItemBorder   //added for changing the menu border
+        {
+            get { return Color.Gold; }
+        }
+
+        public override Color MenuItemSelected 
+        {
+            get { return Color.DimGray; }
+        }
+        
+
+    }
+
     public class VerticalTabControl : TabControl
     {
         public VerticalTabControl()
@@ -161,7 +196,7 @@ namespace SimpleWallet
         Executor exec = Executor.Instance;
         public String currentDaemondStatus = "";
         public String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                 + "\\Snowgem\\";
+                 + "\\zero\\";
         private static Api instance = null;
         private static readonly object padlock = new object();
 
@@ -222,14 +257,14 @@ namespace SimpleWallet
                 Directory.CreateDirectory(appdata);
             }
 
-            String filename = appdata + "\\snowgem.conf";
+            String filename = appdata + "\\zero.conf";
             if (!File.Exists(filename))
             {
                 File.Create(filename).Close();
                 String rpcUser = "rpcuser=" + getRandomString(30);
                 String rpcPass = "rpcpassword=" + getRandomString(30);
-                String node = "addnode=explorer.snowgem.org\naddnode=insight.snowgem.org";
-                String port = "port=16113\nrpcport=16112\ntxindex=1";
+                String node = "addnode=zero.cryptoforge.cc:23801\naddnode=zero.cryptonode.cloud:23801";
+                String port = "port=23801\nrpcport=23800\ntxindex=1";
                 String finalStr = rpcUser + "\n" + rpcPass + "\n" + node + "\n" + port;
                 File.WriteAllText(filename, finalStr);
             }
@@ -259,22 +294,10 @@ namespace SimpleWallet
         {
             Types.ConfigureResult result = Types.ConfigureResult.OK;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                             + "\\Snowgem";
-            String confFile = appdata + "\\snowgem.conf";
-            String mnFile = appdata + "\\masternode.conf";
-            if (aliasName.StartsWith("#"))
-            {
-                aliasName = aliasName.Substring(1, aliasName.Length - 1);
-            }
-
-            List<Types.Masternode> mns = getMasternodes();
-            if (oldName != aliasName && mns.FindIndex(f => f.alias == aliasName) != -1)
-            {
-                result = Types.ConfigureResult.DUPLICATE;
-            }
-            else
-            {
-                try
+                             + "\\zero";
+            String confFile = appdata + "\\zero.conf";
+           
+            try
                 {
                     if (!File.Exists(confFile))
                     {
@@ -290,7 +313,7 @@ namespace SimpleWallet
                         {
                             text.RemoveAt(index);
                         }
-                        text.Add("port=16113");
+                        text.Add("port=23801");
                         index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
@@ -303,30 +326,6 @@ namespace SimpleWallet
                             text.RemoveAt(index);
                         }
                         text.Add("server=1");
-                        index = text.FindIndex(x => x.StartsWith("masternode="));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("masternode=1");
-                        index = text.FindIndex(x => x.StartsWith("masternodeaddr"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("masternodeaddr=" + IP + ":16113");
-                        index = text.FindIndex(x => x.StartsWith("externalip"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("externalip=" + IP + ":16113");
-                        index = text.FindIndex(x => x.StartsWith("masternodeprivkey"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("masternodeprivkey=" + privKey);
                         index = text.FindIndex(x => x.StartsWith("txindex"));
                         if (index != -1)
                         {
@@ -340,31 +339,14 @@ namespace SimpleWallet
 
                         File.WriteAllLines(confFile, text.ToArray());
 
-                        if (!isNew)
-                        {
-                            index = mns.FindIndex(f => f.alias == oldName);
-                            if(index > -1)
-                            {
-                                mns.RemoveAt(index);
-                            }
-                        }
-                        mns.Add(new Types.Masternode(status, aliasName, IP + ":16113", privKey, txHash, txIndex));
-
-                        List<String> data = new List<string>();
-                        foreach(Types.Masternode m in mns)
-                        {
-                            data.Add(m.ToString());
-                        }
-
-                        File.WriteAllLines(mnFile, data);
-
+                 
                     }
                 }
-                catch (Exception ex)
+                catch 
                 {
                     result = Types.ConfigureResult.FAIL;
                 }
-            }
+            //}
             return result;
         }
 
@@ -372,15 +354,8 @@ namespace SimpleWallet
         {
             Types.ConfigureResult result = Types.ConfigureResult.OK;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                             + "\\Snowgem";
-            String confFile = appdata + "\\snowgem.conf";
-            String mnFile = appdata + "\\masternode.conf";
-
-            if(aliasName.StartsWith("#"))
-            {
-                aliasName = aliasName.Substring(1, aliasName.Length - 1);
-            }
-            List<Types.Masternode> mns = getMasternodes();
+                             + "\\zero";
+            String confFile = appdata + "\\zero.conf";
             try
             {
                 if (!File.Exists(confFile))
@@ -390,9 +365,6 @@ namespace SimpleWallet
                 else
                 {
                     int index = 0;
-                    if (status == "ENABLE" || isDisableAll)
-                    {
-                        //config file
                         List<String> text = File.ReadAllLines(confFile).ToList();
                         text.RemoveAll(String.IsNullOrEmpty);
                         index = text.FindIndex(x => x.StartsWith("port"));
@@ -400,7 +372,7 @@ namespace SimpleWallet
                         {
                             text.RemoveAt(index);
                         }
-                        text.Add("port=16113");
+                        text.Add("port=23801");
                         index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
@@ -413,30 +385,6 @@ namespace SimpleWallet
                             text.RemoveAt(index);
                         }
                         text.Add("server=1");
-                        index = text.FindIndex(x => x.StartsWith("masternode="));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("masternode=" + (isDisableAll ? "0" : "1"));
-                        index = text.FindIndex(x => x.StartsWith("masternodeaddr"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("masternodeaddr=" + IP);
-                        index = text.FindIndex(x => x.StartsWith("externalip"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("externalip=" + IP);
-                        index = text.FindIndex(x => x.StartsWith("masternodeprivkey"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("masternodeprivkey=" + privKey);
                         index = text.FindIndex(x => x.StartsWith("txindex"));
                         if (index != -1)
                         {
@@ -449,70 +397,23 @@ namespace SimpleWallet
                         text.Add("txindex=1");
 
                         File.WriteAllLines(confFile, text.ToArray());
-                    }
-
-                    index = mns.FindIndex(f => f.alias == aliasName);
-                    if (index > -1)
-                    {
-                        mns.RemoveAt(index);
-                    }
-
-                    mns.Add(new Types.Masternode(status, aliasName, IP, privKey, txHash, txIndex));
-
-                    List<String> data = new List<string>();
-                    foreach (Types.Masternode m in mns)
-                    {
-                        data.Add(m.ToString());
-                    }
-
-                    File.WriteAllLines(mnFile, data);
 
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 result = Types.ConfigureResult.FAIL;
             }
             return result;
         }
 
-        public List<Types.Masternode> getMasternodes()
-        {
-            List<Types.Masternode> rtn = new List<Types.Masternode>();
-            String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                 + "\\Snowgem";
-            String mnFile = appdata + "\\masternode.conf";
-
-            List<String> data = File.ReadAllLines(mnFile).ToList();
-            data.RemoveAll(String.IsNullOrEmpty);
-            foreach (String s in data)
-            {
-                List<String> temp = new List<string>();
-                String strTmp = s;
-                if (strTmp[0] == '#')
-                {
-                    strTmp = strTmp.Substring(1, s.Length - 1);
-                    temp.Add("DISABLE");
-                }
-                else
-                    temp.Add("ENABLE");
-                temp.AddRange(strTmp.Split(' ').ToList());
-                temp.RemoveAll(String.IsNullOrEmpty);
-                rtn.Add(new Types.Masternode(temp));
-            }
-            rtn.Sort(delegate(Types.Masternode x, Types.Masternode y)
-            {
-                return x.alias.CompareTo(y.alias);
-            });
-            return rtn;
-        }
 
         public Dictionary<String, String> startWallet(String command)
         {
             Dictionary<String, String> strDict = new Dictionary<String, String>();
-            if(!File.Exists("snowgem.exe"))
+            if(!File.Exists("zcashd.exe"))
             {
-                strDict["message"] = "Could not find \"snowgem.exe\" file in the folder";
+                strDict["message"] = "Could not find \"zcashd.exe\" file in the folder";
                 strDict["result"] = "fail";
             }
             String result = Task.Run(() => exec.executeStart(command)).Result;
@@ -554,13 +455,97 @@ namespace SimpleWallet
             exec.executeStop(); 
         }
 
-        public String getAllData(Types.GetAllDataType type)
+
+        public Types.AllData getAllData()
         {
-            String data = "";
-            List<String> command = new List<String> { "getalldata", ((int)type).ToString() };
-            String ret = Task.Run(() => exec.executeSync(command, data)).Result;
-            return ret;
+            Types.AllData data = new Types.AllData();
+            try
+            {
+                //connections
+                data.connectionCount = checkConnections();
+
+                //balances
+                string rpcdata = getZTotalBalance();
+                dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
+                data.privatebalance = parse.@private;
+                data.transparentbalance = parse.transparent;
+                data.totalbalance = parse.total;
+                data.unconfirmedbalance = getUnconfirmedBalance();
+
+                //blockhash info
+                rpcdata = getBestBlockhash();
+                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
+                data.bestblockhash = parse.bestblockhash;
+
+                //bestblock time
+                rpcdata = getBestTime(data.bestblockhash);
+                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
+                //data.time = parse.time;
+                data.besttime = parse.time;
+
+                //transaction list
+                rpcdata = getListTransactions();
+                data.listtransactions = JsonConvert.DeserializeObject<List<Types.Transaction>>(rpcdata);
+
+                //address balance
+                Dictionary<String, String> addressDictionary = new Dictionary<String, String>(); ;
+                List<Dictionary<String, String>> addressList = new List<Dictionary<String, String>>();
+
+                //add t-addresses
+                rpcdata = getTAddress();
+                parse = JsonConvert.DeserializeObject<List<String>>(rpcdata);
+
+                for (int i = 0; i < parse.Count; i++)
+                {
+                    addressDictionary.Add(parse[i], "0");
+                }
+
+                //add unspent t-addresses
+                rpcdata = getTAddressUnspent();
+                parse = JsonConvert.DeserializeObject<List<Types.AddressData>>(rpcdata);
+ 
+                for (int i = 0; i < parse.Count; i++)
+                {
+                    try
+                    {
+                        addressDictionary.Add(parse[i].address, "0");
+                    }
+                    catch { }
+                }
+
+                //add z-address
+                rpcdata = getZAddress();
+                parse = JsonConvert.DeserializeObject<List<String>>(rpcdata);
+
+                for (int i = 0; i < parse.Count; i++)
+                {
+                    try
+                    {
+                        addressDictionary.Add(parse[i], "0");
+                    }
+                    catch { }
+                }
+
+                addressList.Add(addressDictionary);
+                data.addressbalance = addressList;
+
+
+                foreach (String a in addressList[0].Keys.ToList())
+                {
+                    //get current balance of the address
+                    String balance = Task.Run(() => getAddressBalance(a)).Result;
+                    //update balance
+                    addressList[0][a]=balance;
+                }
+
+            }
+            catch
+            {
+                
+            }
+            return data;
         }
+
 
         public String getPeerInfo()
         {
@@ -610,10 +595,34 @@ namespace SimpleWallet
             return ret;
         }
 
+        public String getZTotalBalance()
+        {
+            String data = "";
+            List<String> command = new List<String> { "z_gettotalbalance","1" };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
+        public String getZTotalBalanceUnconfirmed()
+        {
+            String data = "";
+            List<String> command = new List<String> { "z_gettotalbalance", "0" };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+        
         public String getTAddress()
         {
             String data = "";
-            List<String> command = new List<String> { "getaddressesbyaccount \"\"" };
+            List<String> command = new List<String> { "getaddressesbyaccount \"\""};
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
+        public String getTAddressUnspent()
+        {
+            String data = "";
+            List<String> command = new List<String> { "listunspent" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }
@@ -703,7 +712,7 @@ namespace SimpleWallet
             String data = "";
             List<String> command = new List<String> { "getaccount ", wallet };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
-            if (ret.Contains("Invalid Snowgem address"))
+            if (ret.Contains("Invalid Zero address"))
             {
                 strDict["result"] = "fail";
             }
@@ -719,7 +728,7 @@ namespace SimpleWallet
         {
             Dictionary<String, String> strDict = new Dictionary<String, String>();
             SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "dat Files|*.dat";
+            dialog.Filter = "zero Files|*.zero";
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
@@ -727,7 +736,7 @@ namespace SimpleWallet
                 {
                     String filename = dialog.FileName;
                     String walletDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                        "\\Snowgem\\wallet.dat";
+                        "\\zero\\wallet.zero";
                     File.Copy(walletDir, filename, true);
                     strDict["message"] = "Backup success";
                     strDict["result"] = "success";
@@ -951,7 +960,7 @@ namespace SimpleWallet
                         return strDict;
                     }
                 }
-                catch (Exception ex)
+                catch 
                 { }
             }
             strDict["result"] = "checking";
@@ -1026,7 +1035,7 @@ namespace SimpleWallet
             {
                 return result["result"] == "success" || result["result"] == "checking" ? true : false;
             }
-            catch (Exception ex)
+            catch 
             {
                 return true;
             }
@@ -1039,7 +1048,7 @@ namespace SimpleWallet
             {
                 return result["message"];
             }
-            catch(Exception ex)
+            catch
             {
                 return "";
             }
@@ -1051,7 +1060,7 @@ namespace SimpleWallet
             {
                 return result["result"];
             }
-            catch (Exception ex)
+            catch 
             {
                 return "";
             }

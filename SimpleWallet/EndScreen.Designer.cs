@@ -38,7 +38,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 277);
+            this.label1.Location = new System.Drawing.Point(23, 276);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(375, 15);
@@ -48,16 +48,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(132, 261);
+            this.label2.Location = new System.Drawing.Point(151, 261);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(163, 15);
+            this.label2.Size = new System.Drawing.Size(132, 15);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Snowgem is shutting down...";
+            this.label2.Text = "Zero is shutting down...";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImage = global::SimpleWallet.Properties.Resources.logo_500;
+            this.pictureBox1.BackgroundImage = global::SimpleWallet.Properties.Resources.logo512;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
             this.pictureBox1.Location = new System.Drawing.Point(93, 7);
@@ -72,6 +72,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Gold;
             this.ClientSize = new System.Drawing.Size(424, 302);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);

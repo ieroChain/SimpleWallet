@@ -25,6 +25,20 @@ namespace SimpleWallet
             this.from = from;
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case 0x84:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    return;
+            }
+
+            base.WndProc(ref m);
+        }
+
         Dictionary<String, String> sendMultiple(String from, List<String> to, String fee, bool defaultFee)
         {
             return api.sendManyCoin(from, to, fee, defaultFee);
@@ -84,5 +98,12 @@ namespace SimpleWallet
             ((Button)sender).Enabled = true;
             rtbAddress.Focus();
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        
     }
 }
