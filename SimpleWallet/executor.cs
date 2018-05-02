@@ -18,8 +18,8 @@ namespace SimpleWallet
     class Executor
     {
         Types type = new Types();
-        String daemond = "snowgemd.exe";
-        String cli = "snowgem-cli.exe";
+        String daemond = "zcashd.exe";
+        String cli = "zcash-cli.exe";
         const String verifyingKey = "sprout-verifying.key";
         const String provingKey = "sprout-proving.key";
         String dataToGetSync = "";
@@ -34,7 +34,7 @@ namespace SimpleWallet
         String dataToGetTransaction = "";
         String getResultGetTransaction = "";
 
-        bool error = false;
+        //bool error = false;
         bool isClosedDeamon = true;
 
         public event ReceivedDataEventHandler progressChange;
@@ -140,7 +140,7 @@ namespace SimpleWallet
                     OnDaemonStatus(new DaemonEventArgs(true));
                 }
             }
-            catch (Exception ex)
+            catch 
             {
 
             }
@@ -321,18 +321,18 @@ namespace SimpleWallet
         public bool checkParamsFile(String file1, String file2)
         {
             bool ret = false;
-            String webLink = "https://snowgem.org/downloads/";
+            String webLink = "https://z.cash/downloads/";
             String file1Link = webLink + file1;
             String file2Link = webLink + file2;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            String file1Loc = appdata + "\\SnowgemParams\\" + file1;
-            String file2Loc = appdata + "\\SnowgemParams\\" + file2;
+            String file1Loc = appdata + "\\ZcashParams\\" + file1;
+            String file2Loc = appdata + "\\ZcashParams\\" + file2;
             Int64 length = 0;
             WebClient wc = new WebClient();
             Stream response = null;
-            if (!Directory.Exists(appdata + "\\SnowgemParams"))
+            if (!Directory.Exists(appdata + "\\ZcashParams"))
             {
-                Directory.CreateDirectory(appdata + "\\SnowgemParams");
+                Directory.CreateDirectory(appdata + "\\ZcashParams");
                 return true;
             }
             if(!File.Exists(file1Loc) || !File.Exists(file2Loc))
@@ -363,9 +363,9 @@ namespace SimpleWallet
                 length = new System.IO.FileInfo(file2Loc).Length;
                 response.Close();
             }
-            catch (Exception ex)
+            catch 
             {
-                //MessageBox.Show(ex.Message);
+                
             }
             bytes_total = Convert.ToInt64(wc.ResponseHeaders["Content-Length"]);
 
@@ -379,10 +379,10 @@ namespace SimpleWallet
         public bool downloadParams(String file, Types.DownloadFileType downloadType)
         {
             bool shouldDownload = false;
-            String webLink = "https://snowgem.org/downloads/";
+            String webLink = "https://z.cash/downloads/";
             String fileLink = webLink + file;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            String fileLoc = appdata + "\\SnowgemParams\\" + file;
+            String fileLoc = appdata + "\\ZcashParams\\" + file;
             Int64 length = 0;
             WebClient wc = new WebClient();
             Stream response = null;
@@ -395,9 +395,9 @@ namespace SimpleWallet
                 response.Close();
                 length = new System.IO.FileInfo(fileLoc).Length;
             }
-            catch(Exception ex)
+            catch
             {
-                //MessageBox.Show(ex.Message);
+               
             }
 
             if(bytes_total != length)
@@ -417,7 +417,7 @@ namespace SimpleWallet
                     wc.DownloadProgressChanged += verifying_DownloadProgressChanged;
                     wc.DownloadFileCompleted += verifying_DownloadFileCompleted;
                 }
-                wc.DownloadFileAsync(new System.Uri(fileLink), appdata + "\\SnowgemParams\\" + file, true);
+                wc.DownloadFileAsync(new System.Uri(fileLink), appdata + "\\ZcashParams\\" + file, true);
             }
             return shouldDownload;
         }

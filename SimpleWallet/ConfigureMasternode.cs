@@ -13,21 +13,21 @@ namespace SimpleWallet
     public partial class ConfigureMasternode : Form
     {
         public Types.ConfigureResult result = Types.ConfigureResult.FAIL;
-        Types.Masternode mn;
+        //Types.Masternode mn;
         bool isNew = false;
         String oldName = "";
         Api api = Api.Instance;
-        public ConfigureMasternode(Types.Masternode mn, bool isNew)
-        {
-            InitializeComponent();
-            mn = new Types.Masternode(mn);
+        //public ConfigureMasternode(Types.Masternode mn, bool isNew)
+        //{
+        //    InitializeComponent();
+        //    mn = new Types.Masternode(mn);
 
-            tbName.Text = oldName = mn.alias;
-            tbIP.Text = mn.ipAddress;
-            tbPrivKey.Text = mn.privKey;
-            tbOutPuts.Text = mn.txHash + " " + mn.index;
-            this.isNew = isNew;
-        }
+        //    tbName.Text = oldName = mn.alias;
+        //    tbIP.Text = mn.ipAddress;
+        //    tbPrivKey.Text = mn.privKey;
+        //    tbOutPuts.Text = mn.txHash + " " + mn.index;
+        //    this.isNew = isNew;
+        //}
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

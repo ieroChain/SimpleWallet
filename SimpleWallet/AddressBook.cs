@@ -22,6 +22,20 @@ namespace SimpleWallet
             this.book = new List<Types.AddressBook>(book);
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case 0x84:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    return;
+            }
+
+            base.WndProc(ref m);
+        }
+
         private void AddressBook_Load(object sender, EventArgs e)
         {
             dtgAddressBook.RowHeadersVisible = false;
@@ -61,7 +75,7 @@ namespace SimpleWallet
 
                 MessageBox.Show("Duplicated label");
             }
-            catch (Exception ex)
+            catch
             {
                 try
                 {
@@ -78,7 +92,7 @@ namespace SimpleWallet
                         dtgAddressBook.DataSource = new BindingList<Types.AddressBook>(book);
                     }));
                 }
-                catch (Exception ex1)
+                catch //(Exception ex1)
                 {
                     //if (shouldRestart)
                     //{
@@ -105,7 +119,7 @@ namespace SimpleWallet
                     return;
                 }
             }
-            catch (Exception ex)
+            catch 
             {
             }
             book.RemoveAll(x => x.label == oldLabel);
@@ -244,11 +258,16 @@ namespace SimpleWallet
                         MessageBox.Show("Cannot delete empty String");
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     MessageBox.Show("Delete label error");
                 }
             }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

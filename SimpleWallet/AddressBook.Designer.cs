@@ -35,6 +35,8 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addressBookBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnNewAddressBook = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dtgAddressBook)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.addressBookBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -47,7 +49,7 @@
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
             this.dtgAddressBook.DataSource = this.addressBookBindingSource;
-            this.dtgAddressBook.Location = new System.Drawing.Point(13, 13);
+            this.dtgAddressBook.Location = new System.Drawing.Point(12, 32);
             this.dtgAddressBook.Name = "dtgAddressBook";
             this.dtgAddressBook.Size = new System.Drawing.Size(899, 442);
             this.dtgAddressBook.TabIndex = 0;
@@ -71,22 +73,54 @@
             // 
             // btnNewAddressBook
             // 
-            this.btnNewAddressBook.Location = new System.Drawing.Point(732, 462);
+            this.btnNewAddressBook.BackColor = System.Drawing.Color.Black;
+            this.btnNewAddressBook.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGray;
+            this.btnNewAddressBook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNewAddressBook.ForeColor = System.Drawing.Color.Gold;
+            this.btnNewAddressBook.Location = new System.Drawing.Point(731, 481);
             this.btnNewAddressBook.Name = "btnNewAddressBook";
             this.btnNewAddressBook.Size = new System.Drawing.Size(180, 27);
             this.btnNewAddressBook.TabIndex = 12;
             this.btnNewAddressBook.Text = "New address label";
-            this.btnNewAddressBook.UseVisualStyleBackColor = true;
+            this.btnNewAddressBook.UseVisualStyleBackColor = false;
             this.btnNewAddressBook.Click += new System.EventHandler(this.btnNewAddressBook_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.Gold;
+            this.btnClose.Location = new System.Drawing.Point(880, 3);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(49, 23);
+            this.btnClose.TabIndex = 13;
+            this.btnClose.Text = "X";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Gold;
+            this.label1.Location = new System.Drawing.Point(12, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(73, 13);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Address Book";
             // 
             // AddressBook
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(924, 501);
+            this.BackColor = System.Drawing.Color.DimGray;
+            this.ClientSize = new System.Drawing.Size(924, 519);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnNewAddressBook);
             this.Controls.Add(this.dtgAddressBook);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.ForeColor = System.Drawing.Color.Black;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "AddressBook";
@@ -96,17 +130,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtgAddressBook)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.addressBookBindingSource)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.DataGridView dtgAddressBook;
-        private System.Windows.Forms.DataGridViewTextBoxColumn labelDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
+        //private System.Windows.Forms.DataGridViewTextBoxColumn labelDataGridViewTextBoxColumn;
+        //private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.BindingSource addressBookBindingSource;
         private System.Windows.Forms.Button btnNewAddressBook;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Label label1;
     }
 }

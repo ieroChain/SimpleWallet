@@ -36,6 +36,7 @@
             // lbChecking
             // 
             this.lbChecking.AutoSize = true;
+            this.lbChecking.ForeColor = System.Drawing.Color.Gold;
             this.lbChecking.Location = new System.Drawing.Point(17, 16);
             this.lbChecking.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbChecking.Name = "lbChecking";
@@ -56,6 +57,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(379, 75);
             this.Controls.Add(this.pbTransaction);
             this.Controls.Add(this.lbChecking);
