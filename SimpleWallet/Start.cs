@@ -34,7 +34,7 @@ namespace SimpleWallet
         public List<Types.Transaction> listtransactions = new List<Types.Transaction>();
         List<Types.TransactionConverted> txconvert = new List<Types.TransactionConverted>();
         public static String privKey = "";
-        const int startTime = 1511111234;
+        const int startTime = 1487462548;
         int numConnection = 0;
         int bestHeight = 0;
         Object lockObj = new Object();
@@ -1581,11 +1581,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 {
                     type = Types.CtxMenuType.TRANSACTIONS;
                 }
-                else if (((DataGridView)sender).Name == "dtgGlobalMN")
-                {
-                    type = Types.CtxMenuType.MASTERNODE_GLOBAL;
-                }
-
 
                 rightClick.isClicked = true;
                 rightClick.type = type;
@@ -1597,13 +1592,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 rightClick.y = e.Y;
 
             }
-        }
-
-        private void btnStartAll_Click(object sender, EventArgs e)
-        {
-            String rtn = api.startAll();
-            ErrorMessage errMsg = new ErrorMessage(rtn);
-            errMsg.ShowDialog();
         }
 
         private void btnOverview_Click(object sender, EventArgs e)
@@ -1624,6 +1612,11 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         private void btnTransactions_Click(object sender, EventArgs e)
         {
             pnlTransactions.BringToFront();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
       
         

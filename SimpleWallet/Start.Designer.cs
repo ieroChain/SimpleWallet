@@ -139,6 +139,7 @@
             this.masternodeListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnSearch = new SimpleWallet.RoundButton();
             this.typesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnClose = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transactionConvertedBindingSource)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -290,7 +291,7 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(260, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(168, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -309,7 +310,7 @@
             this.aboutToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.aboutToolStripMenuItem.ForeColor = System.Drawing.Color.Gold;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -318,7 +319,7 @@
             this.quitToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.quitToolStripMenuItem.ForeColor = System.Drawing.Color.Gold;
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -459,12 +460,12 @@
             // pnlTransactions
             // 
             this.pnlTransactions.BackColor = System.Drawing.Color.Black;
-            this.pnlTransactions.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05_resized;
+            this.pnlTransactions.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlTransactions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlTransactions.Controls.Add(this.btnReindex);
             this.pnlTransactions.Controls.Add(this.dtgTransactions);
             this.pnlTransactions.Controls.Add(this.btnRescan);
-            this.pnlTransactions.Location = new System.Drawing.Point(168, 25);
+            this.pnlTransactions.Location = new System.Drawing.Point(169, 25);
             this.pnlTransactions.Name = "pnlTransactions";
             this.pnlTransactions.Size = new System.Drawing.Size(875, 500);
             this.pnlTransactions.TabIndex = 9;
@@ -590,13 +591,13 @@
             // pnlReceiveCoins
             // 
             this.pnlReceiveCoins.BackColor = System.Drawing.Color.Black;
-            this.pnlReceiveCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05_resized;
+            this.pnlReceiveCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlReceiveCoins.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlReceiveCoins.Controls.Add(this.dtgAddress);
             this.pnlReceiveCoins.Controls.Add(this.btnNewZAddress);
             this.pnlReceiveCoins.Controls.Add(this.btnNewAddress);
             this.pnlReceiveCoins.Controls.Add(this.btnAddressBook);
-            this.pnlReceiveCoins.Location = new System.Drawing.Point(168, 25);
+            this.pnlReceiveCoins.Location = new System.Drawing.Point(169, 25);
             this.pnlReceiveCoins.Name = "pnlReceiveCoins";
             this.pnlReceiveCoins.Size = new System.Drawing.Size(875, 500);
             this.pnlReceiveCoins.TabIndex = 9;
@@ -661,7 +662,7 @@
             // pnlOverview
             // 
             this.pnlOverview.BackColor = System.Drawing.Color.Black;
-            this.pnlOverview.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05_resized;
+            this.pnlOverview.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlOverview.Controls.Add(this.pbTransaction4);
             this.pnlOverview.Controls.Add(this.label5);
@@ -693,7 +694,7 @@
             this.pnlOverview.Controls.Add(this.label7);
             this.pnlOverview.Controls.Add(this.lbTime1);
             this.pnlOverview.Controls.Add(this.label12);
-            this.pnlOverview.Location = new System.Drawing.Point(168, 25);
+            this.pnlOverview.Location = new System.Drawing.Point(169, 25);
             this.pnlOverview.Name = "pnlOverview";
             this.pnlOverview.Size = new System.Drawing.Size(875, 500);
             this.pnlOverview.TabIndex = 8;
@@ -1099,11 +1100,11 @@
             // pnlSendCoins
             // 
             this.pnlSendCoins.BackColor = System.Drawing.Color.Black;
-            this.pnlSendCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05_resized;
+            this.pnlSendCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlSendCoins.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlSendCoins.Controls.Add(this.groupBox2);
             this.pnlSendCoins.Controls.Add(this.groupBox1);
-            this.pnlSendCoins.Location = new System.Drawing.Point(168, 25);
+            this.pnlSendCoins.Location = new System.Drawing.Point(169, 25);
             this.pnlSendCoins.Name = "pnlSendCoins";
             this.pnlSendCoins.Size = new System.Drawing.Size(875, 500);
             this.pnlSendCoins.TabIndex = 9;
@@ -1449,12 +1450,28 @@
             // 
             this.typesBindingSource.DataSource = typeof(SimpleWallet.Types);
             // 
+            // btnClose
+            // 
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.Gold;
+            this.btnClose.Location = new System.Drawing.Point(1020, 0);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(21, 24);
+            this.btnClose.TabIndex = 12;
+            this.btnClose.Text = "X";
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
             // Start
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1044, 555);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.pnlOverview);
             this.Controls.Add(this.pnlTransactions);
             this.Controls.Add(this.pnlReceiveCoins);
@@ -1626,6 +1643,7 @@
         private System.Windows.Forms.Button btnSendCoins;
         private System.Windows.Forms.Button btnReceiveCoins;
         private System.Windows.Forms.Button btnOverview;
+        private System.Windows.Forms.Button btnClose;
         //private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn1;
         //private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         //private System.Windows.Forms.DataGridViewTextBoxColumn ipAddressDataGridViewTextBoxColumn;

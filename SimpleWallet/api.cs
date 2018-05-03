@@ -263,9 +263,12 @@ namespace SimpleWallet
                 File.Create(filename).Close();
                 String rpcUser = "rpcuser=" + getRandomString(30);
                 String rpcPass = "rpcpassword=" + getRandomString(30);
-                String node = "addnode=zero.cryptoforge.cc:23801\naddnode=zero.cryptonode.cloud:23801";
-                String port = "port=23801\nrpcport=23800\ntxindex=1";
-                String finalStr = rpcUser + "\n" + rpcPass + "\n" + node + "\n" + port;
+                String node = "addnode=zero.cryptoforge.cc:23801" + System.Environment.NewLine + "addnode=zero.cryptonode.cloud:23801" +
+                              "addnode=64.237.50.236:23801" + System.Environment.NewLine + "addnode=51.255.95.53:23801" + System.Environment.NewLine + "addnode=213.239.212.246:23801" +
+                              "addnode=188.166.2.55:23801" + System.Environment.NewLine + "addnode=151.45.45.171:23801" + System.Environment.NewLine + "addnode=83.219.38.218:23801" +
+                              "addnode=145.239.2.43:23801" + System.Environment.NewLine + "addnode=86.31.59.86:23801";
+                String port = "port=23801" + System.Environment.NewLine + "rpcport=23800" + System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
+                String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + node + System.Environment.NewLine + port;
                 File.WriteAllText(filename, finalStr);
             }
             else
@@ -675,30 +678,6 @@ namespace SimpleWallet
             return ret;
         }
 
-        public String getMNPrivKey()
-        {
-            String data = "";
-            List<String> command = new List<String> { "masternode ", "genkey" };
-            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
-            return ret;
-        }
-
-        public String getMNOutputs()
-        {
-            String data = "";
-            List<String> command = new List<String> { "masternode ", "outputs" };
-            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
-            return ret;
-        }
-
-        public String getMasternodeList()
-        {
-            String data = "";
-            List<String> command = new List<String> { "masternode ", "list" };
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
         public Dictionary<String, String> checkWallet(String wallet)
         {
             Dictionary<String, String> strDict = new Dictionary<String, String>();
@@ -988,47 +967,6 @@ namespace SimpleWallet
             return ret;
         }
 
-        public String startMasternode(String name)
-        {
-            String data = "";
-            List<String> command = new List<String> { "startmasternode ", "alias", "false", name};
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
-        public String startAlias(String name)
-        {
-            String data = "";
-            List<String> command = new List<String> { "startalias ", name };
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
-        public String startAll()
-        {
-            String data = "";
-            List<String> command = new List<String> { "startmasternode", "many", "false" };
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
-        public Types.MasternodeType isMasternodeEnable()
-        {
-            List<String> data = File.ReadAllLines(Types.cfLocation).ToList();
-            int index = data.FindIndex(x => x.StartsWith("masternode="));
-            if (index >= 0)
-            {
-                String[] split = data[index].Split('=');
-                if(split.Length >=2)
-                {
-                    if (split[1] == "1")
-                        return Types.MasternodeType.ON;
-                    else
-                        return Types.MasternodeType.OFF;
-                }
-            }
-            return Types.MasternodeType.NONE;
-        }
         public static bool checkResult(Dictionary<String, String> result)
         {
             try

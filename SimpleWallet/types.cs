@@ -64,12 +64,6 @@ namespace SimpleWallet
         public Dictionary<int, String> intDict = new Dictionary<int, String>();
         public Dictionary<String, String> strDict = new Dictionary<String, String>();
 
-        public enum MasternodeType
-        {
-            NONE = 0,
-            ON,
-            OFF
-        }
 
         public enum GetAllDataType
         {
@@ -118,7 +112,6 @@ namespace SimpleWallet
             DAEMOND = 0,
             SYNC,
             BALANCE,
-            MASTERNODE,
             GET_TRANSACTION,
             OTHERS
         }
@@ -147,9 +140,7 @@ namespace SimpleWallet
         {
             WALLET = 0,
             TRANSACTIONS,
-            ADDRESS_BOOK,
-            MASTERNODE,
-            MASTERNODE_GLOBAL
+            ADDRESS_BOOK
         }
 
         public class RightClickData
@@ -305,130 +296,5 @@ namespace SimpleWallet
             public List<Outputs> outputslist { get; set; }
         }
 
-
-        //public class Masternode
-        //{
-        //    public Masternode(string status, string alias, string ipAddress, string privKey, string txHash, string txindex)
-        //    {
-        //        this.status = status;
-        //        this.alias = alias;
-        //        this.privKey = privKey;
-        //        this.ipAddress = ipAddress;
-        //        this.txHash = txHash;
-        //        this.index = txindex;
-        //    }
-        //    public Masternode()
-        //    {
-        //        this.status = this.alias = this.privKey = this.ipAddress = this.txHash = this.index = "";
-        //    }
-
-        //    public Masternode(Masternode temp)
-        //    {
-        //        this.status = temp.status;
-        //        this.alias = temp.alias;
-        //        this.privKey = temp.privKey;
-        //        this.ipAddress = temp.ipAddress;
-        //        this.txHash = temp.txHash;
-        //        this.index = temp.index;
-        //    }
-
-        //    public Masternode(List<String> temp)
-        //    {
-        //        this.status = temp[0];
-        //        this.alias = temp[1];
-        //        this.ipAddress = temp[2];
-        //        this.privKey = temp[3];
-        //        this.txHash = temp[4];
-        //        this.index = temp[5];
-        //    }
-
-        //    public override String ToString()
-        //    {
-        //        return (status == "ENABLE" ? "" : "#") + alias + " " + ipAddress + " " + privKey + " " + txHash + " " + index;
-        //    }
-
-        //    public String status { get; set; }
-        //    public String alias { get; set; }
-        //    public String privKey { get; set; }
-        //    public String ipAddress { get; set; }
-        //    public String txHash { get; set; }
-        //    public String index { get; set; }
-        //}
-        //public class MasternodeList
-        //{
-        //    public List<MasternodeDetail> masternodelist { get; set; }
-        //}
-
-        //public class MasternodeDetail
-        //{
-        //    public MasternodeDetail(MasternodeDetail temp)
-        //    {
-        //        if (temp != null)
-        //        {
-        //            this.rank = temp.rank;
-        //            this.addr = temp.addr;
-        //            this.version = temp.version;
-        //            this.status = temp.status;
-        //            this.activetime = temp.activetime;
-        //            this.lastseen = temp.lastseen;
-        //            this.lastpaid = temp.lastpaid;
-        //            this.txhash = temp.txhash;
-        //            this.network = temp.network;
-        //            this.outidx = temp.outidx;
-        //            this.ip = temp.ip;
-        //        }
-        //    }
-        //    public int rank { get; set; }
-        //    public String addr { get; set; }
-        //    public int version { get; set; }
-        //    public String status { get; set; }
-        //    public int activetime { get; set; }
-        //    public int lastseen { get; set; }
-        //    public int lastpaid { get; set; }
-        //    public String txhash { get; set; }
-        //    public String network { get; set; }
-        //    public int outidx { get; set; }
-        //    public String ip { get; set; }
-        //}
-
-        //public class MasternodeDetailConverted
-        //{
-        //    public String rank { get; set; }
-        //    public String addr { get; set; }
-        //    public String version { get; set; }
-        //    public String status { get; set; }
-        //    public String activetime { get; set; }
-        //    public String lastseen { get; set; }
-        //    public String lastpaid { get; set; }
-        //    public String txhash { get; set; }
-        //    public String ip { get; set; }
-
-        //    public MasternodeDetailConverted(String rank, String addr, String version, 
-        //        String status, String activetime, String lastseen, String lastpaid, String txhash, String ip)
-        //    {
-        //        this.rank = rank;
-        //        this.addr = addr;
-        //        this.version = version;
-        //        this.status = status;
-        //        this.activetime = activetime;
-        //        this.lastseen = lastseen;
-        //        this.lastpaid = lastpaid;
-        //        this.txhash = txhash;
-        //        this.ip = ip;
-        //    }
-        //}
-
-        //public class StartMNResponse
-        //{
-        //    public String overall { get; set; }
-        //    public List<Detail> detail { get; set; }
-        //}
-
-        public class Detail
-        {
-            public String alias { get; set; }
-            public String result { get; set; }
-            public String error { get; set; }
-        }
     }
 }

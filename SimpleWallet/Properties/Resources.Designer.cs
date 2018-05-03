@@ -63,16 +63,6 @@ namespace SimpleWallet.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap background_bottom {
-            get {
-                object obj = ResourceManager.GetObject("background_bottom", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap connect0_16 {
             get {
                 object obj = ResourceManager.GetObject("connect0_16", resourceCulture);
@@ -126,16 +116,6 @@ namespace SimpleWallet.Properties {
         internal static System.Drawing.Bitmap inboundgreen {
             get {
                 object obj = ResourceManager.GetObject("inboundgreen", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap logo_500 {
-            get {
-                object obj = ResourceManager.GetObject("logo_500", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,16 +303,6 @@ namespace SimpleWallet.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap splash {
-            get {
-                object obj = ResourceManager.GetObject("splash", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap synced {
             get {
                 object obj = ResourceManager.GetObject("synced", resourceCulture);
@@ -433,9 +403,9 @@ namespace SimpleWallet.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap zero05_resized {
+        internal static System.Drawing.Bitmap zero05 {
             get {
-                object obj = ResourceManager.GetObject("zero05-resized", resourceCulture);
+                object obj = ResourceManager.GetObject("zero05", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
