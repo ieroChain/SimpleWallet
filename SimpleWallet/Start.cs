@@ -101,6 +101,7 @@ namespace SimpleWallet
             groupBox1.Enabled = false;
             groupBox1.Hide();
 
+
         }
 
         protected override void WndProc(ref Message m)
@@ -207,6 +208,7 @@ namespace SimpleWallet
             List<String> addresses;
             populateTransactions(listtransactions, out addresses);
             startCheckBalance(walletDic);
+            loadWallet();
             dtgTransactions.Invoke(new Action(() => dtgTransactions.Visible = true));
             bool isSynced = false;
             int count = 0;
@@ -223,34 +225,47 @@ namespace SimpleWallet
                     int nHeight = Convert.ToInt32(parse.blocks);
                     if (bestHeight + 1 == nHeight || shouldGetTransaction)
                     {
-                        dataimport = api.getAllData();
-                        shouldGetTransaction = false;
-
-                        listtransactions = dataimport.listtransactions;
-
-                        //recent transactions
-                        listtransactions.Reverse();
-
-                        populateRecentTx(listtransactions);
-
-                        //transactions
-                        populateTransactions(listtransactions, out addresses);
+                        shouldGetWallet = true;
                     }
-                    else if (shouldGetWallet)
+
+                    dataimport = api.getAllData();
+                        
+                    listtransactions = dataimport.listtransactions;
+
+                    //recent transactions
+                    listtransactions.Reverse();
+
+                    populateRecentTx(listtransactions);
+
+                    //transactions
+                    populateTransactions(listtransactions, out addresses);
+
+                    walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
+                    populateBalance(walletDic);
+                    startCheckBalance(walletDic);
+                    btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
+                    btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
+
+                    //balance
+                    lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));
+
+                    //balance
+                    lbPrivate.Invoke(new Action(() => lbPrivate.Text = dataimport.privatebalance));
+
+                    //balance
+                    lbTransparent.Invoke(new Action(() => lbTransparent.Text = dataimport.transparentbalance));
+
+                    //unconfirmed
+                    lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = dataimport.unconfirmedbalance));
+                     
+                    if (shouldGetWallet)
                     {
-                        dataimport = api.getAllData();
-                        walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
-                        populateBalance(walletDic);
-                        startCheckBalance(walletDic);
-                        btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
-                        btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
+                        loadWallet();
                         shouldGetWallet = false;
+                        shouldGetTransaction = false;
                         count = 0;
                     }
-                    else
-                    {
-                        dataimport = api.getAllData();
-                    }
+                    
                     bestHeight = nHeight;
 
                     //block hash
@@ -287,30 +302,7 @@ namespace SimpleWallet
 
                     //connection
                     populateConnections(dataimport.connectionCount);
-
-                    //balance
-                    lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));   
-
-                    //balance
-                    lbPrivate.Invoke(new Action(() => lbPrivate.Text = dataimport.privatebalance));
-
-                    //balance
-                    lbTransparent.Invoke(new Action(() => lbTransparent.Text = dataimport.transparentbalance));
-
-                    //unconfirmed
-                    lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = dataimport.unconfirmedbalance));
-   
-
-                    if (addresses.Count > 0)
-                    {
-                        addressBalanceChange.AddRange(addresses);
-                    }
-
-                    if (addressBalanceChange.Count > 0)
-                    {
-                        startCheckBalance(addressBalanceChange);
-                        addressBalanceChange.Clear();
-                    }
+                    
                     count++;
                 }
                 catch
@@ -333,7 +325,7 @@ namespace SimpleWallet
                     //update balance
                     updateBalance(a, balance);
                 }
-                loadWallet();
+                //loadWallet();
             }
             catch  { }
         }
@@ -349,7 +341,7 @@ namespace SimpleWallet
                     //update balance
                     updateBalance(a, balance);
                 }
-                loadWallet();
+                //loadWallet();
             }
             catch { }
         }
@@ -1040,28 +1032,6 @@ namespace SimpleWallet
             api.importPrivateKeys();
         }
 
-        private void showPrivateKeyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                Dictionary<String, String> strDict = api.exportPrivateKey(dtgAddress.CurrentCell.Value.ToString());
-                if (!Api.checkResult(strDict))
-                {
-                    MessageBox.Show(Api.getMessage(strDict));
-                }
-                else
-                {
-                    Clipboard.SetText(Api.getMessage(strDict));
-                    MessageBox.Show("The private key has also been copied to the clipboard. Your keys is: " + Api.getMessage(strDict));
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Could not export private key, please select your address");
-            }
-        }
-
         private void importOnePrivateKeyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportKey importDialog = new ImportKey();
@@ -1536,6 +1506,46 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             }
         }
 
+        private void ctxMenu_ViewPrivateKey(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.WALLET)
+            {
+                try
+                {
+                    Dictionary<String, String> strDict = api.exportPrivateKey(dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString());
+                    if (!Api.checkResult(strDict))
+                    {
+                        MessageBox.Show(Api.getMessage(strDict));
+                    }
+                    else
+                    {
+                        Clipboard.SetText(Api.getMessage(strDict));
+                        MessageBox.Show("The private key has also been copied to the clipboard." + System.Environment.NewLine + System.Environment.NewLine + "Your keys for address " +
+                                         dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString() + " is: " +
+                                         System.Environment.NewLine + System.Environment.NewLine + Api.getMessage(strDict));
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Could not export private key, please select your address");
+                }
+            }
+        }
+        private void ctxMenu_CopyAddress(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.WALLET)
+            {
+                try
+                {
+                    Clipboard.SetText(dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString());
+                }
+                catch
+                {
+                }
+            }
+        }
         private void Dtg_DataError(object sender, DataGridViewDataErrorEventArgs anError)
         {
         }
@@ -1618,6 +1628,23 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         {
             this.Close();
         }
+
+        private void dtgAddress_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Types.CtxMenuType type = Types.CtxMenuType.WALLET;
+                ContextMenu ctxMenu = new ContextMenu();
+                ctxMenu.MenuItems.Add(new CustomMenuItem("Copy Address", ctxMenu_CopyAddress, type));
+                ctxMenu.MenuItems.Add(new CustomMenuItem("View Private Key", ctxMenu_ViewPrivateKey, type));
+                ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[rightClick.rowIdx].Cells[1];
+                ctxMenu.Show(((DataGridView)sender), new Point(rightClick.x, rightClick.y));
+            }
+        }
+
+
+        
+        
       
         
     }
