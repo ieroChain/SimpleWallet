@@ -101,6 +101,7 @@
             this.addressBookBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.masternodeListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnClose = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.label6 = new SimpleWallet.TransparentLabel();
             this.label9 = new SimpleWallet.TransparentLabel();
             this.label8 = new SimpleWallet.TransparentLabel();
@@ -111,6 +112,11 @@
             this.transparentLabel5 = new SimpleWallet.TransparentLabel();
             this.btnShield = new SimpleWallet.TransparentButton();
             this.transparentLabel4 = new SimpleWallet.TransparentLabel();
+            this.lblConfirmed = new SimpleWallet.TransparentLabel();
+            this.lblUnconfirmedHeader = new SimpleWallet.TransparentLabel();
+            this.lblTotalUnconfirmed = new SimpleWallet.TransparentLabel();
+            this.lblPrivateUnconfirmed = new SimpleWallet.TransparentLabel();
+            this.lblTransparentUnconfirmed = new SimpleWallet.TransparentLabel();
             this.label5 = new SimpleWallet.TransparentLabel();
             this.lbBestTime = new SimpleWallet.TransparentLabel();
             this.lbBestHash = new SimpleWallet.TransparentLabel();
@@ -128,9 +134,7 @@
             this.lbValue2 = new SimpleWallet.TransparentLabel();
             this.lbTransparent = new SimpleWallet.TransparentLabel();
             this.lbValue1 = new SimpleWallet.TransparentLabel();
-            this.label2 = new SimpleWallet.TransparentLabel();
             this.lbTime4 = new SimpleWallet.TransparentLabel();
-            this.lbUnconfirmed = new SimpleWallet.TransparentLabel();
             this.lbTime3 = new SimpleWallet.TransparentLabel();
             this.label4 = new SimpleWallet.TransparentLabel();
             this.lbTime2 = new SimpleWallet.TransparentLabel();
@@ -592,7 +596,6 @@
             this.dtgAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dtgAddress.Size = new System.Drawing.Size(855, 414);
             this.dtgAddress.TabIndex = 9;
-            this.dtgAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgAddress_CellDoubleClick);
             this.dtgAddress.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtgAddress_CellMouseClick);
             this.dtgAddress.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
             // 
@@ -640,6 +643,11 @@
             this.pnlOverview.BackColor = System.Drawing.Color.Black;
             this.pnlOverview.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlOverview.Controls.Add(this.lblConfirmed);
+            this.pnlOverview.Controls.Add(this.lblUnconfirmedHeader);
+            this.pnlOverview.Controls.Add(this.lblTotalUnconfirmed);
+            this.pnlOverview.Controls.Add(this.lblPrivateUnconfirmed);
+            this.pnlOverview.Controls.Add(this.lblTransparentUnconfirmed);
             this.pnlOverview.Controls.Add(this.pbTransaction4);
             this.pnlOverview.Controls.Add(this.label5);
             this.pnlOverview.Controls.Add(this.pbTransaction3);
@@ -661,9 +669,7 @@
             this.pnlOverview.Controls.Add(this.lbValue2);
             this.pnlOverview.Controls.Add(this.lbTransparent);
             this.pnlOverview.Controls.Add(this.lbValue1);
-            this.pnlOverview.Controls.Add(this.label2);
             this.pnlOverview.Controls.Add(this.lbTime4);
-            this.pnlOverview.Controls.Add(this.lbUnconfirmed);
             this.pnlOverview.Controls.Add(this.lbTime3);
             this.pnlOverview.Controls.Add(this.label4);
             this.pnlOverview.Controls.Add(this.lbTime2);
@@ -734,6 +740,7 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label15);
             this.groupBox2.Controls.Add(this.btnSendMany);
             this.groupBox2.Controls.Add(this.cbbAddress);
@@ -841,8 +848,7 @@
             this.cbUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbUnit.FormattingEnabled = true;
             this.cbUnit.Items.AddRange(new object[] {
-            "Zer",
-            "mZer"});
+            "Zer"});
             this.cbUnit.Location = new System.Drawing.Point(177, 103);
             this.cbUnit.Name = "cbUnit";
             this.cbUnit.Size = new System.Drawing.Size(100, 23);
@@ -967,6 +973,16 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // label2
+            // 
+            this.label2.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label2.Location = new System.Drawing.Point(6, 234);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(506, 21);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "** Outbound transactions from Z addresses are not reported in the transaction log" +
+    ".";
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -1089,6 +1105,76 @@
             this.transparentLabel4.Text = "To";
             this.transparentLabel4.TransparentBackColor = System.Drawing.Color.Blue;
             // 
+            // lblConfirmed
+            // 
+            this.lblConfirmed.AutoSize = true;
+            this.lblConfirmed.BackColor = System.Drawing.Color.Transparent;
+            this.lblConfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblConfirmed.ForeColor = System.Drawing.Color.Gold;
+            this.lblConfirmed.Location = new System.Drawing.Point(106, 37);
+            this.lblConfirmed.Name = "lblConfirmed";
+            this.lblConfirmed.Opacity = 0;
+            this.lblConfirmed.Size = new System.Drawing.Size(78, 16);
+            this.lblConfirmed.TabIndex = 18;
+            this.lblConfirmed.Text = "Confirmed";
+            this.lblConfirmed.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // lblUnconfirmedHeader
+            // 
+            this.lblUnconfirmedHeader.AutoSize = true;
+            this.lblUnconfirmedHeader.BackColor = System.Drawing.Color.Transparent;
+            this.lblUnconfirmedHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUnconfirmedHeader.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblUnconfirmedHeader.Location = new System.Drawing.Point(233, 37);
+            this.lblUnconfirmedHeader.Name = "lblUnconfirmedHeader";
+            this.lblUnconfirmedHeader.Opacity = 0;
+            this.lblUnconfirmedHeader.Size = new System.Drawing.Size(95, 16);
+            this.lblUnconfirmedHeader.TabIndex = 17;
+            this.lblUnconfirmedHeader.Text = "Unconfirmed";
+            this.lblUnconfirmedHeader.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // lblTotalUnconfirmed
+            // 
+            this.lblTotalUnconfirmed.AutoSize = true;
+            this.lblTotalUnconfirmed.BackColor = System.Drawing.Color.Transparent;
+            this.lblTotalUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalUnconfirmed.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblTotalUnconfirmed.Location = new System.Drawing.Point(233, 86);
+            this.lblTotalUnconfirmed.Name = "lblTotalUnconfirmed";
+            this.lblTotalUnconfirmed.Opacity = 0;
+            this.lblTotalUnconfirmed.Size = new System.Drawing.Size(103, 15);
+            this.lblTotalUnconfirmed.TabIndex = 14;
+            this.lblTotalUnconfirmed.Text = "Loading data...";
+            this.lblTotalUnconfirmed.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // lblPrivateUnconfirmed
+            // 
+            this.lblPrivateUnconfirmed.AutoSize = true;
+            this.lblPrivateUnconfirmed.BackColor = System.Drawing.Color.Transparent;
+            this.lblPrivateUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrivateUnconfirmed.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblPrivateUnconfirmed.Location = new System.Drawing.Point(233, 68);
+            this.lblPrivateUnconfirmed.Name = "lblPrivateUnconfirmed";
+            this.lblPrivateUnconfirmed.Opacity = 0;
+            this.lblPrivateUnconfirmed.Size = new System.Drawing.Size(103, 15);
+            this.lblPrivateUnconfirmed.TabIndex = 15;
+            this.lblPrivateUnconfirmed.Text = "Loading data...";
+            this.lblPrivateUnconfirmed.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // lblTransparentUnconfirmed
+            // 
+            this.lblTransparentUnconfirmed.AutoSize = true;
+            this.lblTransparentUnconfirmed.BackColor = System.Drawing.Color.Transparent;
+            this.lblTransparentUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTransparentUnconfirmed.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblTransparentUnconfirmed.Location = new System.Drawing.Point(233, 52);
+            this.lblTransparentUnconfirmed.Name = "lblTransparentUnconfirmed";
+            this.lblTransparentUnconfirmed.Opacity = 0;
+            this.lblTransparentUnconfirmed.Size = new System.Drawing.Size(103, 15);
+            this.lblTransparentUnconfirmed.TabIndex = 16;
+            this.lblTransparentUnconfirmed.Text = "Loading data...";
+            this.lblTransparentUnconfirmed.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -1132,7 +1218,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.ForeColor = System.Drawing.Color.Gold;
-            this.label1.Location = new System.Drawing.Point(17, 102);
+            this.label1.Location = new System.Drawing.Point(20, 86);
             this.label1.Name = "label1";
             this.label1.Opacity = 0;
             this.label1.Size = new System.Drawing.Size(34, 15);
@@ -1160,7 +1246,7 @@
             this.lbTotal.BackColor = System.Drawing.Color.Transparent;
             this.lbTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTotal.ForeColor = System.Drawing.Color.Gold;
-            this.lbTotal.Location = new System.Drawing.Point(103, 102);
+            this.lbTotal.Location = new System.Drawing.Point(106, 86);
             this.lbTotal.Name = "lbTotal";
             this.lbTotal.Opacity = 0;
             this.lbTotal.Size = new System.Drawing.Size(103, 15);
@@ -1187,7 +1273,7 @@
             this.transparentLabel1.AutoSize = true;
             this.transparentLabel1.BackColor = System.Drawing.Color.Transparent;
             this.transparentLabel1.ForeColor = System.Drawing.Color.Gold;
-            this.transparentLabel1.Location = new System.Drawing.Point(17, 68);
+            this.transparentLabel1.Location = new System.Drawing.Point(20, 68);
             this.transparentLabel1.Name = "transparentLabel1";
             this.transparentLabel1.Opacity = 0;
             this.transparentLabel1.Size = new System.Drawing.Size(44, 15);
@@ -1229,7 +1315,7 @@
             this.lbPrivate.BackColor = System.Drawing.Color.Transparent;
             this.lbPrivate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbPrivate.ForeColor = System.Drawing.Color.Gold;
-            this.lbPrivate.Location = new System.Drawing.Point(103, 68);
+            this.lbPrivate.Location = new System.Drawing.Point(106, 68);
             this.lbPrivate.Name = "lbPrivate";
             this.lbPrivate.Opacity = 0;
             this.lbPrivate.Size = new System.Drawing.Size(103, 15);
@@ -1270,7 +1356,7 @@
             this.tlTransparentBalance.AutoSize = true;
             this.tlTransparentBalance.BackColor = System.Drawing.Color.Transparent;
             this.tlTransparentBalance.ForeColor = System.Drawing.Color.Gold;
-            this.tlTransparentBalance.Location = new System.Drawing.Point(17, 52);
+            this.tlTransparentBalance.Location = new System.Drawing.Point(20, 52);
             this.tlTransparentBalance.Name = "tlTransparentBalance";
             this.tlTransparentBalance.Opacity = 0;
             this.tlTransparentBalance.Size = new System.Drawing.Size(73, 15);
@@ -1298,7 +1384,7 @@
             this.lbTransparent.BackColor = System.Drawing.Color.Transparent;
             this.lbTransparent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTransparent.ForeColor = System.Drawing.Color.Gold;
-            this.lbTransparent.Location = new System.Drawing.Point(103, 52);
+            this.lbTransparent.Location = new System.Drawing.Point(106, 52);
             this.lbTransparent.Name = "lbTransparent";
             this.lbTransparent.Opacity = 0;
             this.lbTransparent.Size = new System.Drawing.Size(103, 15);
@@ -1320,19 +1406,6 @@
             this.lbValue1.TransparentBackColor = System.Drawing.Color.Blue;
             this.lbValue1.Visible = false;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.ForeColor = System.Drawing.Color.Gold;
-            this.label2.Location = new System.Drawing.Point(17, 86);
-            this.label2.Name = "label2";
-            this.label2.Opacity = 0;
-            this.label2.Size = new System.Drawing.Size(78, 15);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Unconfirmed";
-            this.label2.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
             // lbTime4
             // 
             this.lbTime4.AutoSize = true;
@@ -1346,20 +1419,6 @@
             this.lbTime4.Text = "time";
             this.lbTime4.TransparentBackColor = System.Drawing.Color.Blue;
             this.lbTime4.Visible = false;
-            // 
-            // lbUnconfirmed
-            // 
-            this.lbUnconfirmed.AutoSize = true;
-            this.lbUnconfirmed.BackColor = System.Drawing.Color.Transparent;
-            this.lbUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbUnconfirmed.ForeColor = System.Drawing.Color.Gold;
-            this.lbUnconfirmed.Location = new System.Drawing.Point(103, 86);
-            this.lbUnconfirmed.Name = "lbUnconfirmed";
-            this.lbUnconfirmed.Opacity = 0;
-            this.lbUnconfirmed.Size = new System.Drawing.Size(103, 15);
-            this.lbUnconfirmed.TabIndex = 6;
-            this.lbUnconfirmed.Text = "Loading data...";
-            this.lbUnconfirmed.TransparentBackColor = System.Drawing.Color.Blue;
             // 
             // lbTime3
             // 
@@ -1519,8 +1578,6 @@
         private TransparentLabel lbBestTime;
         private TransparentLabel lbBestHash;
         private TransparentLabel label4;
-        private TransparentLabel lbUnconfirmed;
-        private TransparentLabel label2;
         private TransparentLabel lbTotal;
         private TransparentLabel label1;
         private System.Windows.Forms.PictureBox pbSignal;
@@ -1633,6 +1690,12 @@
         private System.Windows.Forms.Button btnReceiveCoins;
         private System.Windows.Forms.Button btnOverview;
         private System.Windows.Forms.Button btnClose;
+        private TransparentLabel lblUnconfirmedHeader;
+        private TransparentLabel lblTotalUnconfirmed;
+        private TransparentLabel lblPrivateUnconfirmed;
+        private TransparentLabel lblTransparentUnconfirmed;
+        private TransparentLabel lblConfirmed;
+        private System.Windows.Forms.Label label2;
         //private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn1;
         //private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         //private System.Windows.Forms.DataGridViewTextBoxColumn ipAddressDataGridViewTextBoxColumn;

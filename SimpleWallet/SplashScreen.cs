@@ -96,6 +96,9 @@ namespace SimpleWallet
                 start.transparentbalance = dataimport.transparentbalance;
                 start.totalbalance = dataimport.totalbalance;
                 start.unconfirmedbalance = dataimport.unconfirmedbalance;
+                start.privatebalanceunconfirmed = dataimport.privatebalanceunconfirmed;
+                start.transparentbalanceunconfirmed = dataimport.transparentbalanceunconfirmed;
+                start.totalbalanceunconfirmed = dataimport.totalbalanceunconfirmed;    
 
                 //blockhash info
                 start.bestHash = dataimport.bestblockhash;

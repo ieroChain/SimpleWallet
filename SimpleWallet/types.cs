@@ -173,11 +173,14 @@ namespace SimpleWallet
             public String besttime { get; set; } //remove
             public String time { get; set; }
             public String bestblockhash { get; set; }
-            public String transparentbalance { get; set; } 
+            public String transparentbalance { get; set; }
+            public String transparentbalanceunconfirmed { get; set; } 
             public String transparent { get; set; }
-            public String privatebalance { get; set; }  
+            public String privatebalance { get; set; }
+            public String privatebalanceunconfirmed { get; set; }
             public String @private { get; set; }
-            public String totalbalance { get; set; } 
+            public String totalbalance { get; set; }
+            public String totalbalanceunconfirmed { get; set; } 
             public String total { get; set; }
             public String unconfirmedbalance { get; set; }
             public List<Dictionary<String, String>> addressbalance { get; set; }
@@ -257,6 +260,12 @@ namespace SimpleWallet
         public class AddressData
         {
             public String address { get; set; }
+        }
+
+        public class ValidAddress
+        {
+            public String address { get; set; }
+            public String isvalid { get; set; }
         }
 
         public class AddressBook

@@ -26,10 +26,13 @@ namespace SimpleWallet
         public String bestHash = "";
         public String connections = "";
         public String totalbalance = "";
+        public String totalbalanceunconfirmed = "";
         public String unconfirmedbalance = "";
         public String privatebalance = "";
+        public String privatebalanceunconfirmed = "";
         public String transparentbalance = "";
- 
+        public String transparentbalanceunconfirmed = "";
+
         public List<String> addressBalanceChange = new List<String>();
         public List<Types.Transaction> listtransactions = new List<Types.Transaction>();
         List<Types.TransactionConverted> txconvert = new List<Types.TransactionConverted>();
@@ -65,9 +68,10 @@ namespace SimpleWallet
             InitializeComponent();
             dtgAddress.ColumnCount = 3;
             dtgAddress.RowHeadersVisible = false;
-            dtgAddress.Columns[0].Name = "No.";
+            dtgAddress.Columns[0].Name = "Confirmed";
             dtgAddress.Columns[0].Width = dtgAddress.Width / 10;
             dtgAddress.Columns[0].ReadOnly = true;
+            dtgAddress.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dtgAddress.Columns[1].Name = "Address";
             dtgAddress.Columns[1].Width = dtgAddress.Width * 7 / 10;
             dtgAddress.Columns[1].ReadOnly = true;
@@ -75,6 +79,7 @@ namespace SimpleWallet
             dtgAddress.Columns[2].Width = dtgAddress.Width * 2 / 10;
             dtgAddress.Columns[2].ReadOnly = true;
             dtgAddress.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            dtgAddress.DoubleBuffered(true);
 
             dtgTransactions.RowHeadersVisible = false;
             dtgTransactions.Columns[0].HeaderText = "Direction";
@@ -96,6 +101,7 @@ namespace SimpleWallet
             dtgTransactions.Columns[5].Width = dtgTransactions.Width * 4 / 10;
             dtgTransactions.Columns[5].ReadOnly = true;
             dtgTransactions.Columns[5].Visible = false;
+            dtgTransactions.DoubleBuffered(true);
 
             cbUnit.SelectedIndex = 0;
             groupBox1.Enabled = false;
@@ -155,16 +161,31 @@ namespace SimpleWallet
             populateConnections(connections);
             //balance
             lbTotal.Invoke(new Action(() => lbTotal.Text = totalbalance));
-
+            lbTotal.Invoke(new Action(() => lblTotalUnconfirmed.Text = totalbalanceunconfirmed));
             //balance
             lbPrivate.Invoke(new Action(() => lbPrivate.Text = privatebalance));
+            lbPrivate.Invoke(new Action(() => lblPrivateUnconfirmed.Text = privatebalanceunconfirmed));
 
             //balance
             lbTransparent.Invoke(new Action(() => lbTransparent.Text = transparentbalance));
+            lbTransparent.Invoke(new Action(() => lblTransparentUnconfirmed.Text = transparentbalanceunconfirmed));
 
-            //unconfirmed
-            lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = unconfirmedbalance));
-
+            if (totalbalance==totalbalanceunconfirmed &&
+                privatebalance==privatebalanceunconfirmed &&
+                transparentbalance==transparentbalanceunconfirmed)
+            {
+                lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Hide()));
+                lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Hide()));
+                lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Hide()));
+                lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Hide()));
+            }
+            else
+            {
+                lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Show()));
+                lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Show()));
+                lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Show()));
+                lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Show()));
+            }
             listtransactions.Reverse();
 
             //populate recent trans
@@ -248,16 +269,33 @@ namespace SimpleWallet
 
                     //balance
                     lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));
+                    lbTotal.Invoke(new Action(() => lblTotalUnconfirmed.Text = dataimport.totalbalanceunconfirmed));
 
                     //balance
                     lbPrivate.Invoke(new Action(() => lbPrivate.Text = dataimport.privatebalance));
+                    lbPrivate.Invoke(new Action(() => lblPrivateUnconfirmed.Text = dataimport.privatebalanceunconfirmed));
 
                     //balance
                     lbTransparent.Invoke(new Action(() => lbTransparent.Text = dataimport.transparentbalance));
+                    lbTransparent.Invoke(new Action(() => lblTransparentUnconfirmed.Text = dataimport.transparentbalanceunconfirmed));
 
-                    //unconfirmed
-                    lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = dataimport.unconfirmedbalance));
-                     
+                    if (dataimport.totalbalance==dataimport.totalbalanceunconfirmed &&
+                        dataimport.privatebalance==dataimport.privatebalanceunconfirmed &&
+                        dataimport.transparentbalance==dataimport.transparentbalanceunconfirmed)
+                    {
+                        lblUnconfirmedHeader.Invoke(new Action (() => lblUnconfirmedHeader.Hide()));
+                        lblTransparentUnconfirmed.Invoke(new Action (() => lblTransparentUnconfirmed.Hide()));
+                        lblPrivateUnconfirmed.Invoke(new Action (() => lblPrivateUnconfirmed.Hide()));
+                        lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Hide()));
+                    }
+                    else
+                    {
+                        lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Show()));
+                        lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Show()));
+                        lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Show()));
+                        lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Show()));
+                    }
+
                     if (shouldGetWallet)
                     {
                         loadWallet();
@@ -346,9 +384,25 @@ namespace SimpleWallet
             catch { }
         }
 
+        string CheckBalanceUnconfirmed(string a)
+        {
+            String balance = null;
+            try
+            {
+                //get current balance of the address
+                balance = Task.Run(() => api.getAddressBalanceUnconfirmed(a)).Result;
+            }
+            catch 
+            {
+                balance = "0.00";
+            }
+            return balance;
+        }
+
         void updateBalance(String address, String balance)
         {
             DataGridViewRow row = new DataGridViewRow();
+            String balanceUnconfirmed = "0.00";
             try
             {
                 bool tempAllowUserToAddRows = dtgAddress.AllowUserToAddRows;
@@ -365,7 +419,19 @@ namespace SimpleWallet
             }
             catch  { return; }
             int rowIndex = row.Index;
-            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balance));
+
+            balanceUnconfirmed=CheckBalanceUnconfirmed(address);
+            if (balanceUnconfirmed==balance)
+            {
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "Yes"));
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balance));
+            }
+            else
+            {
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "No"));
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balanceUnconfirmed));
+            }
+            
         }
 
         public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
@@ -1163,15 +1229,6 @@ namespace SimpleWallet
             }
         }
 
-        private void dtgAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (((DataGridView)(sender)).CurrentCell.Value != null)
-            {
-                QrCode qr = new QrCode(((DataGridView)(sender)).CurrentCell.Value.ToString());
-                qr.ShowDialog();
-            }
-        }
-
         private void tpReceive_Leave(object sender, EventArgs e)
         {
             dtgAddress.Visible = false;
@@ -1637,6 +1694,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 ContextMenu ctxMenu = new ContextMenu();
                 ctxMenu.MenuItems.Add(new CustomMenuItem("Copy Address", ctxMenu_CopyAddress, type));
                 ctxMenu.MenuItems.Add(new CustomMenuItem("View Private Key", ctxMenu_ViewPrivateKey, type));
+                ctxMenu.MenuItems.Add(new CustomMenuItem("View Qr Code", ctxMenu_ViewQrCode, type));
                 ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[rightClick.rowIdx].Cells[1];
                 ctxMenu.Show(((DataGridView)sender), new Point(rightClick.x, rightClick.y));
             }
@@ -1644,7 +1702,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
 
 
         
-        
+   
       
         
     }
