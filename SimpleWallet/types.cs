@@ -54,7 +54,7 @@ namespace SimpleWallet
                                                   DaemonEventArgs e);
     public class Types
     {
-        public static String version = "Zero Simple Wallet - Version 0.0.1 beta";
+        public static String version = "Zero Simple Wallet - Version 1.0.0";
         public static String startCommandsFile = Path.GetTempPath() + "\\commands.dat";
         public static String addressLabel = Path.GetTempPath() + "\\addressLabel.dat";
         public static String outputsSave = Path.GetTempPath() + "\\outputs.dat";

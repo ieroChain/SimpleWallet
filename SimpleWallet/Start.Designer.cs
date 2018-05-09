@@ -79,6 +79,7 @@
             this.pbTransaction1 = new System.Windows.Forms.PictureBox();
             this.pnlSendCoins = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.btnSendMany = new System.Windows.Forms.Button();
             this.cbbAddress = new System.Windows.Forms.ComboBox();
@@ -101,17 +102,7 @@
             this.addressBookBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.masternodeListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnClose = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label6 = new SimpleWallet.TransparentLabel();
-            this.label9 = new SimpleWallet.TransparentLabel();
-            this.label8 = new SimpleWallet.TransparentLabel();
-            this.label10 = new SimpleWallet.TransparentLabel();
-            this.label11 = new SimpleWallet.TransparentLabel();
-            this.transparentLabel3 = new SimpleWallet.TransparentLabel();
-            this.transparentLabel6 = new SimpleWallet.TransparentLabel();
-            this.transparentLabel5 = new SimpleWallet.TransparentLabel();
-            this.btnShield = new SimpleWallet.TransparentButton();
-            this.transparentLabel4 = new SimpleWallet.TransparentLabel();
+            this.btnMinimize = new System.Windows.Forms.Button();
             this.lblConfirmed = new SimpleWallet.TransparentLabel();
             this.lblUnconfirmedHeader = new SimpleWallet.TransparentLabel();
             this.lblTotalUnconfirmed = new SimpleWallet.TransparentLabel();
@@ -141,6 +132,16 @@
             this.label7 = new SimpleWallet.TransparentLabel();
             this.lbTime1 = new SimpleWallet.TransparentLabel();
             this.label12 = new SimpleWallet.TransparentLabel();
+            this.label6 = new SimpleWallet.TransparentLabel();
+            this.label9 = new SimpleWallet.TransparentLabel();
+            this.label8 = new SimpleWallet.TransparentLabel();
+            this.label10 = new SimpleWallet.TransparentLabel();
+            this.label11 = new SimpleWallet.TransparentLabel();
+            this.transparentLabel3 = new SimpleWallet.TransparentLabel();
+            this.transparentLabel6 = new SimpleWallet.TransparentLabel();
+            this.transparentLabel5 = new SimpleWallet.TransparentLabel();
+            this.btnShield = new SimpleWallet.TransparentButton();
+            this.transparentLabel4 = new SimpleWallet.TransparentLabel();
             this.btnSearch = new SimpleWallet.RoundButton();
             this.typesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).BeginInit();
@@ -766,6 +767,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Normal send";
             // 
+            // label2
+            // 
+            this.label2.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label2.Location = new System.Drawing.Point(6, 234);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(506, 21);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "** Outbound transactions from Z addresses are not reported in the transaction log" +
+    ".";
+            // 
             // label15
             // 
             this.label15.Location = new System.Drawing.Point(9, 162);
@@ -966,144 +977,28 @@
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.Gold;
             this.btnClose.Location = new System.Drawing.Point(1020, 0);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(0);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(21, 24);
+            this.btnClose.Size = new System.Drawing.Size(15, 25);
             this.btnClose.TabIndex = 12;
             this.btnClose.Text = "X";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // label2
+            // btnMinimize
             // 
-            this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(6, 234);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(506, 21);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "** Outbound transactions from Z addresses are not reported in the transaction log" +
-    ".";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.Location = new System.Drawing.Point(6, 23);
-            this.label6.Name = "label6";
-            this.label6.Opacity = 0;
-            this.label6.Size = new System.Drawing.Size(36, 15);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "From";
-            this.label6.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.BackColor = System.Drawing.Color.Transparent;
-            this.label9.Location = new System.Drawing.Point(6, 79);
-            this.label9.Name = "label9";
-            this.label9.Opacity = 0;
-            this.label9.Size = new System.Drawing.Size(58, 15);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "Message";
-            this.label9.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.Color.Transparent;
-            this.label8.Location = new System.Drawing.Point(6, 52);
-            this.label8.Name = "label8";
-            this.label8.Opacity = 0;
-            this.label8.Size = new System.Drawing.Size(44, 15);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Pay To";
-            this.label8.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.BackColor = System.Drawing.Color.Transparent;
-            this.label10.Location = new System.Drawing.Point(6, 106);
-            this.label10.Name = "label10";
-            this.label10.Opacity = 0;
-            this.label10.Size = new System.Drawing.Size(49, 15);
-            this.label10.TabIndex = 0;
-            this.label10.Text = "Amount";
-            this.label10.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.BackColor = System.Drawing.Color.Transparent;
-            this.label11.Location = new System.Drawing.Point(6, 133);
-            this.label11.Name = "label11";
-            this.label11.Opacity = 0;
-            this.label11.Size = new System.Drawing.Size(28, 15);
-            this.label11.TabIndex = 0;
-            this.label11.Text = "Fee";
-            this.label11.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // transparentLabel3
-            // 
-            this.transparentLabel3.AutoSize = true;
-            this.transparentLabel3.BackColor = System.Drawing.Color.Transparent;
-            this.transparentLabel3.Location = new System.Drawing.Point(6, 23);
-            this.transparentLabel3.Name = "transparentLabel3";
-            this.transparentLabel3.Opacity = 0;
-            this.transparentLabel3.Size = new System.Drawing.Size(36, 15);
-            this.transparentLabel3.TabIndex = 0;
-            this.transparentLabel3.Text = "From";
-            this.transparentLabel3.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // transparentLabel6
-            // 
-            this.transparentLabel6.AutoSize = true;
-            this.transparentLabel6.BackColor = System.Drawing.Color.Transparent;
-            this.transparentLabel6.Location = new System.Drawing.Point(6, 77);
-            this.transparentLabel6.Name = "transparentLabel6";
-            this.transparentLabel6.Opacity = 0;
-            this.transparentLabel6.Size = new System.Drawing.Size(63, 15);
-            this.transparentLabel6.TabIndex = 0;
-            this.transparentLabel6.Text = "Max utxos";
-            this.transparentLabel6.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // transparentLabel5
-            // 
-            this.transparentLabel5.AutoSize = true;
-            this.transparentLabel5.BackColor = System.Drawing.Color.Transparent;
-            this.transparentLabel5.Location = new System.Drawing.Point(6, 104);
-            this.transparentLabel5.Name = "transparentLabel5";
-            this.transparentLabel5.Opacity = 0;
-            this.transparentLabel5.Size = new System.Drawing.Size(28, 15);
-            this.transparentLabel5.TabIndex = 0;
-            this.transparentLabel5.Text = "Fee";
-            this.transparentLabel5.TransparentBackColor = System.Drawing.Color.Blue;
-            // 
-            // btnShield
-            // 
-            this.btnShield.BackColor = System.Drawing.Color.Transparent;
-            this.btnShield.BackgroundImage = global::SimpleWallet.Properties.Resources.shield1;
-            this.btnShield.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnShield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnShield.Location = new System.Drawing.Point(776, 129);
-            this.btnShield.Name = "btnShield";
-            this.btnShield.Size = new System.Drawing.Size(49, 47);
-            this.btnShield.TabIndex = 13;
-            this.ttStart.SetToolTip(this.btnShield, "Start shield coinbase");
-            this.btnShield.UseVisualStyleBackColor = true;
-            this.btnShield.Click += new System.EventHandler(this.btnShield_Click);
-            // 
-            // transparentLabel4
-            // 
-            this.transparentLabel4.AutoSize = true;
-            this.transparentLabel4.BackColor = System.Drawing.Color.Transparent;
-            this.transparentLabel4.Location = new System.Drawing.Point(6, 50);
-            this.transparentLabel4.Name = "transparentLabel4";
-            this.transparentLabel4.Opacity = 0;
-            this.transparentLabel4.Size = new System.Drawing.Size(21, 15);
-            this.transparentLabel4.TabIndex = 0;
-            this.transparentLabel4.Text = "To";
-            this.transparentLabel4.TransparentBackColor = System.Drawing.Color.Blue;
+            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.btnMinimize.FlatAppearance.BorderSize = 0;
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMinimize.ForeColor = System.Drawing.Color.Gold;
+            this.btnMinimize.Location = new System.Drawing.Point(1000, -1);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(15, 25);
+            this.btnMinimize.TabIndex = 13;
+            this.btnMinimize.Text = "__";
+            this.btnMinimize.UseVisualStyleBackColor = false;
+            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
             // 
             // lblConfirmed
             // 
@@ -1502,6 +1397,128 @@
             this.label12.Text = "Latest block hash:";
             this.label12.TransparentBackColor = System.Drawing.Color.Blue;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.Location = new System.Drawing.Point(6, 23);
+            this.label6.Name = "label6";
+            this.label6.Opacity = 0;
+            this.label6.Size = new System.Drawing.Size(36, 15);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "From";
+            this.label6.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.Color.Transparent;
+            this.label9.Location = new System.Drawing.Point(6, 79);
+            this.label9.Name = "label9";
+            this.label9.Opacity = 0;
+            this.label9.Size = new System.Drawing.Size(58, 15);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Message";
+            this.label9.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Location = new System.Drawing.Point(6, 52);
+            this.label8.Name = "label8";
+            this.label8.Opacity = 0;
+            this.label8.Size = new System.Drawing.Size(44, 15);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Pay To";
+            this.label8.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.BackColor = System.Drawing.Color.Transparent;
+            this.label10.Location = new System.Drawing.Point(6, 106);
+            this.label10.Name = "label10";
+            this.label10.Opacity = 0;
+            this.label10.Size = new System.Drawing.Size(49, 15);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Amount";
+            this.label10.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.Location = new System.Drawing.Point(6, 133);
+            this.label11.Name = "label11";
+            this.label11.Opacity = 0;
+            this.label11.Size = new System.Drawing.Size(28, 15);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Fee";
+            this.label11.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // transparentLabel3
+            // 
+            this.transparentLabel3.AutoSize = true;
+            this.transparentLabel3.BackColor = System.Drawing.Color.Transparent;
+            this.transparentLabel3.Location = new System.Drawing.Point(6, 23);
+            this.transparentLabel3.Name = "transparentLabel3";
+            this.transparentLabel3.Opacity = 0;
+            this.transparentLabel3.Size = new System.Drawing.Size(36, 15);
+            this.transparentLabel3.TabIndex = 0;
+            this.transparentLabel3.Text = "From";
+            this.transparentLabel3.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // transparentLabel6
+            // 
+            this.transparentLabel6.AutoSize = true;
+            this.transparentLabel6.BackColor = System.Drawing.Color.Transparent;
+            this.transparentLabel6.Location = new System.Drawing.Point(6, 77);
+            this.transparentLabel6.Name = "transparentLabel6";
+            this.transparentLabel6.Opacity = 0;
+            this.transparentLabel6.Size = new System.Drawing.Size(63, 15);
+            this.transparentLabel6.TabIndex = 0;
+            this.transparentLabel6.Text = "Max utxos";
+            this.transparentLabel6.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // transparentLabel5
+            // 
+            this.transparentLabel5.AutoSize = true;
+            this.transparentLabel5.BackColor = System.Drawing.Color.Transparent;
+            this.transparentLabel5.Location = new System.Drawing.Point(6, 104);
+            this.transparentLabel5.Name = "transparentLabel5";
+            this.transparentLabel5.Opacity = 0;
+            this.transparentLabel5.Size = new System.Drawing.Size(28, 15);
+            this.transparentLabel5.TabIndex = 0;
+            this.transparentLabel5.Text = "Fee";
+            this.transparentLabel5.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // btnShield
+            // 
+            this.btnShield.BackColor = System.Drawing.Color.Transparent;
+            this.btnShield.BackgroundImage = global::SimpleWallet.Properties.Resources.shield1;
+            this.btnShield.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnShield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShield.Location = new System.Drawing.Point(776, 129);
+            this.btnShield.Name = "btnShield";
+            this.btnShield.Size = new System.Drawing.Size(49, 47);
+            this.btnShield.TabIndex = 13;
+            this.ttStart.SetToolTip(this.btnShield, "Start shield coinbase");
+            this.btnShield.UseVisualStyleBackColor = true;
+            this.btnShield.Click += new System.EventHandler(this.btnShield_Click);
+            // 
+            // transparentLabel4
+            // 
+            this.transparentLabel4.AutoSize = true;
+            this.transparentLabel4.BackColor = System.Drawing.Color.Transparent;
+            this.transparentLabel4.Location = new System.Drawing.Point(6, 50);
+            this.transparentLabel4.Name = "transparentLabel4";
+            this.transparentLabel4.Opacity = 0;
+            this.transparentLabel4.Size = new System.Drawing.Size(21, 15);
+            this.transparentLabel4.TabIndex = 0;
+            this.transparentLabel4.Text = "To";
+            this.transparentLabel4.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
             // btnSearch
             // 
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -1522,6 +1539,7 @@
             this.ClientSize = new System.Drawing.Size(1044, 555);
             this.Controls.Add(this.pnlOverview);
             this.Controls.Add(this.pnlSendCoins);
+            this.Controls.Add(this.btnMinimize);
             this.Controls.Add(this.pnlReceiveCoins);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.pnlTransactions);
@@ -1536,7 +1554,7 @@
             this.MaximizeBox = false;
             this.Name = "Start";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Zero Simple Wallet - Version 0.0.1 beta";
+            this.Text = "Zero Simple Wallet - Version 1.0.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Start_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Start_FormClosed);
             this.Load += new System.EventHandler(this.Start_Load);
@@ -1696,6 +1714,7 @@
         private TransparentLabel lblTransparentUnconfirmed;
         private TransparentLabel lblConfirmed;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnMinimize;
         //private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn1;
         //private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         //private System.Windows.Forms.DataGridViewTextBoxColumn ipAddressDataGridViewTextBoxColumn;
