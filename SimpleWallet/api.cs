@@ -274,10 +274,7 @@ namespace SimpleWallet
                 File.Create(filename).Close();
                 String rpcUser = "rpcuser=" + getRandomString(30);
                 String rpcPass = "rpcpassword=" + getRandomString(30);
-                String node = "addnode=zero.cryptoforge.cc:23801" + System.Environment.NewLine + "addnode=zero.cryptonode.cloud:23801" +
-                              "addnode=64.237.50.236:23801" + System.Environment.NewLine + "addnode=51.255.95.53:23801" + System.Environment.NewLine + "addnode=213.239.212.246:23801" +
-                              "addnode=188.166.2.55:23801" + System.Environment.NewLine + "addnode=151.45.45.171:23801" + System.Environment.NewLine + "addnode=83.219.38.218:23801" +
-                              "addnode=145.239.2.43:23801" + System.Environment.NewLine + "addnode=86.31.59.86:23801";
+                String node = "addnode=zeroseed.cryptoforge.cc:23801" + System.Environment.NewLine + "addnode=34.236.37.74:23801";
                 String port = "port=23801" + System.Environment.NewLine + "rpcport=23800" + System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
                 String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + node + System.Environment.NewLine + port;
                 File.WriteAllText(filename, finalStr);
