@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net;
+using System.Reflection;
 
 namespace SimpleWallet
 {
@@ -190,6 +191,16 @@ namespace SimpleWallet
         }
     }
 
+    public static class ExtensionMethods
+    {
+        public static void DoubleBuffered(this DataGridView dgv, bool setting)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(dgv, setting, null);
+        }
+    }
+
     class Api
     {
         const int START_CHECK_NUMBER_COUN = 5;
@@ -263,9 +274,9 @@ namespace SimpleWallet
                 File.Create(filename).Close();
                 String rpcUser = "rpcuser=" + getRandomString(30);
                 String rpcPass = "rpcpassword=" + getRandomString(30);
-                String node = "addnode=zero.cryptoforge.cc:23801\naddnode=zero.cryptonode.cloud:23801";
-                String port = "port=23801\nrpcport=23800\ntxindex=1";
-                String finalStr = rpcUser + "\n" + rpcPass + "\n" + node + "\n" + port;
+                String node = "addnode=zeroseed.cryptoforge.cc:23801" + System.Environment.NewLine + "addnode=34.236.37.74:23801";
+                String port = "port=23801" + System.Environment.NewLine + "rpcport=23800" + System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
+                String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + node + System.Environment.NewLine + port;
                 File.WriteAllText(filename, finalStr);
             }
             else
@@ -472,6 +483,14 @@ namespace SimpleWallet
                 data.totalbalance = parse.total;
                 data.unconfirmedbalance = getUnconfirmedBalance();
 
+                rpcdata = getZTotalBalanceUnconfirmed();
+                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
+                data.privatebalanceunconfirmed = parse.@private;
+                data.transparentbalanceunconfirmed = parse.transparent;
+                data.totalbalanceunconfirmed = parse.total;
+
+                
+
                 //blockhash info
                 rpcdata = getBestBlockhash();
                 parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
@@ -483,13 +502,13 @@ namespace SimpleWallet
                 //data.time = parse.time;
                 data.besttime = parse.time;
 
-                //transaction list
-                rpcdata = getListTransactions();
-                data.listtransactions = JsonConvert.DeserializeObject<List<Types.Transaction>>(rpcdata);
-
-                //address balance
-                Dictionary<String, String> addressDictionary = new Dictionary<String, String>(); ;
+                //address lists
+                Dictionary<String, String> addressDictionary = new Dictionary<String, String>();
+                Dictionary<String, String> validatedAddressDictionary = new Dictionary<String, String>();
+                Dictionary<String, String> validatedZAddressDictionary = new Dictionary<String, String>(); 
                 List<Dictionary<String, String>> addressList = new List<Dictionary<String, String>>();
+                List<Dictionary<String, String>> ValidatedList = new List<Dictionary<String, String>>();
+                List<Dictionary<String, String>> ValidatedZList = new List<Dictionary<String, String>>();
 
                 //add t-addresses
                 rpcdata = getTAddress();
@@ -513,7 +532,29 @@ namespace SimpleWallet
                     catch { }
                 }
 
-                //add z-address
+                addressList.Add(addressDictionary);
+
+                //Validate wallet t-addresses have spend keys 
+                foreach (String a in addressList[0].Keys.ToList())
+                {
+                    try
+                    {
+                        String Validate = ValidateTAddress(a);
+                        dynamic ValidAddresses = JsonConvert.DeserializeObject<Types.ValidAddress>(Validate);
+                        if (ValidAddresses.isvalid == "true")
+                        {
+                            validatedAddressDictionary.Add(a, "0");
+                        }
+                    }
+                    catch { }
+                }
+
+                //reset dictionaries
+                addressDictionary = new Dictionary<String, String>(); 
+                addressList = new List<Dictionary<String, String>>();
+
+
+                //add z-addresses
                 rpcdata = getZAddress();
                 parse = JsonConvert.DeserializeObject<List<String>>(rpcdata);
 
@@ -527,17 +568,65 @@ namespace SimpleWallet
                 }
 
                 addressList.Add(addressDictionary);
-                data.addressbalance = addressList;
 
-
+                //Validate wallet z-addresses have spend keys 
                 foreach (String a in addressList[0].Keys.ToList())
+                {
+                    try
+                    {
+                        String Validate = ValidateZAddress(a);
+                        dynamic ValidAddresses = JsonConvert.DeserializeObject<Types.ValidAddress>(Validate);
+                        if (ValidAddresses.isvalid == "true")
+                        {
+                            validatedAddressDictionary.Add(a, "0");
+                            validatedZAddressDictionary.Add(a, "0");
+                        }
+                    }
+                    catch { }
+                }
+
+                ValidatedZList.Add(validatedZAddressDictionary);
+                ValidatedList.Add(validatedAddressDictionary);
+
+                foreach (String a in ValidatedList[0].Keys.ToList())
                 {
                     //get current balance of the address
                     String balance = Task.Run(() => getAddressBalance(a)).Result;
                     //update balance
-                    addressList[0][a]=balance;
+                    ValidatedList[0][a] = balance;
                 }
 
+                data.addressbalance = ValidatedList;
+
+                //t-address transaction list
+                rpcdata = getListTransactions();
+                data.listtransactions = JsonConvert.DeserializeObject<List<Types.Transaction>>(rpcdata);
+
+
+                //z-received by transactions
+                foreach (String a in ValidatedZList[0].Keys.ToList())
+                {
+                    try
+                    {
+                        String ZTxidRPC = getZReceiveTransactions(a);
+                        dynamic ZTxid = JsonConvert.DeserializeObject<List<Types.Transaction>>(ZTxidRPC);
+
+                        for (int i = 0; i < ZTxid.Count; i++)
+                        {
+                            try
+                            {
+                                String ZTransactionsRPC = getTransaction(ZTxid[i].txid);
+                                dynamic ZTransactions = JsonConvert.DeserializeObject<Types.Transaction>(ZTransactionsRPC);
+                                ZTransactions.amount = ZTxid[i].amount;
+                                ZTransactions.address = "Z-Address ...." + a.Substring(a.Length - 6);
+                                data.listtransactions.Add(ZTransactions);
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
+                }
+                data.listtransactions.Sort((x, y) => x.time.CompareTo(y.time));
             }
             catch
             {
@@ -622,7 +711,7 @@ namespace SimpleWallet
         public String getTAddressUnspent()
         {
             String data = "";
-            List<String> command = new List<String> { "listunspent" };
+            List<String> command = new List<String> { "listunspent", "0" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }
@@ -654,7 +743,15 @@ namespace SimpleWallet
         public String getAddressBalance(String address)
         {
             String data = "";
-            List<String> command = new List<String> { "z_getbalance", address };
+            List<String> command = new List<String> { "z_getbalance", address, "1" };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
+        public String getAddressBalanceUnconfirmed(String address)
+        {
+            String data = "";
+            List<String> command = new List<String> { "z_getbalance", address, "0" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }
@@ -675,27 +772,19 @@ namespace SimpleWallet
             return ret;
         }
 
-        public String getMNPrivKey()
+        public String ValidateTAddress(String a)
         {
             String data = "";
-            List<String> command = new List<String> { "masternode ", "genkey" };
-            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
+            List<String> command = new List<String> { "validateaddress", a };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }
 
-        public String getMNOutputs()
+        public String ValidateZAddress(String a)
         {
             String data = "";
-            List<String> command = new List<String> { "masternode ", "outputs" };
-            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
-            return ret;
-        }
-
-        public String getMasternodeList()
-        {
-            String data = "";
-            List<String> command = new List<String> { "masternode ", "list" };
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
+            List<String> command = new List<String> { "z_validateaddress", a };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }
 
@@ -895,41 +984,48 @@ namespace SimpleWallet
         public Dictionary<String, String> sendManyCoin(String from, List<String> to, String fee, bool defaultFee)
         {
             Dictionary<String, String> strDict = new Dictionary<String, String>();
-            String sendInfo = "";
-            sendInfo += "\"" + from + "\" " + "\"[";
-            foreach (String t in to)
+            try
             {
-                String[] split = t.Split(',');
-                sendInfo += "{\\\"address\\\":\\\"" + split[0] + "\\\",\\\"amount\\\":" + split[1] + "},";
+                String sendInfo = "";
+                sendInfo += "\"" + from + "\" " + "\"[";
+                foreach (String t in to)
+                {
+                    String[] split = t.Split(',');
+                    sendInfo += "{\\\"address\\\":\\\"" + split[0] + "\\\",\\\"amount\\\":" + split[1] + "},";
+                }
+
+                sendInfo = sendInfo.Remove(sendInfo.Length - 1, 1);
+
+                sendInfo += "]\"";
+
+                if (defaultFee)
+                {
+                    sendInfo += " 1 " + "0.0001";
+                }
+                else
+                {
+                    sendInfo += " 1 " + fee;
+                }
+
+
+                String data = "";
+                List<String> command = new List<String> { "z_sendmany", sendInfo };
+
+                String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
+
+                strDict["message"] = ret;
+                if (ret.Contains("error"))
+                {
+                    strDict["result"] = "fail";
+                }
+                else
+                {
+                    strDict["result"] = "success";
+                }
             }
-
-            sendInfo = sendInfo.Remove(sendInfo.Length - 1, 1);
-
-            sendInfo += "]\"";
-
-            if (defaultFee)
-            {
-                sendInfo += " 1 " + "0.0001";
-            }
-            else
-            {
-                sendInfo += " 1 " + fee;
-            }
-
-
-            String data = "";
-            List<String> command = new List<String> { "z_sendmany", sendInfo };
-
-            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
-
-            strDict["message"] = ret;
-            if (ret.Contains("error"))
+            catch 
             {
                 strDict["result"] = "fail";
-            }
-            else
-            {
-                strDict["result"] = "success";
             }
             return strDict;
         }
@@ -975,10 +1071,19 @@ namespace SimpleWallet
         public String getListTransactions()
         {
             String data = "";
-            List<String> command = new List<String> { "listtransactions", "\"\"", "100" };
+            List<String> command = new List<String> { "listtransactions", "\"*\"", "100" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }
+
+        public String getZReceiveTransactions(String a)
+        {
+            String data = "";
+            List<String> command = new List<String> { "z_listreceivedbyaddress", a, "0" };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
 
         public String getTransaction(string txid)
         {
@@ -988,47 +1093,6 @@ namespace SimpleWallet
             return ret;
         }
 
-        public String startMasternode(String name)
-        {
-            String data = "";
-            List<String> command = new List<String> { "startmasternode ", "alias", "false", name};
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
-        public String startAlias(String name)
-        {
-            String data = "";
-            List<String> command = new List<String> { "startalias ", name };
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
-        public String startAll()
-        {
-            String data = "";
-            List<String> command = new List<String> { "startmasternode", "many", "false" };
-            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
-            return ret;
-        }
-
-        public Types.MasternodeType isMasternodeEnable()
-        {
-            List<String> data = File.ReadAllLines(Types.cfLocation).ToList();
-            int index = data.FindIndex(x => x.StartsWith("masternode="));
-            if (index >= 0)
-            {
-                String[] split = data[index].Split('=');
-                if(split.Length >=2)
-                {
-                    if (split[1] == "1")
-                        return Types.MasternodeType.ON;
-                    else
-                        return Types.MasternodeType.OFF;
-                }
-            }
-            return Types.MasternodeType.NONE;
-        }
         public static bool checkResult(Dictionary<String, String> result)
         {
             try

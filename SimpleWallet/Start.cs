@@ -26,15 +26,18 @@ namespace SimpleWallet
         public String bestHash = "";
         public String connections = "";
         public String totalbalance = "";
+        public String totalbalanceunconfirmed = "";
         public String unconfirmedbalance = "";
         public String privatebalance = "";
+        public String privatebalanceunconfirmed = "";
         public String transparentbalance = "";
- 
+        public String transparentbalanceunconfirmed = "";
+
         public List<String> addressBalanceChange = new List<String>();
         public List<Types.Transaction> listtransactions = new List<Types.Transaction>();
         List<Types.TransactionConverted> txconvert = new List<Types.TransactionConverted>();
         public static String privKey = "";
-        const int startTime = 1511111234;
+        const int startTime = 1487462548;
         int numConnection = 0;
         int bestHeight = 0;
         Object lockObj = new Object();
@@ -65,9 +68,10 @@ namespace SimpleWallet
             InitializeComponent();
             dtgAddress.ColumnCount = 3;
             dtgAddress.RowHeadersVisible = false;
-            dtgAddress.Columns[0].Name = "No.";
+            dtgAddress.Columns[0].Name = "Confirmed";
             dtgAddress.Columns[0].Width = dtgAddress.Width / 10;
             dtgAddress.Columns[0].ReadOnly = true;
+            dtgAddress.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dtgAddress.Columns[1].Name = "Address";
             dtgAddress.Columns[1].Width = dtgAddress.Width * 7 / 10;
             dtgAddress.Columns[1].ReadOnly = true;
@@ -75,6 +79,7 @@ namespace SimpleWallet
             dtgAddress.Columns[2].Width = dtgAddress.Width * 2 / 10;
             dtgAddress.Columns[2].ReadOnly = true;
             dtgAddress.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            dtgAddress.DoubleBuffered(true);
 
             dtgTransactions.RowHeadersVisible = false;
             dtgTransactions.Columns[0].HeaderText = "Direction";
@@ -96,10 +101,12 @@ namespace SimpleWallet
             dtgTransactions.Columns[5].Width = dtgTransactions.Width * 4 / 10;
             dtgTransactions.Columns[5].ReadOnly = true;
             dtgTransactions.Columns[5].Visible = false;
+            dtgTransactions.DoubleBuffered(true);
 
             cbUnit.SelectedIndex = 0;
             groupBox1.Enabled = false;
             groupBox1.Hide();
+
 
         }
 
@@ -154,16 +161,31 @@ namespace SimpleWallet
             populateConnections(connections);
             //balance
             lbTotal.Invoke(new Action(() => lbTotal.Text = totalbalance));
-
+            lbTotal.Invoke(new Action(() => lblTotalUnconfirmed.Text = totalbalanceunconfirmed));
             //balance
             lbPrivate.Invoke(new Action(() => lbPrivate.Text = privatebalance));
+            lbPrivate.Invoke(new Action(() => lblPrivateUnconfirmed.Text = privatebalanceunconfirmed));
 
             //balance
             lbTransparent.Invoke(new Action(() => lbTransparent.Text = transparentbalance));
+            lbTransparent.Invoke(new Action(() => lblTransparentUnconfirmed.Text = transparentbalanceunconfirmed));
 
-            //unconfirmed
-            lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = unconfirmedbalance));
-
+            if (totalbalance==totalbalanceunconfirmed &&
+                privatebalance==privatebalanceunconfirmed &&
+                transparentbalance==transparentbalanceunconfirmed)
+            {
+                lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Hide()));
+                lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Hide()));
+                lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Hide()));
+                lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Hide()));
+            }
+            else
+            {
+                lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Show()));
+                lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Show()));
+                lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Show()));
+                lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Show()));
+            }
             listtransactions.Reverse();
 
             //populate recent trans
@@ -207,6 +229,7 @@ namespace SimpleWallet
             List<String> addresses;
             populateTransactions(listtransactions, out addresses);
             startCheckBalance(walletDic);
+            loadWallet();
             dtgTransactions.Invoke(new Action(() => dtgTransactions.Visible = true));
             bool isSynced = false;
             int count = 0;
@@ -223,34 +246,64 @@ namespace SimpleWallet
                     int nHeight = Convert.ToInt32(parse.blocks);
                     if (bestHeight + 1 == nHeight || shouldGetTransaction)
                     {
-                        dataimport = api.getAllData();
-                        shouldGetTransaction = false;
-
-                        listtransactions = dataimport.listtransactions;
-
-                        //recent transactions
-                        listtransactions.Reverse();
-
-                        populateRecentTx(listtransactions);
-
-                        //transactions
-                        populateTransactions(listtransactions, out addresses);
+                        shouldGetWallet = true;
                     }
-                    else if (shouldGetWallet)
+
+                    dataimport = api.getAllData();
+                        
+                    listtransactions = dataimport.listtransactions;
+
+                    //recent transactions
+                    listtransactions.Reverse();
+
+                    populateRecentTx(listtransactions);
+
+                    //transactions
+                    populateTransactions(listtransactions, out addresses);
+
+                    walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
+                    populateBalance(walletDic);
+                    startCheckBalance(walletDic);
+                    btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
+                    btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
+
+                    //balance
+                    lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));
+                    lbTotal.Invoke(new Action(() => lblTotalUnconfirmed.Text = dataimport.totalbalanceunconfirmed));
+
+                    //balance
+                    lbPrivate.Invoke(new Action(() => lbPrivate.Text = dataimport.privatebalance));
+                    lbPrivate.Invoke(new Action(() => lblPrivateUnconfirmed.Text = dataimport.privatebalanceunconfirmed));
+
+                    //balance
+                    lbTransparent.Invoke(new Action(() => lbTransparent.Text = dataimport.transparentbalance));
+                    lbTransparent.Invoke(new Action(() => lblTransparentUnconfirmed.Text = dataimport.transparentbalanceunconfirmed));
+
+                    if (dataimport.totalbalance==dataimport.totalbalanceunconfirmed &&
+                        dataimport.privatebalance==dataimport.privatebalanceunconfirmed &&
+                        dataimport.transparentbalance==dataimport.transparentbalanceunconfirmed)
                     {
-                        dataimport = api.getAllData();
-                        walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
-                        populateBalance(walletDic);
-                        startCheckBalance(walletDic);
-                        btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
-                        btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
-                        shouldGetWallet = false;
-                        count = 0;
+                        lblUnconfirmedHeader.Invoke(new Action (() => lblUnconfirmedHeader.Hide()));
+                        lblTransparentUnconfirmed.Invoke(new Action (() => lblTransparentUnconfirmed.Hide()));
+                        lblPrivateUnconfirmed.Invoke(new Action (() => lblPrivateUnconfirmed.Hide()));
+                        lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Hide()));
                     }
                     else
                     {
-                        dataimport = api.getAllData();
+                        lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Show()));
+                        lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Show()));
+                        lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Show()));
+                        lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Show()));
                     }
+
+                    if (shouldGetWallet)
+                    {
+                        loadWallet();
+                        shouldGetWallet = false;
+                        shouldGetTransaction = false;
+                        count = 0;
+                    }
+                    
                     bestHeight = nHeight;
 
                     //block hash
@@ -287,30 +340,7 @@ namespace SimpleWallet
 
                     //connection
                     populateConnections(dataimport.connectionCount);
-
-                    //balance
-                    lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));   
-
-                    //balance
-                    lbPrivate.Invoke(new Action(() => lbPrivate.Text = dataimport.privatebalance));
-
-                    //balance
-                    lbTransparent.Invoke(new Action(() => lbTransparent.Text = dataimport.transparentbalance));
-
-                    //unconfirmed
-                    lbUnconfirmed.Invoke(new Action(() => lbUnconfirmed.Text = dataimport.unconfirmedbalance));
-   
-
-                    if (addresses.Count > 0)
-                    {
-                        addressBalanceChange.AddRange(addresses);
-                    }
-
-                    if (addressBalanceChange.Count > 0)
-                    {
-                        startCheckBalance(addressBalanceChange);
-                        addressBalanceChange.Clear();
-                    }
+                    
                     count++;
                 }
                 catch
@@ -333,7 +363,7 @@ namespace SimpleWallet
                     //update balance
                     updateBalance(a, balance);
                 }
-                loadWallet();
+                //loadWallet();
             }
             catch  { }
         }
@@ -349,14 +379,30 @@ namespace SimpleWallet
                     //update balance
                     updateBalance(a, balance);
                 }
-                loadWallet();
+                //loadWallet();
             }
             catch { }
+        }
+
+        string CheckBalanceUnconfirmed(string a)
+        {
+            String balance = null;
+            try
+            {
+                //get current balance of the address
+                balance = Task.Run(() => api.getAddressBalanceUnconfirmed(a)).Result;
+            }
+            catch 
+            {
+                balance = "0.00";
+            }
+            return balance;
         }
 
         void updateBalance(String address, String balance)
         {
             DataGridViewRow row = new DataGridViewRow();
+            String balanceUnconfirmed = "0.00";
             try
             {
                 bool tempAllowUserToAddRows = dtgAddress.AllowUserToAddRows;
@@ -373,7 +419,19 @@ namespace SimpleWallet
             }
             catch  { return; }
             int rowIndex = row.Index;
-            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balance));
+
+            balanceUnconfirmed=CheckBalanceUnconfirmed(address);
+            if (balanceUnconfirmed==balance)
+            {
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "Yes"));
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balance));
+            }
+            else
+            {
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "No"));
+                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balanceUnconfirmed));
+            }
+            
         }
 
         public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
@@ -1040,28 +1098,6 @@ namespace SimpleWallet
             api.importPrivateKeys();
         }
 
-        private void showPrivateKeyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                Dictionary<String, String> strDict = api.exportPrivateKey(dtgAddress.CurrentCell.Value.ToString());
-                if (!Api.checkResult(strDict))
-                {
-                    MessageBox.Show(Api.getMessage(strDict));
-                }
-                else
-                {
-                    Clipboard.SetText(Api.getMessage(strDict));
-                    MessageBox.Show("The private key has also been copied to the clipboard. Your keys is: " + Api.getMessage(strDict));
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Could not export private key, please select your address");
-            }
-        }
-
         private void importOnePrivateKeyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportKey importDialog = new ImportKey();
@@ -1190,15 +1226,6 @@ namespace SimpleWallet
                     shouldGetTransaction = true;
                     shouldGetWallet = true;
                 }
-            }
-        }
-
-        private void dtgAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (((DataGridView)(sender)).CurrentCell.Value != null)
-            {
-                QrCode qr = new QrCode(((DataGridView)(sender)).CurrentCell.Value.ToString());
-                qr.ShowDialog();
             }
         }
 
@@ -1536,6 +1563,46 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             }
         }
 
+        private void ctxMenu_ViewPrivateKey(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.WALLET)
+            {
+                try
+                {
+                    Dictionary<String, String> strDict = api.exportPrivateKey(dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString());
+                    if (!Api.checkResult(strDict))
+                    {
+                        MessageBox.Show(Api.getMessage(strDict));
+                    }
+                    else
+                    {
+                        Clipboard.SetText(Api.getMessage(strDict));
+                        MessageBox.Show("The private key has also been copied to the clipboard." + System.Environment.NewLine + System.Environment.NewLine + "Your keys for address " +
+                                         dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString() + " is: " +
+                                         System.Environment.NewLine + System.Environment.NewLine + Api.getMessage(strDict));
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Could not export private key, please select your address");
+                }
+            }
+        }
+        private void ctxMenu_CopyAddress(Object sender, System.EventArgs e)
+        {
+            CustomMenuItem item = sender as CustomMenuItem;
+            if (item.type == Types.CtxMenuType.WALLET)
+            {
+                try
+                {
+                    Clipboard.SetText(dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString());
+                }
+                catch
+                {
+                }
+            }
+        }
         private void Dtg_DataError(object sender, DataGridViewDataErrorEventArgs anError)
         {
         }
@@ -1581,11 +1648,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 {
                     type = Types.CtxMenuType.TRANSACTIONS;
                 }
-                else if (((DataGridView)sender).Name == "dtgGlobalMN")
-                {
-                    type = Types.CtxMenuType.MASTERNODE_GLOBAL;
-                }
-
 
                 rightClick.isClicked = true;
                 rightClick.type = type;
@@ -1597,13 +1659,6 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 rightClick.y = e.Y;
 
             }
-        }
-
-        private void btnStartAll_Click(object sender, EventArgs e)
-        {
-            String rtn = api.startAll();
-            ErrorMessage errMsg = new ErrorMessage(rtn);
-            errMsg.ShowDialog();
         }
 
         private void btnOverview_Click(object sender, EventArgs e)
@@ -1625,6 +1680,34 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         {
             pnlTransactions.BringToFront();
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void dtgAddress_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Types.CtxMenuType type = Types.CtxMenuType.WALLET;
+                ContextMenu ctxMenu = new ContextMenu();
+                ctxMenu.MenuItems.Add(new CustomMenuItem("Copy Address", ctxMenu_CopyAddress, type));
+                ctxMenu.MenuItems.Add(new CustomMenuItem("View Private Key", ctxMenu_ViewPrivateKey, type));
+                ctxMenu.MenuItems.Add(new CustomMenuItem("View Qr Code", ctxMenu_ViewQrCode, type));
+                ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[rightClick.rowIdx].Cells[1];
+                ctxMenu.Show(((DataGridView)sender), new Point(rightClick.x, rightClick.y));
+            }
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+
+        
+   
       
         
     }

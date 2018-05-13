@@ -8,7 +8,7 @@ namespace SimpleWallet
 {
     static class Program
     {
-        private const string AppMutexName = "37A1DGRT-G58J-6t45-915E-DB85D5929426";
+        private const string AppMutexName = "37A1DGRT-G58J-6t45-915E-DB85D5929426-ZERO";
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -29,6 +29,7 @@ namespace SimpleWallet
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new SplashScreen());
+                GC.KeepAlive(appMutex);
             }
             finally
             {

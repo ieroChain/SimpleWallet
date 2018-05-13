@@ -63,16 +63,6 @@ namespace SimpleWallet.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap background_bottom {
-            get {
-                object obj = ResourceManager.GetObject("background_bottom", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap connect0_16 {
             get {
                 object obj = ResourceManager.GetObject("connect0_16", resourceCulture);
@@ -126,16 +116,6 @@ namespace SimpleWallet.Properties {
         internal static System.Drawing.Bitmap inboundgreen {
             get {
                 object obj = ResourceManager.GetObject("inboundgreen", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap logo_500 {
-            get {
-                object obj = ResourceManager.GetObject("logo_500", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,16 +303,6 @@ namespace SimpleWallet.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap splash {
-            get {
-                object obj = ResourceManager.GetObject("splash", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap synced {
             get {
                 object obj = ResourceManager.GetObject("synced", resourceCulture);
@@ -363,89 +333,9 @@ namespace SimpleWallet.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap zero_sample_a_bg {
+        internal static System.Drawing.Bitmap zero05 {
             get {
-                object obj = ResourceManager.GetObject("zero_sample_a_bg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero_sample_b_bg {
-            get {
-                object obj = ResourceManager.GetObject("zero_sample_b_bg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero_sample_c_bg {
-            get {
-                object obj = ResourceManager.GetObject("zero_sample_c_bg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero01 {
-            get {
-                object obj = ResourceManager.GetObject("zero01", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero02 {
-            get {
-                object obj = ResourceManager.GetObject("zero02", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero03 {
-            get {
-                object obj = ResourceManager.GetObject("zero03", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero04 {
-            get {
-                object obj = ResourceManager.GetObject("zero04", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap zero05_resized {
-            get {
-                object obj = ResourceManager.GetObject("zero05-resized", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Zero1 {
-            get {
-                object obj = ResourceManager.GetObject("Zero1", resourceCulture);
+                object obj = ResourceManager.GetObject("zero05", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

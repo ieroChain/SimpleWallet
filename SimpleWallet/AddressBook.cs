@@ -164,7 +164,7 @@ namespace SimpleWallet
         {
             if (e.Button == MouseButtons.Right)
             {
-                Types.CtxMenuType type = Types.CtxMenuType.MASTERNODE;
+                Types.CtxMenuType type = Types.CtxMenuType.ADDRESS_BOOK;
                 ContextMenu ctxMenu = new ContextMenu();
                 if (((DataGridView)sender).Name == "dtgAddressBook")
                 {
