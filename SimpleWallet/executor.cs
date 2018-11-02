@@ -18,8 +18,8 @@ namespace SimpleWallet
     class Executor
     {
         Types type = new Types();
-        String daemond = "zcashd.exe";
-        String cli = "zcash-cli.exe";
+        String daemond = "zerod.exe";
+        String cli = "zero-cli.exe";
         const String verifyingKey = "sprout-verifying.key";
         const String provingKey = "sprout-proving.key";
         String dataToGetSync = "";

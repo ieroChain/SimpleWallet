@@ -422,9 +422,9 @@ namespace SimpleWallet
         public Dictionary<String, String> startWallet(String command)
         {
             Dictionary<String, String> strDict = new Dictionary<String, String>();
-            if(!File.Exists("zcashd.exe"))
+            if(!File.Exists("zerod.exe"))
             {
-                strDict["message"] = "Could not find \"zcashd.exe\" file in the folder";
+                strDict["message"] = "Could not find \"zerod.exe\" file in the folder";
                 strDict["result"] = "fail";
             }
             String result = Task.Run(() => exec.executeStart(command)).Result;
