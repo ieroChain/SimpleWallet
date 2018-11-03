@@ -104,8 +104,8 @@ namespace SimpleWallet
             dtgTransactions.DoubleBuffered(true);
 
             cbUnit.SelectedIndex = 0;
-            groupBox1.Enabled = false;
-            groupBox1.Hide();
+            //groupBox1.Enabled = false;
+            //groupBox1.Hide();
 
 
         }
@@ -266,6 +266,7 @@ namespace SimpleWallet
                     startCheckBalance(walletDic);
                     btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
                     btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
+                    btnNewSaplingAddress.Invoke(new Action(() => btnNewSaplingAddress.Enabled = true));
 
                     //balance
                     lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));
@@ -867,7 +868,11 @@ namespace SimpleWallet
             }
             if (btnNewZAddress.Enabled == false)
             {
-                btnNewAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
+                btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
+            }
+            if (btnNewSaplingAddress.Enabled == false)
+            {
+                btnNewSaplingAddress.Invoke(new Action(() => btnNewSaplingAddress.Enabled = true));
             }
         }
 
@@ -1028,6 +1033,7 @@ namespace SimpleWallet
         {
             btnNewAddress.Enabled = false;
             btnNewZAddress.Enabled = false;
+            btnNewSaplingAddress.Enabled = false;
             api.newAddress();
             shouldGetWallet = true;
             MessageBox.Show("Please wait few seconds for new address");
@@ -1037,7 +1043,18 @@ namespace SimpleWallet
         {
             btnNewAddress.Enabled = false;
             btnNewZAddress.Enabled = false;
+            btnNewSaplingAddress.Enabled = false;
             api.newZAddress();
+            shouldGetWallet = true;
+            MessageBox.Show("Please wait few seconds for new address");
+        }
+
+        private void btnNewSaplingAddress_Click(object sender, EventArgs e)
+        {
+            btnNewAddress.Enabled = false;
+            btnNewZAddress.Enabled = false;
+            btnNewSaplingAddress.Enabled = false;
+            api.newSaplingAddress();
             shouldGetWallet = true;
             MessageBox.Show("Please wait few seconds for new address");
         }
@@ -1704,6 +1721,8 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
+        
 
 
         

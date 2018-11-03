@@ -252,7 +252,7 @@ namespace SimpleWallet
         {
             String rtn = "";
             int temp = 0;
-            Random rand = new Random();
+            Random rand = new Random(Guid.NewGuid().GetHashCode());
             for (int i = 0; i < length; i++ )
             {
                 temp = rand.Next(65, 90);
@@ -768,6 +768,14 @@ namespace SimpleWallet
         {
             String data = "";
             List<String> command = new List<String> { "z_getnewaddress" };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
+        public String newSaplingAddress()
+        {
+            String data = "";
+            List<String> command = new List<String> { "z_getnewaddress","sapling" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }

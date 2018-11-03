@@ -119,7 +119,10 @@ namespace SimpleWallet
         public enum DownloadFileType
         {
             VERIFYING = 0,
-            PROVING = 1
+            PROVING = 1,
+            GROTH = 2,
+            SPEND = 3,
+            OUTPUT = 4
         }
 
         public enum DebugType

@@ -25,9 +25,15 @@ namespace SimpleWallet
         BackgroundWorker startWallet = new BackgroundWorker();
         const String verifyingKey = "sprout-verifying.key";
         const String provingKey = "sprout-proving.key";
+        const String groth16Key = "sprout-groth16.params";
+        const String saplingSpend = "sapling-spend.params";
+        const String saplingOutput = "sapling-output.params";
 
         bool veriStatus = false;
         bool provStatus = false;
+        bool grothStatus = false;
+        bool spendStatus = false;
+        bool outputStatus = false;
         bool shouldRestart = false;
         String command = "";
 
@@ -131,7 +137,7 @@ namespace SimpleWallet
 
             if (!File.Exists(walletDir))
             {
-                MessageBox.Show("Remember to backup your wallet.dat file and private keys before using the wallet", "ATTENTION!!!");
+                MessageBox.Show("Remember to backup your wallet.zero file and private keys before using the wallet", "ATTENTION!!!");
             }
 
             startWallet.RunWorkerAsync();
@@ -142,31 +148,75 @@ namespace SimpleWallet
             api.checkConfig();
             String currStatus = "Checking params...";
             lbCurrentStatus.Invoke(new Action(() => lbCurrentStatus.Text = currStatus));
-            bool downloadFile = exec.checkParamsFile(verifyingKey, provingKey);
+            bool downloadFile = exec.checkParamsFile(verifyingKey, provingKey, groth16Key, saplingSpend, saplingOutput);
             if (downloadFile)
             {
+                lblVerifing.Invoke(new Action(() => lblVerifing.Visible = true));
+                lblProving.Invoke(new Action(() => lblProving.Visible = true));
+                lblGroth.Invoke(new Action(() => lblGroth.Visible = true));
+                lblSpend.Invoke(new Action(() => lblSpend.Visible = true));
+                lblOutput.Invoke(new Action(() => lblOutput.Visible = true));
+
                 pbProcess.Invoke(new Action(() => pbProcess.Visible = true));
+                pbProving.Invoke(new Action(() => pbProving.Visible = true));
+                pbGroth.Invoke(new Action(() => pbGroth.Visible = true));
+                pbSpend.Invoke(new Action(() => pbSpend.Visible = true));
+                pbOutput.Invoke(new Action(() => pbOutput.Visible = true));
                 currStatus = "Downloading params";
                 lbCurrentStatus.Invoke(new Action(() => lbCurrentStatus.Text = currStatus));
+                
                 downloadFile = Task.Run(() => exec.downloadParams(verifyingKey, Types.DownloadFileType.VERIFYING)).Result;
                 if (!downloadFile)
                 {
+                    pbProcess.Invoke(new Action(() => pbProcess.Value = 100 * 100));
                     veriStatus = true;
                 }
-                downloadFile |= Task.Run(() => exec.downloadParams(provingKey, Types.DownloadFileType.PROVING)).Result;
-                if (downloadFile)
+
+                downloadFile = Task.Run(() => exec.downloadParams(provingKey, Types.DownloadFileType.PROVING)).Result;
+                if (!downloadFile)
                 {
-                    checkParamsDone = false;
+                    pbProving.Invoke(new Action(() => pbProving.Value = 100 * 100));
+                    provStatus = true;
+                }
+
+                downloadFile = Task.Run(() => exec.downloadParams(groth16Key, Types.DownloadFileType.GROTH)).Result;
+                if (!downloadFile)
+                {
+                    pbGroth.Invoke(new Action(() => pbGroth.Value = 100 * 100));
+                    grothStatus = true;
+                }
+                
+                downloadFile = Task.Run(() => exec.downloadParams(saplingSpend, Types.DownloadFileType.SPEND)).Result;
+                if (!downloadFile)
+                {
+                    pbSpend.Invoke(new Action(() => pbSpend.Value = 100 * 100));
+                    spendStatus = true;
+                }
+
+                downloadFile = Task.Run(() => exec.downloadParams(saplingOutput, Types.DownloadFileType.OUTPUT)).Result;
+                if (!downloadFile)
+                {
+                    pbOutput.Invoke(new Action(() => pbOutput.Value = 100 * 100));
+                    outputStatus = true;
+                }
+
+                if (veriStatus && provStatus && grothStatus && spendStatus && outputStatus)
+                {
+                    checkParamsDone = true;
                 }
                 else
                 {
-                    provStatus = true;
+                    checkParamsDone = false;
                 }
+
             }
             else
             {
                 veriStatus = true;
                 provStatus = true;
+                grothStatus = true;
+                outputStatus = true;
+                spendStatus = true;
                 checkParamsDone = true;
                 if (start.isEnableAutoBackup())
                     command += " -backupwallet";
@@ -250,7 +300,28 @@ namespace SimpleWallet
 
         void Download_ProgressChange(object sender, ReceivedDataEventArgs e)
         {
-            pbProcess.Invoke(new Action(() => pbProcess.Value = e.progress * 100));   
+            
+            switch (e.fileName)
+              {
+                case verifyingKey:
+                      pbProcess.Invoke(new Action(() => pbProcess.Value = e.progress * 100));
+                      break;
+                case provingKey:
+                      pbProving.Invoke(new Action(() => pbProving.Value = e.progress * 100));
+                      break;
+                case groth16Key:
+                      pbGroth.Invoke(new Action(() => pbGroth.Value = e.progress * 100));
+                      break;
+                case saplingSpend:
+                      pbSpend.Invoke(new Action(() => pbSpend.Value = e.progress * 100));
+                      break;
+                case saplingOutput:
+                      pbOutput.Invoke(new Action(() => pbOutput.Value = e.progress * 100));
+                      break;
+              }
+             
+
+            
         }
 
         void pbIncrease()
@@ -269,11 +340,27 @@ namespace SimpleWallet
             {
                 veriStatus = true;
             }
-            else if(!e.isCancel && e.fileName == provingKey)
+            
+            if(!e.isCancel && e.fileName == provingKey)
             {
                 provStatus = true;
             }
-            if (veriStatus && provStatus)
+            
+            if (!e.isCancel && e.fileName == groth16Key)
+            {
+                grothStatus = true;
+            }
+            
+            if (!e.isCancel && e.fileName == saplingSpend)
+            {
+                spendStatus = true;
+            }
+            
+            if (!e.isCancel && e.fileName == saplingOutput)
+            {
+                outputStatus = true;
+            }
+            if (veriStatus && provStatus && grothStatus && spendStatus && outputStatus)
             {
                 checkParamsDone = true;
                 if (start.isEnableAutoBackup())
@@ -294,6 +381,11 @@ namespace SimpleWallet
         }
 
         private void SplashScreen_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
+
+        private void transparentLabel1_Click(object sender, EventArgs e)
         {
 
         }

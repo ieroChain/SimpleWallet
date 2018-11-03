@@ -22,6 +22,9 @@ namespace SimpleWallet
         String cli = "zero-cli.exe";
         const String verifyingKey = "sprout-verifying.key";
         const String provingKey = "sprout-proving.key";
+        const String groth16Key = "sprout-groth16.params";
+        const String saplingSpend = "sapling-spend.params";
+        const String saplingOutput = "sapling-output.params";
         String dataToGetSync = "";
         String getResultSync = "";
         String dataToGetBalance = "";
@@ -305,15 +308,21 @@ namespace SimpleWallet
             return getResultOthers;
         }
 
-        public bool checkParamsFile(String file1, String file2)
+        public bool checkParamsFile(String file1, String file2, String file3, String file4, String file5)
         {
             bool ret = false;
             String webLink = "https://z.cash/downloads/";
             String file1Link = webLink + file1;
             String file2Link = webLink + file2;
+            String file3Link = webLink + file3;
+            String file4Link = webLink + file4;
+            String file5Link = webLink + file5;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             String file1Loc = appdata + "\\ZcashParams\\" + file1;
             String file2Loc = appdata + "\\ZcashParams\\" + file2;
+            String file3Loc = appdata + "\\ZcashParams\\" + file3;
+            String file4Loc = appdata + "\\ZcashParams\\" + file4;
+            String file5Loc = appdata + "\\ZcashParams\\" + file5;
             Int64 length = 0;
             WebClient wc = new WebClient();
             Stream response = null;
@@ -322,7 +331,7 @@ namespace SimpleWallet
                 Directory.CreateDirectory(appdata + "\\ZcashParams");
                 return true;
             }
-            if(!File.Exists(file1Loc) || !File.Exists(file2Loc))
+            if (!File.Exists(file1Loc) || !File.Exists(file2Loc) || !File.Exists(file3Loc) || !File.Exists(file4Loc) || !File.Exists(file5Loc))
             {
                 return true;
             }
@@ -344,6 +353,8 @@ namespace SimpleWallet
                 ret = true;
             }
 
+
+
             try
             {
                 response = wc.OpenRead(new System.Uri(file2Link));
@@ -360,6 +371,59 @@ namespace SimpleWallet
             {
                 ret = true;
             }
+            
+
+            try
+            {
+                response = wc.OpenRead(new System.Uri(file3Link));
+                length = new System.IO.FileInfo(file3Loc).Length;
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            bytes_total = Convert.ToInt64(wc.ResponseHeaders["Content-Length"]);
+
+            if (bytes_total != length)
+            {
+                ret = true;
+            }
+
+            try
+            {
+                response = wc.OpenRead(new System.Uri(file4Link));
+                length = new System.IO.FileInfo(file4Loc).Length;
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            bytes_total = Convert.ToInt64(wc.ResponseHeaders["Content-Length"]);
+
+            if (bytes_total != length)
+            {
+                ret = true;
+            }
+
+            try
+            {
+                response = wc.OpenRead(new System.Uri(file5Link));
+                length = new System.IO.FileInfo(file5Loc).Length;
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            bytes_total = Convert.ToInt64(wc.ResponseHeaders["Content-Length"]);
+
+            if (bytes_total != length)
+            {
+                ret = true;
+            }
+
             return ret;
         }
 
@@ -399,10 +463,25 @@ namespace SimpleWallet
                     wc.DownloadProgressChanged += proving_DownloadProgressChanged;
                     wc.DownloadFileCompleted += proving_DownloadFileCompleted;
                 }
-                else
+                else if (downloadType == Types.DownloadFileType.VERIFYING)
                 {
                     wc.DownloadProgressChanged += verifying_DownloadProgressChanged;
                     wc.DownloadFileCompleted += verifying_DownloadFileCompleted;
+                }
+                else if (downloadType == Types.DownloadFileType.GROTH)
+                {
+                    wc.DownloadProgressChanged += groth_DownloadProgressChanged;
+                    wc.DownloadFileCompleted += groth_DownloadFileCompleted;
+                }
+                else if (downloadType == Types.DownloadFileType.SPEND)
+                {
+                    wc.DownloadProgressChanged += spend_DownloadProgressChanged;
+                    wc.DownloadFileCompleted += spend_DownloadFileCompleted;
+                }
+                else if (downloadType == Types.DownloadFileType.OUTPUT)
+                {
+                    wc.DownloadProgressChanged += output_DownloadProgressChanged;
+                    wc.DownloadFileCompleted += output_DownloadFileCompleted;
                 }
                 wc.DownloadFileAsync(new System.Uri(fileLink), appdata + "\\ZcashParams\\" + file, true);
             }
@@ -465,6 +544,57 @@ namespace SimpleWallet
         void proving_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             OnProgressChange(new ReceivedDataEventArgs(false, e.ProgressPercentage, false, provingKey));
+        }
+
+        void groth_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                OnProgressDone(new ReceivedDataEventArgs(true, 100, true, groth16Key));
+            }
+            else
+            {
+                OnProgressDone(new ReceivedDataEventArgs(false, 100, false, groth16Key));
+            }
+        }
+
+        void groth_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            OnProgressChange(new ReceivedDataEventArgs(false, e.ProgressPercentage, false, groth16Key));
+        }
+
+        void spend_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                OnProgressDone(new ReceivedDataEventArgs(true, 100, true, saplingSpend));
+            }
+            else
+            {
+                OnProgressDone(new ReceivedDataEventArgs(false, 100, false, saplingSpend));
+            }
+        }
+
+        void spend_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            OnProgressChange(new ReceivedDataEventArgs(false, e.ProgressPercentage, false, saplingSpend));
+        }
+
+        void output_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                OnProgressDone(new ReceivedDataEventArgs(true, 100, true, saplingOutput));
+            }
+            else
+            {
+                OnProgressDone(new ReceivedDataEventArgs(false, 100, false, saplingOutput));
+            }
+        }
+
+        void output_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            OnProgressChange(new ReceivedDataEventArgs(false, e.ProgressPercentage, false, saplingOutput));
         }
     }
 }
