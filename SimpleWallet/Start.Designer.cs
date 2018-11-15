@@ -69,6 +69,7 @@
             this.pbSignal = new System.Windows.Forms.PictureBox();
             this.pbStatus = new System.Windows.Forms.PictureBox();
             this.pnlReceiveCoins = new System.Windows.Forms.Panel();
+            this.btnNewSaplingAddress = new System.Windows.Forms.Button();
             this.dtgAddress = new System.Windows.Forms.DataGridView();
             this.btnNewZAddress = new System.Windows.Forms.Button();
             this.btnNewAddress = new System.Windows.Forms.Button();
@@ -144,7 +145,6 @@
             this.btnMinimize = new System.Windows.Forms.Button();
             this.btnSearch = new SimpleWallet.RoundButton();
             this.typesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.btnNewSaplingAddress = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transactionConvertedBindingSource)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -597,6 +597,19 @@
             this.pnlReceiveCoins.Name = "pnlReceiveCoins";
             this.pnlReceiveCoins.Size = new System.Drawing.Size(876, 500);
             this.pnlReceiveCoins.TabIndex = 9;
+            // 
+            // btnNewSaplingAddress
+            // 
+            this.btnNewSaplingAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnNewSaplingAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNewSaplingAddress.ForeColor = System.Drawing.Color.Gold;
+            this.btnNewSaplingAddress.Location = new System.Drawing.Point(498, 434);
+            this.btnNewSaplingAddress.Name = "btnNewSaplingAddress";
+            this.btnNewSaplingAddress.Size = new System.Drawing.Size(180, 27);
+            this.btnNewSaplingAddress.TabIndex = 10;
+            this.btnNewSaplingAddress.Text = "Get new Z address (Sapling)";
+            this.btnNewSaplingAddress.UseVisualStyleBackColor = true;
+            this.btnNewSaplingAddress.Click += new System.EventHandler(this.btnNewSaplingAddress_Click);
             // 
             // dtgAddress
             // 
@@ -1533,34 +1546,21 @@
             // 
             this.typesBindingSource.DataSource = typeof(SimpleWallet.Types);
             // 
-            // btnNewSaplingAddress
-            // 
-            this.btnNewSaplingAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnNewSaplingAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewSaplingAddress.ForeColor = System.Drawing.Color.Gold;
-            this.btnNewSaplingAddress.Location = new System.Drawing.Point(498, 434);
-            this.btnNewSaplingAddress.Name = "btnNewSaplingAddress";
-            this.btnNewSaplingAddress.Size = new System.Drawing.Size(180, 27);
-            this.btnNewSaplingAddress.TabIndex = 10;
-            this.btnNewSaplingAddress.Text = "Get new Z address (Sapling)";
-            this.btnNewSaplingAddress.UseVisualStyleBackColor = true;
-            this.btnNewSaplingAddress.Click += new System.EventHandler(this.btnNewSaplingAddress_Click);
-            // 
             // Start
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1044, 555);
-            this.Controls.Add(this.pnlReceiveCoins);
-            this.Controls.Add(this.pnlSendCoins);
             this.Controls.Add(this.pnlOverview);
+            this.Controls.Add(this.pnlSendCoins);
             this.Controls.Add(this.btnMinimize);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.pnlTransactions);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.pnlReceiveCoins);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
