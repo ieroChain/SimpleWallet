@@ -911,9 +911,15 @@ namespace SimpleWallet
 
         public Dictionary<String, String> exportPrivateKey(String address)
         {
+            String strCommand;
+            if (address.IndexOf("t",0)==1) {
+                strCommand = "dumpprivkey";
+            } else {
+                strCommand = "z_exportkey";
+            }
             Dictionary<String, String> strDict = new Dictionary<String, String>();
             String data = "";
-            List<String> command = new List<String> { "dumpprivkey", address };
+            List<String> command = new List<String> { strCommand, address };
             String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
             if (ret.Contains("error"))
             {
