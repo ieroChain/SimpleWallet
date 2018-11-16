@@ -912,7 +912,8 @@ namespace SimpleWallet
         public Dictionary<String, String> exportPrivateKey(String address)
         {
             String strCommand;
-            if (address.IndexOf("t",0)==1) {
+            if (address.IndexOf('t', 0) == 0)
+            {
                 strCommand = "dumpprivkey";
             } else {
                 strCommand = "z_exportkey";
@@ -941,8 +942,20 @@ namespace SimpleWallet
             String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
             if (ret.Contains("error"))
             {
-                strDict["result"] = "fail";
-                strDict["message"] = ret;
+                String z_data = "";
+                List<String> z_command = new List<String> { "z_importkey", key, label };
+                String z_ret = Task.Run(() => exec.executeOthers(z_command, z_data)).Result;
+                if (z_ret.Contains("error"))
+                {
+                    strDict["result"] = "fail";
+                    strDict["message"] = ret + " " + z_ret;
+                }
+                else
+                {
+                    strDict["result"] = "success";
+                    strDict["message"] = "Import success";
+                }
+                
             }
             else
             {
