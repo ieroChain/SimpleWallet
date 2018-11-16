@@ -962,7 +962,15 @@ namespace SimpleWallet
             String from = cbbFrom.SelectedItem.ToString().Split(new String[] { " - " }, StringSplitOptions.None)[0];
             String to = tbPayTo.Text;
             String amount = tbAmount.Text;
+            if (amount.IndexOf('.', 0) == 0)
+            {
+                amount = '0' + amount;
+            }
             String fee = tbFee.Text;
+            if (fee.IndexOf('.', 0) == 0)
+            {
+                fee = '0' + fee;
+            }
             bool defaultFee = cbDefaultFee.Checked;
 
             if (String.IsNullOrEmpty(from) || String.IsNullOrEmpty(to) || String.IsNullOrEmpty(amount))
