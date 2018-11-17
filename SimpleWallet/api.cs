@@ -274,9 +274,9 @@ namespace SimpleWallet
                 File.Create(filename).Close();
                 String rpcUser = "rpcuser=" + getRandomString(30);
                 String rpcPass = "rpcpassword=" + getRandomString(30);
-                String node = "addnode=zeroseed.cryptoforge.cc:23801" + System.Environment.NewLine + "addnode=34.236.37.74:23801";
-                String port = "port=23801" + System.Environment.NewLine + "rpcport=23800" + System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
-                String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + node + System.Environment.NewLine + port;
+
+                String opts = System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
+                String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + opts;
                 File.WriteAllText(filename, finalStr);
             }
             else
@@ -319,13 +319,7 @@ namespace SimpleWallet
                         //config file
                         List<String> text = File.ReadAllLines(confFile).ToList();
                         text.RemoveAll(String.IsNullOrEmpty);
-                        int index = text.FindIndex(x => x.StartsWith("port"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("port=23801");
-                        index = text.FindIndex(x => x.StartsWith("listen"));
+                        int index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
                             text.RemoveAt(index);
@@ -378,12 +372,6 @@ namespace SimpleWallet
                     int index = 0;
                         List<String> text = File.ReadAllLines(confFile).ToList();
                         text.RemoveAll(String.IsNullOrEmpty);
-                        index = text.FindIndex(x => x.StartsWith("port"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("port=23801");
                         index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
