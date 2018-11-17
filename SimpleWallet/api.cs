@@ -252,7 +252,7 @@ namespace SimpleWallet
         {
             String rtn = "";
             int temp = 0;
-            Random rand = new Random();
+            Random rand = new Random(Guid.NewGuid().GetHashCode());
             for (int i = 0; i < length; i++ )
             {
                 temp = rand.Next(65, 90);
@@ -274,9 +274,9 @@ namespace SimpleWallet
                 File.Create(filename).Close();
                 String rpcUser = "rpcuser=" + getRandomString(30);
                 String rpcPass = "rpcpassword=" + getRandomString(30);
-                String node = "addnode=zeroseed.cryptoforge.cc:23801" + System.Environment.NewLine + "addnode=34.236.37.74:23801";
-                String port = "port=23801" + System.Environment.NewLine + "rpcport=23800" + System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
-                String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + node + System.Environment.NewLine + port;
+
+                String opts = System.Environment.NewLine + "txindex=1" + System.Environment.NewLine + "server=1";
+                String finalStr = rpcUser + System.Environment.NewLine + rpcPass + System.Environment.NewLine + opts;
                 File.WriteAllText(filename, finalStr);
             }
             else
@@ -319,13 +319,7 @@ namespace SimpleWallet
                         //config file
                         List<String> text = File.ReadAllLines(confFile).ToList();
                         text.RemoveAll(String.IsNullOrEmpty);
-                        int index = text.FindIndex(x => x.StartsWith("port"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("port=23801");
-                        index = text.FindIndex(x => x.StartsWith("listen"));
+                        int index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
                             text.RemoveAt(index);
@@ -378,12 +372,6 @@ namespace SimpleWallet
                     int index = 0;
                         List<String> text = File.ReadAllLines(confFile).ToList();
                         text.RemoveAll(String.IsNullOrEmpty);
-                        index = text.FindIndex(x => x.StartsWith("port"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("port=23801");
                         index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
@@ -422,9 +410,9 @@ namespace SimpleWallet
         public Dictionary<String, String> startWallet(String command)
         {
             Dictionary<String, String> strDict = new Dictionary<String, String>();
-            if(!File.Exists("zcashd.exe"))
+            if(!File.Exists("zerod.exe"))
             {
-                strDict["message"] = "Could not find \"zcashd.exe\" file in the folder";
+                strDict["message"] = "Could not find \"zerod.exe\" file in the folder";
                 strDict["result"] = "fail";
             }
             String result = Task.Run(() => exec.executeStart(command)).Result;
@@ -772,6 +760,14 @@ namespace SimpleWallet
             return ret;
         }
 
+        public String newSaplingAddress()
+        {
+            String data = "";
+            List<String> command = new List<String> { "z_getnewaddress","sapling" };
+            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
         public String ValidateTAddress(String a)
         {
             String data = "";
@@ -903,9 +899,16 @@ namespace SimpleWallet
 
         public Dictionary<String, String> exportPrivateKey(String address)
         {
+            String strCommand;
+            if (address.IndexOf('t', 0) == 0)
+            {
+                strCommand = "dumpprivkey";
+            } else {
+                strCommand = "z_exportkey";
+            }
             Dictionary<String, String> strDict = new Dictionary<String, String>();
             String data = "";
-            List<String> command = new List<String> { "dumpprivkey", address };
+            List<String> command = new List<String> { strCommand, address };
             String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
             if (ret.Contains("error"))
             {
@@ -927,8 +930,20 @@ namespace SimpleWallet
             String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
             if (ret.Contains("error"))
             {
-                strDict["result"] = "fail";
-                strDict["message"] = ret;
+                String z_data = "";
+                List<String> z_command = new List<String> { "z_importkey", key, label };
+                String z_ret = Task.Run(() => exec.executeOthers(z_command, z_data)).Result;
+                if (z_ret.Contains("error"))
+                {
+                    strDict["result"] = "fail";
+                    strDict["message"] = ret + " " + z_ret;
+                }
+                else
+                {
+                    strDict["result"] = "success";
+                    strDict["message"] = "Import success";
+                }
+                
             }
             else
             {
