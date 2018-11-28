@@ -1,6 +1,6 @@
 # Zero SimpleWallet - Isfjorden:2.0.1
 
-# Zero Simple Wallet - Windows Only - Updated > Qaanaaq:1.0.12 > Uummannaq:1.0.14 > Isfjorden:2.0.1
+# Windows Only - Updated > Qaanaaq:1.0.12 > Uummannaq:1.0.14 > Isfjorden:2.0.1
 
 ![alt text](https://github.com/zerocurrencycoin/SimpleWallet/blob/master/simple%20wallet.png)
 
