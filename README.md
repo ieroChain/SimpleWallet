@@ -1,6 +1,6 @@
-# Zero SimpleWallet - Isfjorden:2.0.1
+# Zero SimpleWallet - Ny-Alesund:2.0.4
 
-# Windows Only - Updated > Qaanaaq:1.0.12 > Uummannaq:1.0.14 > Isfjorden:2.0.1
+# Windows Only
 
 ![alt text](https://github.com/zerocurrencycoin/SimpleWallet/blob/master/simple%20wallet.png)
 
@@ -8,4 +8,4 @@
 
 # MAKE SURE SIMPLE WALLET(exe file) & BINARIES("zerod.exe" & "zero-cli.exe") ARE IN THE SAME FOLDER, BEFORE LAUNCHING.
 
-# ZERO BINARIES - https://github.com/zerocurrencycoin/Zero/releases/tag/v2.0.1
+# ZERO BINARIES - https://github.com/zerocurrencycoin/Zero/releases/tag/v2.0.4
