@@ -755,7 +755,7 @@ namespace SimpleWallet
         public String newZAddress()
         {
             String data = "";
-            List<String> command = new List<String> { "z_getnewaddress" };
+            List<String> command = new List<String> { "z_getnewaddress","sprout" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }

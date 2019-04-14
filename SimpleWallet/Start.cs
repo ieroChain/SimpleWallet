@@ -691,7 +691,7 @@ namespace SimpleWallet
                 {
                     image = SimpleWallet.Properties.Resources.connect2_16;
                 }
-                else if (connected >= 5 && connected < 7)
+                else if (connected >= 5 && connected <= 7)
                 {
                     image = SimpleWallet.Properties.Resources.connect3_16;
                 }
