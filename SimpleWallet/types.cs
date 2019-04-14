@@ -54,7 +54,7 @@ namespace SimpleWallet
                                                   DaemonEventArgs e);
     public class Types
     {
-        public static String version = "Zero Simple Wallet - Version 1.0.1";
+        public static String version = "Zero Simple Wallet - Version 1.0.2";
         public static String startCommandsFile = Path.GetTempPath() + "\\commands.dat";
         public static String addressLabel = Path.GetTempPath() + "\\addressLabel.dat";
         public static String outputsSave = Path.GetTempPath() + "\\outputs.dat";
@@ -177,13 +177,13 @@ namespace SimpleWallet
             public String time { get; set; }
             public String bestblockhash { get; set; }
             public String transparentbalance { get; set; }
-            public String transparentbalanceunconfirmed { get; set; } 
+            public String transparentbalanceunconfirmed { get; set; }
             public String transparent { get; set; }
             public String privatebalance { get; set; }
             public String privatebalanceunconfirmed { get; set; }
             public String @private { get; set; }
             public String totalbalance { get; set; }
-            public String totalbalanceunconfirmed { get; set; } 
+            public String totalbalanceunconfirmed { get; set; }
             public String total { get; set; }
             public String unconfirmedbalance { get; set; }
             public List<Dictionary<String, String>> addressbalance { get; set; }
@@ -250,14 +250,14 @@ namespace SimpleWallet
             }
         }
 
-        public class Unspent 
+        public class Unspent
         {
             public String txid { get; set; }
             public String vout { get; set; }
             public String generated { get; set; }
             public String spendable { get; set; }
             public String address { get; set; }
-            
+
         }
 
         public class AddressData
