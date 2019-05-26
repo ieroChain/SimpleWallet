@@ -307,8 +307,21 @@ namespace SimpleWallet
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                              + "\\zero";
             String confFile = appdata + "\\zero.conf";
-           
-            try
+            String mnFile = appdata + "\\zeronode.conf";
+
+            if (aliasName.StartsWith("#"))
+            {
+                aliasName = aliasName.Substring(1, aliasName.Length - 1);
+            }
+
+            List<Types.Masternode> mns = getMasternodes();
+            if (oldName != aliasName && mns.FindIndex(f => f.alias == aliasName) != -1)
+            {
+                result = Types.ConfigureResult.DUPLICATE;
+            }
+            else
+            {
+                try
                 {
                     if (!File.Exists(confFile))
                     {
@@ -319,59 +332,12 @@ namespace SimpleWallet
                         //config file
                         List<String> text = File.ReadAllLines(confFile).ToList();
                         text.RemoveAll(String.IsNullOrEmpty);
-                        int index = text.FindIndex(x => x.StartsWith("listen"));
+                        int index = text.FindIndex(x => x.StartsWith("port"));
                         if (index != -1)
                         {
                             text.RemoveAt(index);
                         }
-                        text.Add("listen=1");
-                        index = text.FindIndex(x => x.StartsWith("server"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("server=1");
-                        index = text.FindIndex(x => x.StartsWith("txindex"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        else
-                        {
-                            result = Types.ConfigureResult.REINDEX;
-                        }
-                        text.Add("txindex=1");
-
-                        File.WriteAllLines(confFile, text.ToArray());
-
-                 
-                    }
-                }
-                catch 
-                {
-                    result = Types.ConfigureResult.FAIL;
-                }
-            //}
-            return result;
-        }
-
-        public Types.ConfigureResult changeStatus(String status, String aliasName, String IP, String privKey, String txHash, String txIndex, bool isDisableAll)
-        {
-            Types.ConfigureResult result = Types.ConfigureResult.OK;
-            String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                             + "\\zero";
-            String confFile = appdata + "\\zero.conf";
-            try
-            {
-                if (!File.Exists(confFile))
-                {
-                    result = Types.ConfigureResult.FAIL;
-                }
-                else
-                {
-                    int index = 0;
-                        List<String> text = File.ReadAllLines(confFile).ToList();
-                        text.RemoveAll(String.IsNullOrEmpty);
+                        text.Add("port=23801");
                         index = text.FindIndex(x => x.StartsWith("listen"));
                         if (index != -1)
                         {
@@ -384,6 +350,30 @@ namespace SimpleWallet
                             text.RemoveAt(index);
                         }
                         text.Add("server=1");
+                        index = text.FindIndex(x => x.StartsWith("zeronode="));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("zeronode=1");
+                        index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("zeronodeaddr=" + IP + ":23801");
+                        index = text.FindIndex(x => x.StartsWith("externalip"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("externalip=" + IP + ":23801");
+                        index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("zeronodeprivkey=" + privKey);
                         index = text.FindIndex(x => x.StartsWith("txindex"));
                         if (index != -1)
                         {
@@ -397,15 +387,175 @@ namespace SimpleWallet
 
                         File.WriteAllLines(confFile, text.ToArray());
 
+                        if (!isNew)
+                        {
+                            index = mns.FindIndex(f => f.alias == oldName);
+                            if(index > -1)
+                            {
+                                mns.RemoveAt(index);
+                            }
+                        }
+                        mns.Add(new Types.Masternode(status, aliasName, IP + ":23801", privKey, txHash, txIndex));
+
+                        List<String> data = new List<string>();
+                        foreach(Types.Masternode m in mns)
+                        {
+                            data.Add(m.MNToString());
+                        }
+
+                        File.WriteAllLines(mnFile, data);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = Types.ConfigureResult.FAIL;
                 }
             }
-            catch
+            return result;
+        }
+
+        public Types.ConfigureResult changeStatus(String status, String aliasName, String IP, String privKey, String txHash, String txIndex, bool isDisableAll)
+        {
+            Types.ConfigureResult result = Types.ConfigureResult.OK;
+            String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+                             + "\\zero";
+            String confFile = appdata + "\\zero.conf";
+            String mnFile = appdata + "\\zeronode.conf";
+
+            if(aliasName.StartsWith("#"))
+            {
+                aliasName = aliasName.Substring(1, aliasName.Length - 1);
+            }
+            List<Types.Masternode> mns = getMasternodes();
+            try
+            {
+                if (!File.Exists(confFile))
+                {
+                    result = Types.ConfigureResult.FAIL;
+                }
+                else
+                {
+                    int index = 0;
+                    if (status == "ENABLE" || isDisableAll)
+                    {
+                        //config file
+                        List<String> text = File.ReadAllLines(confFile).ToList();
+                        text.RemoveAll(String.IsNullOrEmpty);
+                        index = text.FindIndex(x => x.StartsWith("port"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("port=23801");
+                        index = text.FindIndex(x => x.StartsWith("listen"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("listen=1");
+                        index = text.FindIndex(x => x.StartsWith("server"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("server=1");
+                        index = text.FindIndex(x => x.StartsWith("zeronode="));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("zeronode=" + (isDisableAll ? "0" : "1"));
+                        index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("zeronodeaddr=" + IP);
+                        index = text.FindIndex(x => x.StartsWith("externalip"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("externalip=" + IP);
+                        index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        text.Add("zeronodeprivkey=" + privKey);
+                        index = text.FindIndex(x => x.StartsWith("txindex"));
+                        if (index != -1)
+                        {
+                            text.RemoveAt(index);
+                        }
+                        else
+                        {
+                            result = Types.ConfigureResult.REINDEX;
+                        }
+                        text.Add("txindex=1");
+
+                        File.WriteAllLines(confFile, text.ToArray());
+                    }
+
+                    index = mns.FindIndex(f => f.alias == aliasName);
+                    if (index > -1)
+                    {
+                        mns.RemoveAt(index);
+                    }
+
+                    mns.Add(new Types.Masternode(status, aliasName, IP, privKey, txHash, txIndex));
+
+                    List<String> data = new List<string>();
+                    foreach (Types.Masternode m in mns)
+                    {
+                        data.Add(m.MNToString());
+                    }
+
+                    File.WriteAllLines(mnFile, data);
+
+                }
+            }
+            catch (Exception ex)
             {
                 result = Types.ConfigureResult.FAIL;
             }
             return result;
         }
 
+        public List<Types.Masternode> getMasternodes()
+        {
+            List<Types.Masternode> rtn = new List<Types.Masternode>();
+            String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+                 + "\\zero";
+            String mnFile = appdata + "\\zeronode.conf";
+
+            List<String> data = File.ReadAllLines(mnFile).ToList();
+            data.RemoveAll(String.IsNullOrEmpty);
+            foreach (String s in data)
+            {
+                List<String> temp = new List<string>();
+                String strTmp = s;
+                if (strTmp[0] == '#')
+                {
+                    strTmp = strTmp.Substring(1, s.Length - 1);
+                    temp.Add("DISABLE");
+                }
+                else
+                    temp.Add("ENABLE");
+                temp.AddRange(strTmp.Split(' ').ToList());
+                temp.RemoveAll(String.IsNullOrEmpty);
+                if (temp[0] == "ENABLE" && temp.Count == 6) 
+                {
+                    rtn.Add(new Types.Masternode(temp));
+                }
+            }
+            rtn.Sort(delegate(Types.Masternode x, Types.Masternode y)
+            {
+                return x.alias.CompareTo(y.alias);
+            });
+            return rtn;
+        }
 
         public Dictionary<String, String> startWallet(String command)
         {
@@ -460,12 +610,17 @@ namespace SimpleWallet
             Types.AllData data = new Types.AllData();
             try
             {
+                //locked balance
+                string rpcdata = getAllData_New();
+                dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
+                data.lockedbalance = parse.lockedbalance;
+
                 //connections
                 data.connectionCount = checkConnections();
 
                 //balances
-                string rpcdata = getZTotalBalance();
-                dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
+                rpcdata = getZTotalBalance();
+                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
                 data.privatebalance = parse.@private;
                 data.transparentbalance = parse.transparent;
                 data.totalbalance = parse.total;
@@ -624,6 +779,14 @@ namespace SimpleWallet
         }
 
 
+        public String getAllData_New()
+        {
+            String data = "";
+            List<String> command = new List<String> { "getalldata", "3" };
+            String ret = Task.Run(() => exec.executeSync(command, data)).Result;
+            return ret;
+        }
+        
         public String getPeerInfo()
         {
             String data = "\"addr\"";
@@ -781,6 +944,30 @@ namespace SimpleWallet
             String data = "";
             List<String> command = new List<String> { "z_validateaddress", a };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+            return ret;
+        }
+
+        public String getMNPrivKey()
+        {
+            String data = "";
+            List<String> command = new List<String> { "zeronode ", "genkey" };
+            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
+            return ret;
+        }
+
+        public String getMNOutputs()
+        {
+            String data = "";
+            List<String> command = new List<String> { "zeronode ", "outputs" };
+            String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
+            return ret;
+        }
+
+        public String getMasternodeList()
+        {
+            String data = "";
+            List<String> command = new List<String> { "zeronode ", "list" };
+            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
             return ret;
         }
 
@@ -975,6 +1162,10 @@ namespace SimpleWallet
 
         public Dictionary<String, String> shieldCoin(String from, String to, String utxo, String fee, bool defaultFee)
         {
+            int IntUtxos;
+            if (!Int32.TryParse(utxo, out  IntUtxos )) {
+                utxo = "50";
+            }
             if(Convert.ToDouble(utxo) > 500)
             {
                 utxo = "500";
@@ -1106,6 +1297,48 @@ namespace SimpleWallet
             List<String> command = new List<String> { "gettransaction", txid };
             String ret = Task.Run(() => exec.executeGetTransaction(command, data)).Result;
             return ret;
+        }
+
+        public String startMasternode(String name)
+        {
+            String data = "";
+            List<String> command = new List<String> { "startzeronode ", "alias", "false", name};
+            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
+            return ret;
+        }
+
+        public String startAlias(String name)
+        {
+            String data = "";
+            List<String> command = new List<String> { "startalias ", name };
+            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
+            return ret;
+        }
+
+        public String startAll()
+        {
+            String data = "";
+            List<String> command = new List<String> { "startzeronode", "many", "false" };
+            String ret = Task.Run(() => exec.executeMasternode(command, data)).Result;
+            return ret;
+        }
+
+        public Types.MasternodeType isMasternodeEnable()
+        {
+            List<String> data = File.ReadAllLines(Types.cfLocation).ToList();
+            int index = data.FindIndex(x => x.StartsWith("zeronode="));
+            if (index >= 0)
+            {
+                String[] split = data[index].Split('=');
+                if(split.Length >=2)
+                {
+                    if (split[1] == "1")
+                        return Types.MasternodeType.ON;
+                    else
+                        return Types.MasternodeType.OFF;
+                }
+            }
+            return Types.MasternodeType.NONE;
         }
 
         public static bool checkResult(Dictionary<String, String> result)

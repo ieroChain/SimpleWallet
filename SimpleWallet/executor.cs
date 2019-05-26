@@ -119,6 +119,11 @@ namespace SimpleWallet
                     process.OutputDataReceived += new DataReceivedEventHandler(this.outputHandlerBalance);
                     process.ErrorDataReceived += new DataReceivedEventHandler(this.outputHandlerBalance);
                 }
+                else if (type == Types.OutputType.MASTERNODE)
+                {
+                    process.OutputDataReceived += new DataReceivedEventHandler(this.outputHandlerMasternode);
+                    process.ErrorDataReceived += new DataReceivedEventHandler(this.outputHandlerMasternode);
+                }
                 else if (type == Types.OutputType.OTHERS)
                 {
                     process.OutputDataReceived += new DataReceivedEventHandler(this.outputHandlerOthers);
@@ -308,6 +313,14 @@ namespace SimpleWallet
             return getResultOthers;
         }
 
+        public String executeMasternode(List<String> command, String dataToGet)
+        {
+            dataToGetMasternode = dataToGet;
+            getResultMasternode = "";
+            executeCommand(command, Types.OutputType.MASTERNODE);
+            return getResultMasternode;
+        }
+        
         public bool checkParamsFile(String file1, String file2, String file3, String file4, String file5)
         {
             bool ret = false;
