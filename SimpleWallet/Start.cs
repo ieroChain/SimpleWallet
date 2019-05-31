@@ -2328,29 +2328,37 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                     string txHash = dtgMasternode.Rows[index].Cells[4].Value.ToString();
                     string txIndex = dtgMasternode.Rows[index].Cells[5].Value.ToString();
 
+                    String LocalIP = new WebClient().DownloadString("http://icanhazip.com");
+                    LocalIP = LocalIP.TrimEnd('\r', '\n');
+
                     //config file
                     List<String> text = File.ReadAllLines(confFile).ToList();
                     text.RemoveAll(String.IsNullOrEmpty);
-                    index = text.FindIndex(x => x.StartsWith("masternode="));
-                    if (index == -1)
+                    
+                    if (LocalIP == IP)
                     {
-                        text.Add("masternode=1");
+                        index = text.FindIndex(x => x.StartsWith("zeronode="));
+                        if (index == -1)
+                        {
+                            text.Add("zeronode=1");
+                        }
+                        index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                        if (index == -1)
+                        {
+                            text.Add("zeronodeaddr=" + IP);
+                        }
+                        index = text.FindIndex(x => x.StartsWith("externalip"));
+                        if (index == -1)
+                        {
+                            text.Add("externalip=" + IP);
+                        }
+                        index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                        if (index == -1)
+                        {
+                            text.Add("zeronodeprivkey=" + privKey);
+                        }
                     }
-                    index = text.FindIndex(x => x.StartsWith("masternodeaddr="));
-                    if (index == -1)
-                    {
-                        text.Add("masternodeaddr=" + IP);
-                    }
-                    index = text.FindIndex(x => x.StartsWith("externalip="));
-                    if (index == -1)
-                    {
-                        text.Add("externalip=" + IP);
-                    }
-                    index = text.FindIndex(x => x.StartsWith("masternodeprivkey="));
-                    if (index == -1)
-                    {
-                        text.Add("masternodeprivkey=" + privKey);
-                    }
+
                     index = text.FindIndex(x => x.StartsWith("txindex="));
                     if (index == -1)
                     {

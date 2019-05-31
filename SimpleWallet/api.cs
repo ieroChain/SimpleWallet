@@ -284,7 +284,7 @@ namespace SimpleWallet
                 String text = File.ReadAllText(filename);
                 if(!text.Contains("rpcuser"))
                 {
-                    String rpcUser = "rpcuser=" + getRandomString(30);
+                    String rpcUser = "rpcuser=" + getRandomString(25);
                     text += "\n" + rpcUser;
                 }
                 if (!text.Contains("rpcpassword"))
@@ -308,6 +308,9 @@ namespace SimpleWallet
                              + "\\zero";
             String confFile = appdata + "\\zero.conf";
             String mnFile = appdata + "\\zeronode.conf";
+
+            String LocalIP = new WebClient().DownloadString("http://icanhazip.com");
+            LocalIP = LocalIP.TrimEnd('\r', '\n');
 
             if (aliasName.StartsWith("#"))
             {
@@ -350,30 +353,57 @@ namespace SimpleWallet
                             text.RemoveAt(index);
                         }
                         text.Add("server=1");
-                        index = text.FindIndex(x => x.StartsWith("zeronode="));
-                        if (index != -1)
+                        
+                        if (LocalIP == IP)
                         {
-                            text.RemoveAt(index);
+                            index = text.FindIndex(x => x.StartsWith("zeronode="));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("zeronode=1");
+                            index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("zeronodeaddr=" + IP);
+                            index = text.FindIndex(x => x.StartsWith("externalip"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("externalip=" + IP);
+                            index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("zeronodeprivkey=" + privKey);
                         }
-                        text.Add("zeronode=1");
-                        index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
-                        if (index != -1)
+                        else
                         {
-                            text.RemoveAt(index);
+                            index = text.FindIndex(x => x.StartsWith("zeronode="));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            index = text.FindIndex(x => x.StartsWith("externalip"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
                         }
-                        text.Add("zeronodeaddr=" + IP + ":23801");
-                        index = text.FindIndex(x => x.StartsWith("externalip"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("externalip=" + IP + ":23801");
-                        index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("zeronodeprivkey=" + privKey);
                         index = text.FindIndex(x => x.StartsWith("txindex"));
                         if (index != -1)
                         {
@@ -423,6 +453,9 @@ namespace SimpleWallet
             String confFile = appdata + "\\zero.conf";
             String mnFile = appdata + "\\zeronode.conf";
 
+            String LocalIP = new WebClient().DownloadString("http://icanhazip.com");
+            LocalIP = LocalIP.TrimEnd('\r', '\n');
+
             if(aliasName.StartsWith("#"))
             {
                 aliasName = aliasName.Substring(1, aliasName.Length - 1);
@@ -460,30 +493,59 @@ namespace SimpleWallet
                             text.RemoveAt(index);
                         }
                         text.Add("server=1");
-                        index = text.FindIndex(x => x.StartsWith("zeronode="));
-                        if (index != -1)
+                        
+
+                        if (LocalIP == IP)
                         {
-                            text.RemoveAt(index);
+                            index = text.FindIndex(x => x.StartsWith("zeronode="));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("zeronode=" + (isDisableAll ? "0" : "1"));
+                            index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("zeronodeaddr=" + IP);
+                            index = text.FindIndex(x => x.StartsWith("externalip"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("externalip=" + IP);
+                            index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            text.Add("zeronodeprivkey=" + privKey);
                         }
-                        text.Add("zeronode=" + (isDisableAll ? "0" : "1"));
-                        index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
-                        if (index != -1)
+                        else
                         {
-                            text.RemoveAt(index);
+                            index = text.FindIndex(x => x.StartsWith("zeronode="));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            index = text.FindIndex(x => x.StartsWith("zeronodeaddr"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            index = text.FindIndex(x => x.StartsWith("externalip"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
+                            index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
+                            if (index != -1)
+                            {
+                                text.RemoveAt(index);
+                            }
                         }
-                        text.Add("zeronodeaddr=" + IP);
-                        index = text.FindIndex(x => x.StartsWith("externalip"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("externalip=" + IP);
-                        index = text.FindIndex(x => x.StartsWith("zeronodeprivkey"));
-                        if (index != -1)
-                        {
-                            text.RemoveAt(index);
-                        }
-                        text.Add("zeronodeprivkey=" + privKey);
+
                         index = text.FindIndex(x => x.StartsWith("txindex"));
                         if (index != -1)
                         {
@@ -545,7 +607,7 @@ namespace SimpleWallet
                     temp.Add("ENABLE");
                 temp.AddRange(strTmp.Split(' ').ToList());
                 temp.RemoveAll(String.IsNullOrEmpty);
-                if (temp[0] == "ENABLE" && temp.Count == 6) 
+                if ((temp[0] == "ENABLE" || temp[0] == "DISABLE") && temp.Count == 6) 
                 {
                     rtn.Add(new Types.Masternode(temp));
                 }
