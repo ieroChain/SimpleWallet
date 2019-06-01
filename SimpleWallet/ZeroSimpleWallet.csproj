@@ -52,8 +52,8 @@
     <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="QRCoder, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -81,6 +81,12 @@
     </Compile>
     <Compile Include="api.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ConfigureMasternode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigureMasternode.Designer.cs">
+      <DependentUpon>ConfigureMasternode.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug.cs">
       <SubType>Form</SubType>
@@ -112,6 +118,18 @@
     </Compile>
     <Compile Include="License.Designer.cs">
       <DependentUpon>License.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Masternode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Masternode.Designer.cs">
+      <DependentUpon>Masternode.cs</DependentUpon>
     </Compile>
     <Compile Include="NewLabel.cs">
       <SubType>Form</SubType>
@@ -167,6 +185,9 @@
       <DependentUpon>AddressBook.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConfigureMasternode.resx">
+      <DependentUpon>ConfigureMasternode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -186,6 +207,12 @@
     <EmbeddedResource Include="License.resx">
       <DependentUpon>License.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Masternode.resx">
+      <DependentUpon>Masternode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NewLabel.resx">
       <DependentUpon>NewLabel.cs</DependentUpon>
@@ -220,7 +247,6 @@
       <DependentUpon>TransactionDetail.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\DataSources\Types.AddressBook.datasource" />
     <None Include="Properties\DataSources\Types.datasource" />
     <None Include="Properties\DataSources\Types.Masternode.datasource" />
@@ -262,6 +288,21 @@
     <None Include="Images\receiveicon_sm.png" />
     <None Include="Images\sendicon_sm.png" />
     <None Include="Images\transaction_sm.png" />
+    <Content Include="Images\connect0_16.png" />
+    <Content Include="Images\connect1_16.png" />
+    <Content Include="Images\connect2_16.png" />
+    <Content Include="Images\connect3_16.png" />
+    <Content Include="Images\connect4_16.png" />
+    <Content Include="Images\Large Globe_Small Nodes.png" />
+    <Content Include="Images\Large Globe_Smaller Nodes.png" />
+    <Content Include="Images\logo.ico" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\masternodes.png" />
+    <Content Include="Images\notsynced.png" />
+    <Content Include="Images\sm_Large Globe_Small Nodes.png" />
+    <Content Include="Images\sm_Large Globe_Smaller Nodes.png" />
+    <Content Include="Images\synced.png" />
+    <Content Include="Images\zeronode.png" />
     <Content Include="Resources\zero01.bmp" />
     <Content Include="Resources\zero02.bmp" />
     <Content Include="Resources\zero03.bmp" />

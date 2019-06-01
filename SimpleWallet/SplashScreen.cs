@@ -104,7 +104,8 @@ namespace SimpleWallet
                 start.unconfirmedbalance = dataimport.unconfirmedbalance;
                 start.privatebalanceunconfirmed = dataimport.privatebalanceunconfirmed;
                 start.transparentbalanceunconfirmed = dataimport.transparentbalanceunconfirmed;
-                start.totalbalanceunconfirmed = dataimport.totalbalanceunconfirmed;    
+                start.totalbalanceunconfirmed = dataimport.totalbalanceunconfirmed;
+                start.lockedbalance = dataimport.lockedbalance;
 
                 //blockhash info
                 start.bestHash = dataimport.bestblockhash;
@@ -130,6 +131,13 @@ namespace SimpleWallet
             {
                 command = File.ReadAllText(Types.startCommandsFile);
                 File.Delete(Types.startCommandsFile);
+
+            }
+            else
+            {
+                String appPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                    "\\zero\\simplewallet\\";
+                System.IO.Directory.CreateDirectory(appPath);
             }
 
             String walletDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
