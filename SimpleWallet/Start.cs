@@ -33,6 +33,7 @@ namespace SimpleWallet
         public String transparentbalance = "";
         public String transparentbalanceunconfirmed = "";
         public String lockedbalance = "";
+        public String immaturebalance = "";
         String masternodeText = "";
         public static bool shouldDeleteMNCache = false;
         public List<String> addressBalanceChange = new List<String>();
@@ -53,8 +54,8 @@ namespace SimpleWallet
         String inImg = "Images\\inboundgreen.png";
         System.Timers.Timer closeTmr = new System.Timers.Timer(5000);
 
-        Dictionary<String, String> oldWalletDic = new Dictionary<String, String>();
-        public Dictionary<String, String> walletDic = new Dictionary<String, String>();
+        Dictionary<String, Types.AllDataAddress> oldWalletDic = new Dictionary<String, Types.AllDataAddress>();
+        public Dictionary<String, Types.AllDataAddress> walletDic = new Dictionary<String, Types.AllDataAddress>();
         List<String> oldTransactions = new List<String>();
         List<String> transactions = new List<String>();
         WebClient proving = new WebClient();
@@ -72,18 +73,46 @@ namespace SimpleWallet
         public Start()
         {
             InitializeComponent();
-            dtgAddress.ColumnCount = 3;
+
+            dtgWalletInfo.ColumnCount = 2;
+            dtgWalletInfo.RowHeadersVisible = false;
+            dtgWalletInfo.Columns[0].Name = "Type";
+            dtgWalletInfo.Columns[0].Width = dtgWalletInfo.Width * 500 / 1000;
+            dtgWalletInfo.Columns[0].ReadOnly = true;
+            dtgWalletInfo.Columns[1].Name = "Information";
+            dtgWalletInfo.Columns[1].Width = dtgWalletInfo.Width * 500 / 1000;
+            dtgWalletInfo.Columns[1].ReadOnly = true;
+            dtgWalletInfo.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            dtgWalletInfo.DoubleBuffered(true);
+
+            dtgZeroNode.ColumnCount = 2;
+            dtgZeroNode.RowHeadersVisible = false;
+            dtgZeroNode.Columns[0].Name = "Type";
+            dtgZeroNode.Columns[0].Width = dtgZeroNode.Width * 500 / 1000;
+            dtgZeroNode.Columns[0].ReadOnly = true;
+            dtgZeroNode.Columns[1].Name = "Information";
+            dtgZeroNode.Columns[1].Width = dtgZeroNode.Width * 500 / 1000;
+            dtgZeroNode.Columns[1].ReadOnly = true;
+            dtgZeroNode.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            dtgZeroNode.DoubleBuffered(true);
+
+            dtgAddress.ColumnCount = 5;
             dtgAddress.RowHeadersVisible = false;
-            dtgAddress.Columns[0].Name = "Confirmed";
-            dtgAddress.Columns[0].Width = dtgAddress.Width / 10;
+            dtgAddress.Columns[0].Name = "Address";
+            dtgAddress.Columns[0].Width = dtgAddress.Width * 500 / 1000;
             dtgAddress.Columns[0].ReadOnly = true;
-            dtgAddress.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dtgAddress.Columns[1].Name = "Address";
-            dtgAddress.Columns[1].Width = dtgAddress.Width * 7 / 10;
+            dtgAddress.Columns[1].Name = "Confirmed";
+            dtgAddress.Columns[1].Width = dtgAddress.Width * 125 / 1000;
             dtgAddress.Columns[1].ReadOnly = true;
-            dtgAddress.Columns[2].Name = "Amount";
-            dtgAddress.Columns[2].Width = dtgAddress.Width * 2 / 10;
+            dtgAddress.Columns[2].Name = "Unconfirmed";
+            dtgAddress.Columns[2].Width = dtgAddress.Width * 125 / 1000;
             dtgAddress.Columns[2].ReadOnly = true;
+            dtgAddress.Columns[3].Name = "Immature";
+            dtgAddress.Columns[3].Width = dtgAddress.Width * 125 / 1000;
+            dtgAddress.Columns[3].ReadOnly = true;
+            dtgAddress.Columns[4].Name = "Locked";
+            dtgAddress.Columns[4].Width = dtgAddress.Width * 125 / 1000;
+            dtgAddress.Columns[4].ReadOnly = true;
             dtgAddress.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             dtgAddress.DoubleBuffered(true);
 
@@ -175,8 +204,18 @@ namespace SimpleWallet
             cbUnit.SelectedIndex = 0;
             //groupBox1.Enabled = false;
             //groupBox1.Hide();
+            
 
+        }
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
         }
 
         protected override void WndProc(ref Message m)
@@ -241,10 +280,11 @@ namespace SimpleWallet
 
             //balance
             lbLocked.Invoke(new Action(() => lbLocked.Text = lockedbalance));
+            lbImmature.Invoke(new Action(() => lbImmature.Text = immaturebalance));
 
-            if (totalbalance==totalbalanceunconfirmed &&
-                privatebalance==privatebalanceunconfirmed &&
-                transparentbalance==transparentbalanceunconfirmed)
+            if (totalbalanceunconfirmed == "0.00" &&
+                privatebalanceunconfirmed == "0.00" &&
+                transparentbalanceunconfirmed == "0.00")
             {
                 lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Hide()));
                 lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Hide()));
@@ -270,6 +310,16 @@ namespace SimpleWallet
                 lbLocked.Invoke(new Action(() => lbLocked.Show()));
                 label3.Invoke(new Action(() => label3.Show()));
                 lblLockedMessage.Invoke(new Action(() => lblLockedMessage.Show()));
+            }
+            if (immaturebalance == "0.00")
+            {
+                lbImmature.Invoke(new Action(() => lbImmature.Hide()));
+                lbImmatureTxt.Invoke(new Action(() => lbImmatureTxt.Hide()));
+            }
+            else
+            {
+                lbImmature.Invoke(new Action(() => lbImmature.Show()));
+                lbImmatureTxt.Invoke(new Action(() => lbImmatureTxt.Show()));
             }
             //populate recent trans
             if (listtransactions != null)
@@ -316,10 +366,11 @@ namespace SimpleWallet
         void startSync()
         {
             String data = "";
-            Types.AllData dataimport= new Types.AllData();
+            String dataChainInfo = "";
+            String dataZeroNodeCount = "";
             List<String> addresses;
             populateTransactions(listtransactions, out addresses);
-            startCheckBalance(walletDic);
+            //startCheckBalance(walletDic);
             loadWallet();
             dtgTransactions.Invoke(new Action(() => dtgTransactions.Visible = true));
             bool isSynced = false;
@@ -328,181 +379,231 @@ namespace SimpleWallet
             {
                 try
                 {
-                    if (count == 15)
+                    if (count == 0)
                     {
-                        shouldGetWallet = true; // should get wallet at least 1 time per 120 sec
+                        shouldGetTransaction = true; //Run on load
                     }
+                    else if (count == 16) 
+                    {
+                        shouldGetWallet = true;  // should get wallet at least 1 time per 120 sec
+                    }
+
+
+                    dataZeroNodeCount = api.getZeroNodeCount();
+                    dataChainInfo = api.getBestBlockhash();
                     data = api.getNetworkHeight();
+                    Task.Run(() => addWalletInfo(data, dataChainInfo, dataZeroNodeCount));
+
                     dynamic parse = JsonConvert.DeserializeObject<Types.Info>(data);
                     int nHeight = Convert.ToInt32(parse.blocks);
-                    if (bestHeight + 1 == nHeight || shouldGetTransaction)
+                   
+
+                    if (bestHeight + 1 <= nHeight || shouldGetTransaction)
                     {
-                        shouldGetWallet = true;
+                        data = api.getAllData(Types.GetAllDataType.ALL, 200);
+                        populateAllData(data, true, ref nHeight, ref count, ref isSynced);
+
+                        //transactions
+                        populateTransactions(listtransactions, out addresses);
+                        shouldGetTransaction = false; 
                     }
-
-                    dataimport = api.getAllData();
-                        
-                    listtransactions = dataimport.listtransactions;
-
-                    //recent transactions
-                    listtransactions.Reverse();
-
-                    populateRecentTx(listtransactions);
-
-                    //transactions
-                    populateTransactions(listtransactions, out addresses);
-
-                    walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
-                    populateBalance(walletDic);
-                    startCheckBalance(walletDic);
-                    btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
-                    btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
-                    btnNewSaplingAddress.Invoke(new Action(() => btnNewSaplingAddress.Enabled = true));
-
-
-                    //balance
-                    lbTotal.Invoke(new Action(() => lbTotal.Text = dataimport.totalbalance));
-                    lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Text = dataimport.totalbalanceunconfirmed));
-
-                    //balance
-                    lbPrivate.Invoke(new Action(() => lbPrivate.Text = dataimport.privatebalance));
-                    lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Text = dataimport.privatebalanceunconfirmed));
-
-                    //balance
-                    lbTransparent.Invoke(new Action(() => lbTransparent.Text = dataimport.transparentbalance));
-                    lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Text = dataimport.transparentbalanceunconfirmed));
-
-                    //balance
-                    lbLocked.Invoke(new Action(() => lbLocked.Text = dataimport.lockedbalance));
-
-                    if (dataimport.totalbalance==dataimport.totalbalanceunconfirmed &&
-                        dataimport.privatebalance==dataimport.privatebalanceunconfirmed &&
-                        dataimport.transparentbalance==dataimport.transparentbalanceunconfirmed)
+                    else if (shouldGetWallet)
                     {
-                        lblUnconfirmedHeader.Invoke(new Action (() => lblUnconfirmedHeader.Hide()));
-                        lblTransparentUnconfirmed.Invoke(new Action (() => lblTransparentUnconfirmed.Hide()));
-                        lblPrivateUnconfirmed.Invoke(new Action (() => lblPrivateUnconfirmed.Hide()));
-                        lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Hide()));
-                    }
-                    else
-                    {
-                        lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Show()));
-                        lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Show()));
-                        lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Show()));
-                        lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Show()));
-                    }
+                        data = api.getAllData(Types.GetAllDataType.WITH_BALANCE, 0);
+                        populateAllData(data, false, ref nHeight, ref count, ref isSynced);
 
-                    if (dataimport.lockedbalance == "0.00")
-                    {
-                        lbLocked.Invoke(new Action(() => lbLocked.Hide()));
                     }
-                    else
-                    {
-                        lbLocked.Invoke(new Action(() => lbLocked.Show()));
-                    }
-
-                    if (shouldGetWallet)
-                    {
-                        loadWallet();
-                        shouldGetWallet = false;
-                        shouldGetTransaction = false;
-                        count = 0;
-                    }
-                    
-                    bestHeight = nHeight;
-
-                    //block hash
-                    lbBestHash.Invoke(new Action(() => lbBestHash.Text = dataimport.bestblockhash));
-
-                    //block time
-                    String curr = dataimport.besttime;
-                    if (!String.IsNullOrEmpty(curr))
-                    {
-                        DateTime blkTime = UnixTimeStampToDateTime(Convert.ToInt32(curr));
-                        String temp = blkTime.ToString("yyyy/MM/dd HH:mm:ss");
-                        Task.Factory.StartNew(() => { lbBestHash.Invoke(new Action(() => lbBestTime.Text = temp)); });
-                        int time = Convert.ToInt32(curr);
-                        int unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                        int sub = time - startTime;
-                        int total = unixTimestamp - startTime;
-                        int percent = (int)((float)sub / (float)total * 10000);
-                        if (percent > 9998)
-                        {
-                            if (isSynced == false)
-                            {
-                                isSynced = true;
-                                shouldGetWallet = true;
-                            }
-                            pbPercent.Invoke(new Action(() => pbPercent.Value = pbPercent.Maximum));
-                            Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.synced)); });
-                        }
-                        else
-                        {
-                            pbPercent.Invoke(new Action(() => pbPercent.Value = percent));
-                            Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.notsynced)); });
-                        }
-                    }
-
-                    //connection
-                    populateConnections(dataimport.connectionCount);
-                    
-                    count++;
                 }
                 catch
                 {
-
+                    
                 }
-                Thread.Sleep(8000);
-            }
-        }
 
-        void startCheckBalance(List<String> addresses)
-        {
-            try
-            {
-                addresses = addresses.Distinct().ToList();
-                foreach (String a in addresses)
+                
+                if (shouldGetWallet == false)
                 {
-                    //get current balance of the address
-                    String balance = Task.Run(() => api.getAddressBalance(a)).Result;
-                    //update balance
-                    updateBalance(a, balance);
+                    Thread.Sleep(8000);
                 }
-                //loadWallet();
+                count++;
+                shouldGetWallet = false;
             }
-            catch  { }
         }
 
-        void startCheckBalance(Dictionary<String, String> addresses)
+
+        void populateAllData(String data, bool withTransactions, ref int nHeight, ref int count, ref bool isSynced)
         {
-            try
+            dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(data);
+            walletDic = new Dictionary<String, Types.AllDataAddress>(parse.addressbalance[0]);
+
+            populateBalance(walletDic);
+            //startCheckBalance(walletDic);
+
+
+            if (withTransactions == true)
             {
-                foreach (String a in addresses.Keys)
+                listtransactions = api.convertTransactionList(parse.listtransactions);
+
+                //recent transactions
+                listtransactions.Reverse();
+                populateRecentTx(listtransactions);   
+            }
+
+            btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
+            btnNewSaplingAddress.Invoke(new Action(() => btnNewSaplingAddress.Enabled = true));
+
+            //balance
+            lbTotal.Invoke(new Action(() => lbTotal.Text = parse.totalbalance));
+            lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Text = parse.totalunconfirmed));
+
+            //balance
+            lbPrivate.Invoke(new Action(() => lbPrivate.Text = parse.privatebalance));
+            lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Text = parse.privatebalanceunconfirmed));
+
+            //balance
+            lbTransparent.Invoke(new Action(() => lbTransparent.Text = parse.transparentbalance));
+            lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Text = parse.transparentbalanceunconfirmed));
+
+            //balance
+            lbLocked.Invoke(new Action(() => lbLocked.Text = parse.lockedbalance));
+            lbImmature.Invoke(new Action(() => lbImmature.Text = parse.immaturebalance));
+
+            if (parse.totalunconfirmed == "0.00" &&
+                parse.privatebalanceunconfirmed == "0.00" &&
+                parse.transparentbalanceunconfirmed == "0.00")
+            {
+                lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Hide()));
+                lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Hide()));
+                lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Hide()));
+                lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Hide()));
+            }
+            else
+            {
+                lblUnconfirmedHeader.Invoke(new Action(() => lblUnconfirmedHeader.Show()));
+                lblTransparentUnconfirmed.Invoke(new Action(() => lblTransparentUnconfirmed.Show()));
+                lblPrivateUnconfirmed.Invoke(new Action(() => lblPrivateUnconfirmed.Show()));
+                lblTotalUnconfirmed.Invoke(new Action(() => lblTotalUnconfirmed.Show()));
+            }
+
+            if (parse.lockedbalance == "0.00")
+            {
+                lbLocked.Invoke(new Action(() => lbLocked.Hide()));
+                label3.Invoke(new Action(() => label3.Hide()));
+                lblLockedMessage.Invoke(new Action(() => lblLockedMessage.Hide()));
+            }
+            else
+            {
+                lbLocked.Invoke(new Action(() => lbLocked.Show()));
+                label3.Invoke(new Action(() => label3.Show()));
+                lblLockedMessage.Invoke(new Action(() => lblLockedMessage.Show()));
+            }
+
+            if (parse.lockedbalance == "0.00")
+            {
+                lbImmature.Invoke(new Action(() => lbImmature.Hide()));
+            }
+            else
+            {
+                lbImmature.Invoke(new Action(() => lbImmature.Show()));
+            }
+
+
+            if (shouldGetWallet)
+            {
+                loadWallet();
+                shouldGetWallet = false;
+                shouldGetTransaction = false;
+                count = 1;
+            }
+
+            bestHeight = nHeight;
+
+            //block hash
+            lbBestHash.Invoke(new Action(() => lbBestHash.Text = parse.bestblockhash));
+
+            //block time
+            String curr = parse.besttime;
+            if (!String.IsNullOrEmpty(curr))
+            {
+                DateTime blkTime = UnixTimeStampToDateTime(Convert.ToInt32(curr));
+                String temp = blkTime.ToString("yyyy/MM/dd HH:mm:ss");
+                Task.Factory.StartNew(() => { lbBestHash.Invoke(new Action(() => lbBestTime.Text = temp)); });
+                int time = Convert.ToInt32(curr);
+                int unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                int sub = time - startTime;
+                int total = unixTimestamp - startTime;
+                int percent = (int)((float)sub / (float)total * 10000);
+                if (percent > 9998)
                 {
-                    //get current balance of the address
-                    String balance = Task.Run(() => api.getAddressBalance(a)).Result;
-                    //update balance
-                    updateBalance(a, balance);
+                    if (isSynced == false)
+                    {
+                        isSynced = true;
+                        shouldGetWallet = true;
+                    }
+                    pbPercent.Invoke(new Action(() => pbPercent.Value = pbPercent.Maximum));
+                    Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.synced)); });
                 }
-                //loadWallet();
+                else
+                {
+                    pbPercent.Invoke(new Action(() => pbPercent.Value = percent));
+                    Task.Factory.StartNew(() => { pbStatus.Invoke(new Action(() => pbStatus.BackgroundImage = SimpleWallet.Properties.Resources.notsynced)); });
+                }
             }
-            catch { }
+
+            //connection
+            populateConnections(parse.connectionCount);
         }
 
-        string CheckBalanceUnconfirmed(string a)
-        {
-            String balance = null;
-            try
-            {
-                //get current balance of the address
-                balance = Task.Run(() => api.getAddressBalanceUnconfirmed(a)).Result;
-            }
-            catch 
-            {
-                balance = "0.00";
-            }
-            return balance;
-        }
+
+
+
+
+        //void startCheckBalance(List<String> addresses)
+        //{
+        //    try
+        //    {
+        //        addresses = addresses.Distinct().ToList();
+        //        foreach (String a in addresses)
+        //        {
+        //            //get current balance of the address
+        //            String balance = Task.Run(() => api.getAddressBalance(a)).Result;
+        //            //update balance
+        //            updateBalance(a, balance);
+        //        }
+        //        //loadWallet();
+        //    }
+        //    catch  { }
+        //}
+
+        //void startCheckBalance(Dictionary<String, Types.AllDataAddress> addresses)
+        //{
+        //    try
+        //    {
+        //        foreach (String a in addresses.Keys)
+        //        {
+        //            //get current balance of the address
+        //            String balance = Task.Run(() => api.getAddressBalance(a)).Result;
+        //            //update balance
+        //            updateBalance(a, balance);
+        //        }
+        //        //loadWallet();
+        //    }
+        //    catch { }
+        //}
+
+        //string CheckBalanceUnconfirmed(string a)
+        //{
+        //    String balance = null;
+        //    try
+        //    {
+        //        //get current balance of the address
+        //        balance = Task.Run(() => api.getAddressBalanceUnconfirmed(a)).Result;
+        //    }
+        //    catch 
+        //    {
+        //        balance = "0.00";
+        //    }
+        //    return balance;
+        //}
 
         void startCheckMasternodeList()
         {
@@ -557,40 +658,39 @@ namespace SimpleWallet
             return rtn;
         }
 
-        void updateBalance(String address, String balance)
-        {
-            DataGridViewRow row = new DataGridViewRow();
-            String balanceUnconfirmed = "0.00";
-            try
-            {
-                bool tempAllowUserToAddRows = dtgAddress.AllowUserToAddRows;
+        //void updateBalance(String address, String balance)
+        //{
+        //    DataGridViewRow row = new DataGridViewRow();
+        //    String balanceUnconfirmed = "0.00";
+        //    try
+        //    {
+        //        bool tempAllowUserToAddRows = dtgAddress.AllowUserToAddRows;
 
-                dtgAddress.AllowUserToAddRows = false;
+        //        dtgAddress.AllowUserToAddRows = false;
 
+        //        row = dtgAddress.Rows
+        //        .Cast<DataGridViewRow>()
+        //        .Where(r => r.Cells[1].Value.ToString().Equals(address))
+        //        .First();
 
-                row = dtgAddress.Rows
-                .Cast<DataGridViewRow>()
-                .Where(r => r.Cells[1].Value.ToString().Equals(address))
-                .First();
+        //        dtgAddress.AllowUserToAddRows = tempAllowUserToAddRows;
+        //    }
+        //    catch  { return; }
+        //    int rowIndex = row.Index;
 
-                dtgAddress.AllowUserToAddRows = tempAllowUserToAddRows;
-            }
-            catch  { return; }
-            int rowIndex = row.Index;
-
-            balanceUnconfirmed=CheckBalanceUnconfirmed(address);
-            if (balanceUnconfirmed==balance)
-            {
-                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "Yes"));
-                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balance));
-            }
-            else
-            {
-                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "No"));
-                dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balanceUnconfirmed));
-            }
+        //    balanceUnconfirmed=CheckBalanceUnconfirmed(address);
+        //    if (balanceUnconfirmed==balance)
+        //    {
+        //        dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "Yes"));
+        //        dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balance));
+        //    }
+        //    else
+        //    {
+        //        dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[0].Value = "No"));
+        //        dtgAddress.Invoke(new Action(() => dtgAddress.Rows[rowIndex].Cells[2].Value = balanceUnconfirmed));
+        //    }
             
-        }
+        //}
 
         public DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {
@@ -973,15 +1073,223 @@ namespace SimpleWallet
             split.RemoveAll(String.IsNullOrEmpty);
             return split[split.Count - 1];
         }
-        void addWalletInfo(Dictionary<String, String> data, Dictionary<String, String> oldData)
+
+        void addWalletInfo(String data, String dataChainInfo, String dataZeroNode)
+        {
+            try
+            {
+                dynamic parse = JsonConvert.DeserializeObject<Types.Info>(data);
+                dynamic parsedata = JsonConvert.DeserializeObject<Types.BlockChainInfo>(dataChainInfo);
+                int nHeight = Convert.ToInt32(parse.blocks);
+
+                double shieldedValue = Convert.ToDouble(parsedata.valuePools[0].chainValue) + Convert.ToDouble(parsedata.valuePools[1].chainValue);
+                double chainValue = 0;
+                if (nHeight >= 412300)
+                {
+                    if (nHeight <= 800000)
+                    {
+                        chainValue += 4122990 + ((nHeight - 412299) * 10.8);
+                    }
+                    if (nHeight > 800000 && nHeight <= 1600000)
+                    {
+                        chainValue += (nHeight - 800000) * 10.8 / 2;
+                    }
+
+                }
+                else
+                {
+                    chainValue = Convert.ToDouble(nHeight * 10);
+                }
+
+                if (dtgWalletInfo.RowCount != 11)
+                {
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Clear()));
+
+                    String[] rowVersion = { "Version", parse.version };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowVersion)));
+
+                    String[] rowProtocol = { "Protocol Version", parse.protocolversion };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowProtocol)));
+
+                    String[] rowWallet = { "Wallet Version", parse.walletversion };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowWallet)));
+
+                    String[] rowBlocks = { "Block Height", String.Format("{0:n0}", nHeight) };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowBlocks)));
+
+                    String[] rowConnections = { "Connections", parse.connections };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowProtocol)));
+
+                    String[] rowDifficulty = { "Mining Difficulty", parse.difficulty };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowDifficulty)));
+
+                    if (parse.testnet == "false")
+                    {
+                        String[] rowNetwork = { "Network", "Main" };
+                        dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowNetwork)));
+                    }
+                    else
+                    {
+                        String[] rowNetwork = { "Network", "Test" };
+                        dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowNetwork)));
+                    }
+
+                    String[] rowTransparent = { "Transparent Value Pool", String.Format("{0:n8}", (chainValue - shieldedValue)) };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowTransparent)));
+
+                    String[] rowSprout = { "Sprout Value Pool", String.Format("{0:n8}", (String.Format("{0:n8}", Convert.ToDouble(parsedata.valuePools[0].chainValue)))) };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowSprout)));
+
+                    String[] rowSapling = { "Sapling Value Pool", String.Format("{0:n8}", (String.Format("{0:n8}", Convert.ToDouble(parsedata.valuePools[1].chainValue)))) };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowSapling)));
+
+                    String[] rowTotal = { "Total Chain Value", String.Format("{0:n8}", (chainValue)) };
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows.Add(rowTotal)));
+                }
+                else
+                {
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[0].Cells[0].Value = "Version"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[0].Cells[1].Value = parse.version));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[1].Cells[0].Value = "Protocol Version"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[1].Cells[1].Value = parse.protocolversion));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[2].Cells[0].Value = "Wallet Version"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[2].Cells[1].Value = parse.walletversion));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[3].Cells[0].Value = "Block Height"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[3].Cells[1].Value = String.Format("{0:n0}", nHeight)));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[4].Cells[0].Value = "Connections"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[4].Cells[1].Value = parse.connections));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[5].Cells[0].Value = "Mining Difficulty"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[5].Cells[1].Value = parse.difficulty));
+
+                    if (parse.testnet == "false")
+                    {
+                        dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[6].Cells[0].Value = "Network"));
+                        dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[6].Cells[1].Value = "Main"));
+                    }
+                    else
+                    {
+                        dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[6].Cells[0].Value = "Network"));
+                        dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[6].Cells[1].Value = "Test"));
+                    }
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[7].Cells[0].Value = "Transparent Value Pool"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[7].Cells[1].Value = String.Format("{0:n8}", (chainValue - shieldedValue))));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[8].Cells[0].Value = "Sprout Value Pool"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[8].Cells[1].Value = String.Format("{0:n8}", (String.Format("{0:n8}", Convert.ToDouble(parsedata.valuePools[0].chainValue))))));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[9].Cells[0].Value = "Sapling Value Pool"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[9].Cells[1].Value = String.Format("{0:n8}", (String.Format("{0:n8}", Convert.ToDouble(parsedata.valuePools[1].chainValue))))));
+
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[10].Cells[0].Value = "Total Chain Value"));
+                    dtgWalletInfo.Invoke(new Action(() => dtgWalletInfo.Rows[10].Cells[1].Value = String.Format("{0:n8}", (chainValue))));
+
+                }
+
+
+                dynamic zeronodedata = JsonConvert.DeserializeObject<Types.ZeroNodeCount>(dataZeroNode);
+
+                if (dtgZeroNode.RowCount != 11)
+                {
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Clear()));
+
+                    String[] rowTotalNodes = { "Total ZeroNodes", zeronodedata.total };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowTotalNodes)));
+
+                    String[] rowStableNodes = { "Stable ZeroNodes", zeronodedata.stable };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowStableNodes)));
+
+                    String[] rowEnabledNodes = { "Enabled ZeroNodes", zeronodedata.enabled };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowEnabledNodes)));
+
+                    String[] rowInqueueNodes = { "Inqueue ZeroNodes", zeronodedata.inqueue };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowInqueueNodes)));
+
+                    String[] rowIpv4Nodes = { "Ipv4 ZeroNodes", zeronodedata.ipv4 };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowIpv4Nodes)));
+
+                    String[] rowIpv6Nodes = { "Ipv6 ZeroNodes", zeronodedata.ipv6 };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowIpv6Nodes)));
+
+                    String[] rowOnionNodes = { "Onion ZeroNodes", zeronodedata.onion };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowOnionNodes)));
+
+                    String[] rowLockedCoins = { "Locked Coins", String.Format("{0:n0}", Convert.ToUInt32(zeronodedata.total) * 10000) };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowLockedCoins)));
+
+                    String[] rowLockedPert = { "Locked Percent", String.Format("{0:0.00%}", Convert.ToDouble(Convert.ToUInt32(zeronodedata.total) * 10000) / chainValue) };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowLockedPert)));
+
+                    String[] rowROI = { "Current ROI", String.Format("{0:0.00%}", ((((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))) / 10000) * 365)) };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowROI)));
+
+                    String[] rowIncome = { "Est. Daily Income (1 Node)", String.Format("{0:n8}", ((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total)))) };
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowIncome)));
+                        
+                }
+                else
+                {
+                       
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[0].Cells[0].Value = "Total ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[0].Cells[1].Value = zeronodedata.total));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[1].Cells[0].Value = "Stable ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[1].Cells[1].Value = zeronodedata.stable));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[2].Cells[0].Value = "Enabled ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[2].Cells[1].Value = zeronodedata.enabled));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[3].Cells[0].Value = "Inqueue ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[3].Cells[1].Value = zeronodedata.inqueue));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[4].Cells[0].Value = "Ipv4 ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[4].Cells[1].Value = zeronodedata.ipv4));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[5].Cells[0].Value = "Ipv6 ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[5].Cells[1].Value = zeronodedata.ipv6));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[6].Cells[0].Value = "Onion ZeroNodes"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[6].Cells[1].Value = zeronodedata.onion));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[7].Cells[0].Value = "Locked Coins"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[7].Cells[1].Value = String.Format("{0:n0}", Convert.ToUInt32(zeronodedata.total) * 10000)));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[8].Cells[0].Value = "Locked Percentage"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[8].Cells[1].Value = String.Format("{0:0.00%}", Convert.ToDouble(Convert.ToUInt32(zeronodedata.total) * 10000) / chainValue)));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[9].Cells[0].Value = "Current ROI"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[9].Cells[1].Value = String.Format("{0:0.00%}", ((((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))) / 10000) * 365))));
+
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[10].Cells[0].Value = "Est. Daily Income (1 Node)"));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[10].Cells[1].Value = String.Format("{0:n8}", ((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))))));
+
+                }
+                
+            }
+            catch
+            {
+
+            }
+
+
+        }
+
+        void addWalletInfo(Dictionary<String, Types.AllDataAddress> data, Dictionary<String, Types.AllDataAddress> oldData)
         {
             dtgAddress.Invoke(new Action(() => dtgAddress.Visible = false));
-            if (data.Count != oldData.Count)
+
+            if (data.Count != oldData.Count)   
             {
+                shouldGetTransaction = true;
                 dtgAddress.Invoke(new Action(() => dtgAddress.Rows.Clear()));
                 for (int i = 0; i < data.Keys.Count; i++)
                 {
-                    String[] row = { (i + 1).ToString(), data.Keys.ElementAt(i), data[data.Keys.ElementAt(i)] };
+                    String[] row = { data.Keys.ElementAt(i), data[data.Keys.ElementAt(i)].amount, data[data.Keys.ElementAt(i)].unconfirmed, data[data.Keys.ElementAt(i)].immature, data[data.Keys.ElementAt(i)].locked };
                     dtgAddress.Invoke(new Action(() => dtgAddress.Rows.Add(row)));
                 }
             }
@@ -993,6 +1301,7 @@ namespace SimpleWallet
                     if (!oldData.Keys.Contains(data.Keys.ElementAt(i)))
                     {
                         shouldClear = true;
+                        shouldGetTransaction = true;
                         break;
                     }
                 }
@@ -1001,7 +1310,7 @@ namespace SimpleWallet
                     dtgAddress.Invoke(new Action(() => dtgAddress.Rows.Clear()));
                     for (int i = 0; i < data.Keys.Count; i++)
                     {
-                        String[] row = { i.ToString(), data.Keys.ElementAt(i), data[data.Keys.ElementAt(i)] };
+                        String[] row = { data.Keys.ElementAt(i), data[data.Keys.ElementAt(i)].amount, data[data.Keys.ElementAt(i)].unconfirmed, data[data.Keys.ElementAt(i)].immature, data[data.Keys.ElementAt(i)].locked };
                         dtgAddress.Invoke(new Action(() => dtgAddress.Rows.Add(row)));
                     }
                 }
@@ -1009,9 +1318,25 @@ namespace SimpleWallet
                 {
                     for (int i = 0; i < data.Keys.Count; i++)
                     {
-                        if (data[data.Keys.ElementAt(i)] != oldData[data.Keys.ElementAt(i)])
+                        if (data[data.Keys.ElementAt(i)].amount != oldData[data.Keys.ElementAt(i)].amount)
                         {
-                            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[i].Cells[2].Value = data[data.Keys.ElementAt(i)]));
+                            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[i].Cells[1].Value = data[data.Keys.ElementAt(i)].amount));
+                            shouldGetTransaction = true;
+                        }
+                        if (data[data.Keys.ElementAt(i)].unconfirmed != oldData[data.Keys.ElementAt(i)].unconfirmed)
+                        {
+                            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[i].Cells[2].Value = data[data.Keys.ElementAt(i)].unconfirmed));
+                            shouldGetTransaction = true;
+                        }
+                        if (data[data.Keys.ElementAt(i)].immature != oldData[data.Keys.ElementAt(i)].immature)
+                        {
+                            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[i].Cells[3].Value = data[data.Keys.ElementAt(i)].immature));
+                            shouldGetTransaction = true;
+                        }
+                        if (data[data.Keys.ElementAt(i)].locked != oldData[data.Keys.ElementAt(i)].locked)
+                        {
+                            dtgAddress.Invoke(new Action(() => dtgAddress.Rows[i].Cells[4].Value = data[data.Keys.ElementAt(i)].locked));
+                            shouldGetTransaction = true;
                         }
                     }
                 }
@@ -1066,10 +1391,10 @@ namespace SimpleWallet
                     int countShieldTo = 0;
                     foreach (String wallet in walletDic.Keys.ToList())
                     {
-                        if ((Double.TryParse(walletDic[wallet], out output) && Convert.ToDouble(walletDic[wallet]) != 0) ||
-                            (Double.TryParse(walletDic[wallet].Replace(".", ","), out output) && Convert.ToDouble(walletDic[wallet].Replace(".", ",")) != 0))
+                        if ((Double.TryParse(walletDic[wallet].amount, out output) && Convert.ToDouble(walletDic[wallet].amount) != 0) ||
+                            (Double.TryParse(walletDic[wallet].amount.Replace(".", ","), out output) && Convert.ToDouble(walletDic[wallet].amount.Replace(".", ",")) != 0))
                         {
-                            cbbAdd(cbbFrom, wallet + " - " + walletDic[wallet]);
+                            cbbAdd(cbbFrom, wallet + " - " + walletDic[wallet].amount);
                             if (selectedAddress == wallet)
                             {
                                 selectedIdx = count;
@@ -1082,10 +1407,10 @@ namespace SimpleWallet
                                 {
                                     selectedShieldFromIdx = countShieldFrom;
                                 }
-                                cbbAdd(cbbShieldFrom, wallet + " - " + walletDic[wallet]);
+                                cbbAdd(cbbShieldFrom, wallet + " - " + walletDic[wallet].amount);
                                 countShieldFrom++;
                             }
-                            
+
                         }
                         if (wallet.StartsWith("zc"))
                         {
@@ -1127,21 +1452,17 @@ namespace SimpleWallet
             }
         }
 
-        void populateBalance(Dictionary<String, String> walletDic)
+        void populateBalance(Dictionary<String, Types.AllDataAddress> walletDic)
         {
             walletDic.OrderBy(i => i.Key);
 
             addWalletInfo(walletDic, oldWalletDic);
 
-            oldWalletDic = new Dictionary<String, String>(walletDic);
+            oldWalletDic = new Dictionary<String, Types.AllDataAddress>(walletDic);
 
             if (btnNewAddress.Enabled == false)
             {
                 btnNewAddress.Invoke(new Action(() => btnNewAddress.Enabled = true));
-            }
-            if (btnNewZAddress.Enabled == false)
-            {
-                btnNewZAddress.Invoke(new Action(() => btnNewZAddress.Enabled = true));
             }
             if (btnNewSaplingAddress.Enabled == false)
             {
@@ -1313,27 +1634,24 @@ namespace SimpleWallet
         private void btnNewAddress_Click(object sender, EventArgs e)
         {
             btnNewAddress.Enabled = false;
-            btnNewZAddress.Enabled = false;
             btnNewSaplingAddress.Enabled = false;
             api.newAddress();
             shouldGetWallet = true;
             MessageBox.Show("Please wait few seconds for new address");
         }
 
-        private void btnNewZAddress_Click(object sender, EventArgs e)
-        {
-            btnNewAddress.Enabled = false;
-            btnNewZAddress.Enabled = false;
-            btnNewSaplingAddress.Enabled = false;
-            api.newZAddress();
-            shouldGetWallet = true;
-            MessageBox.Show("Please wait few seconds for new address");
-        }
+        //private void btnNewZAddress_Click(object sender, EventArgs e)
+        //{
+        //    btnNewAddress.Enabled = false;
+        //    btnNewSaplingAddress.Enabled = false;
+        //    api.newZAddress();
+        //    shouldGetWallet = true;
+        //    MessageBox.Show("Please wait few seconds for new address");
+        //}
 
         private void btnNewSaplingAddress_Click(object sender, EventArgs e)
         {
             btnNewAddress.Enabled = false;
-            btnNewZAddress.Enabled = false;
             btnNewSaplingAddress.Enabled = false;
             api.newSaplingAddress();
             shouldGetWallet = true;
@@ -2078,7 +2396,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             {
                 if (dtgAddress.CurrentCell != null && dtgAddress.CurrentCell.Value != null)
                 {
-                    QrCode qr = new QrCode(dtgAddress.Rows[dtgAddress.CurrentRow.Index].Cells[1].Value.ToString());
+                    QrCode qr = new QrCode(dtgAddress.Rows[dtgAddress.CurrentRow.Index].Cells[0].Value.ToString());
                     qr.ShowDialog();
                 }
             }
@@ -2109,7 +2427,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             {
                 try
                 {
-                    Dictionary<String, String> strDict = api.exportPrivateKey(dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString());
+                    Dictionary<String, String> strDict = api.exportPrivateKey(dtgAddress.CurrentRow.Cells[0].FormattedValue.ToString());
                     if (!Api.checkResult(strDict))
                     {
                         MessageBox.Show(Api.getMessage(strDict));
@@ -2118,7 +2436,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                     {
                         Clipboard.SetText(Api.getMessage(strDict));
                         MessageBox.Show("The private key has also been copied to the clipboard." + System.Environment.NewLine + System.Environment.NewLine + "Your keys for address " +
-                                         dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString() + " is: " +
+                                         dtgAddress.CurrentRow.Cells[0].FormattedValue.ToString() + " is: " +
                                          System.Environment.NewLine + System.Environment.NewLine + Api.getMessage(strDict));
                     }
                 }
@@ -2135,7 +2453,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
             {
                 try
                 {
-                    Clipboard.SetText(dtgAddress.CurrentRow.Cells[1].FormattedValue.ToString());
+                    Clipboard.SetText(dtgAddress.CurrentRow.Cells[0].FormattedValue.ToString());
                 }
                 catch
                 {
@@ -2480,7 +2798,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 DataGridView dtg = (DataGridView)(sender);
                 int index = dtg.CurrentRow.Index;
                 string txid = dtg.Rows[index].Cells[5].Value.ToString();
-                string data = Task.Run(() => api.getTransaction(txid)).Result;
+                string data = Task.Run(() => api.getZeroTransaction(txid)).Result;
                 TransactionDetail txDetail = new TransactionDetail(data);
                 txDetail.ShowDialog();
             }
@@ -2580,6 +2898,10 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
         {
             pnlZeronodes.BringToFront();
         }
+        private void btnWalletInfo_Click(object sender, EventArgs e)
+        {
+            pnlInfo.BringToFront();
+        }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -2595,7 +2917,7 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 ctxMenu.MenuItems.Add(new CustomMenuItem("Copy Address", ctxMenu_CopyAddress, type));
                 ctxMenu.MenuItems.Add(new CustomMenuItem("View Private Key", ctxMenu_ViewPrivateKey, type));
                 ctxMenu.MenuItems.Add(new CustomMenuItem("View Qr Code", ctxMenu_ViewQrCode, type));
-                ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[rightClick.rowIdx].Cells[1];
+                ((DataGridView)sender).CurrentCell = ((DataGridView)sender).Rows[rightClick.rowIdx].Cells[0];
                 ctxMenu.Show(((DataGridView)sender), new Point(rightClick.x, rightClick.y));
             }
         }
@@ -2646,6 +2968,22 @@ Are you sure?", @"Reopen to scan the wallet", MessageBoxButtons.YesNo);
                 changeMNColor((DataGridView)sender);
             }
         }
+
+        private void btnMaxAmount_Click(object sender, EventArgs e)
+        {
+            if (cbbFrom.SelectedItem.ToString().Contains("-"))
+            {
+                int Start = cbbFrom.SelectedItem.ToString().IndexOf("-", 0);
+                Int64 maxAmount = Convert.ToInt64(Convert.ToDouble(cbbFrom.SelectedItem.ToString().Substring(Start + 2)) * 10e8);
+                Int64 fee = Convert.ToInt64(Convert.ToDouble(tbFee.Text) * 10e8);
+                tbAmount.Text =  Convert.ToString(Convert.ToDouble(maxAmount - fee) / 10e8);
+            }
+
+        }
+
+        
+
+
 
         
     }

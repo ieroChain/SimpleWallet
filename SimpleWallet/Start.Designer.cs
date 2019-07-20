@@ -30,16 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Start));
-            this.btnReindex = new System.Windows.Forms.Button();
-            this.btnRescan = new System.Windows.Forms.Button();
-            this.dtgTransactions = new System.Windows.Forms.DataGridView();
-            this.categoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.confirmationsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.transactionConvertedBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,52 +46,23 @@
             this.peersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyZeroconfDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ttStart = new System.Windows.Forms.ToolTip(this.components);
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.pnlTransactions = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.pbPercent = new System.Windows.Forms.ProgressBar();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnMinimize = new System.Windows.Forms.Button();
+            this.btnWalletInfo = new System.Windows.Forms.Button();
             this.btnMasternode = new System.Windows.Forms.Button();
             this.btnTransactions = new System.Windows.Forms.Button();
             this.btnSendCoins = new System.Windows.Forms.Button();
             this.btnReceiveCoins = new System.Windows.Forms.Button();
             this.btnOverview = new System.Windows.Forms.Button();
-            this.pnlReceiveCoins = new System.Windows.Forms.Panel();
-            this.btnNewSaplingAddress = new System.Windows.Forms.Button();
-            this.dtgAddress = new System.Windows.Forms.DataGridView();
-            this.btnNewZAddress = new System.Windows.Forms.Button();
-            this.btnNewAddress = new System.Windows.Forms.Button();
-            this.btnAddressBook = new System.Windows.Forms.Button();
             this.pnlOverview = new System.Windows.Forms.Panel();
             this.lblLockedMessage = new System.Windows.Forms.Label();
             this.pbTransaction4 = new System.Windows.Forms.PictureBox();
             this.pbTransaction3 = new System.Windows.Forms.PictureBox();
             this.pbTransaction2 = new System.Windows.Forms.PictureBox();
             this.pbTransaction1 = new System.Windows.Forms.PictureBox();
-            this.pnlSendCoins = new System.Windows.Forms.Panel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.btnSendMany = new System.Windows.Forms.Button();
-            this.cbbAddress = new System.Windows.Forms.ComboBox();
-            this.cbDefaultFee = new System.Windows.Forms.CheckBox();
-            this.cbbFrom = new System.Windows.Forms.ComboBox();
-            this.btnSend = new System.Windows.Forms.Button();
-            this.tbAmount = new System.Windows.Forms.TextBox();
-            this.cbUnit = new System.Windows.Forms.ComboBox();
-            this.tbFee = new System.Windows.Forms.TextBox();
-            this.tbLabel = new System.Windows.Forms.TextBox();
-            this.tbPayTo = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbbShieldTo = new System.Windows.Forms.ComboBox();
-            this.cbbShieldFrom = new System.Windows.Forms.ComboBox();
-            this.tbShieldUtxo = new System.Windows.Forms.TextBox();
-            this.cbShieldDefaultFee = new System.Windows.Forms.CheckBox();
-            this.tbShieldFee = new System.Windows.Forms.TextBox();
-            this.masternodeDetailConvertedBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.masternodeBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.addressBookBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.masternodeListBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.btnClose = new System.Windows.Forms.Button();
-            this.btnMinimize = new System.Windows.Forms.Button();
             this.pnlZeronodes = new System.Windows.Forms.Panel();
             this.btnClearMNCache = new System.Windows.Forms.Button();
             this.lbUpdateTime = new System.Windows.Forms.Label();
@@ -123,6 +84,7 @@
             this.lastpaidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txhashDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ipDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.masternodeDetailConvertedBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dtgMasternode = new System.Windows.Forms.DataGridView();
             this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.aliasDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -130,12 +92,59 @@
             this.privKeyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txHashDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pbPercent = new System.Windows.Forms.ProgressBar();
+            this.masternodeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pnlTransactions = new System.Windows.Forms.Panel();
+            this.btnReindex = new System.Windows.Forms.Button();
+            this.dtgTransactions = new System.Windows.Forms.DataGridView();
+            this.categoryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.confirmationsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.transactionConvertedBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btnRescan = new System.Windows.Forms.Button();
+            this.pnlSendCoins = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnMaxAmount = new System.Windows.Forms.Button();
+            this.btnSendMany = new System.Windows.Forms.Button();
+            this.cbbAddress = new System.Windows.Forms.ComboBox();
+            this.cbDefaultFee = new System.Windows.Forms.CheckBox();
+            this.cbbFrom = new System.Windows.Forms.ComboBox();
+            this.btnSend = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.tbAmount = new System.Windows.Forms.TextBox();
+            this.cbUnit = new System.Windows.Forms.ComboBox();
+            this.tbFee = new System.Windows.Forms.TextBox();
+            this.tbLabel = new System.Windows.Forms.TextBox();
+            this.tbPayTo = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btShield = new System.Windows.Forms.Button();
+            this.cbbShieldTo = new System.Windows.Forms.ComboBox();
+            this.cbbShieldFrom = new System.Windows.Forms.ComboBox();
+            this.tbShieldUtxo = new System.Windows.Forms.TextBox();
+            this.cbShieldDefaultFee = new System.Windows.Forms.CheckBox();
+            this.tbShieldFee = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.pbSignal = new System.Windows.Forms.PictureBox();
             this.pbStatus = new System.Windows.Forms.PictureBox();
-            this.btShield = new System.Windows.Forms.Button();
-            this.btnSearch = new SimpleWallet.RoundButton();
+            this.pnlReceiveCoins = new System.Windows.Forms.Panel();
+            this.btnNewSaplingAddress = new System.Windows.Forms.Button();
+            this.dtgAddress = new System.Windows.Forms.DataGridView();
+            this.btnNewAddress = new System.Windows.Forms.Button();
+            this.btnAddressBook = new System.Windows.Forms.Button();
+            this.pnlInfo = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.dtgZeroNode = new System.Windows.Forms.DataGridView();
+            this.dtgWalletInfo = new System.Windows.Forms.DataGridView();
+            this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.addressBookBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.masternodeListBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.lbImmatureTxt = new SimpleWallet.TransparentLabel();
+            this.lbImmature = new SimpleWallet.TransparentLabel();
             this.label3 = new SimpleWallet.TransparentLabel();
             this.lbLocked = new SimpleWallet.TransparentLabel();
             this.lblConfirmed = new SimpleWallet.TransparentLabel();
@@ -167,6 +176,7 @@
             this.label7 = new SimpleWallet.TransparentLabel();
             this.lbTime1 = new SimpleWallet.TransparentLabel();
             this.label12 = new SimpleWallet.TransparentLabel();
+            this.btnSearch = new SimpleWallet.RoundButton();
             this.label6 = new SimpleWallet.TransparentLabel();
             this.label9 = new SimpleWallet.TransparentLabel();
             this.label8 = new SimpleWallet.TransparentLabel();
@@ -176,125 +186,42 @@
             this.transparentLabel6 = new SimpleWallet.TransparentLabel();
             this.transparentLabel5 = new SimpleWallet.TransparentLabel();
             this.transparentLabel4 = new SimpleWallet.TransparentLabel();
+            this.transparentLabel66 = new SimpleWallet.TransparentLabel();
+            this.transparentLabel45 = new SimpleWallet.TransparentLabel();
             this.typesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.transactionConvertedBindingSource)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            this.pnlTransactions.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.pnlReceiveCoins.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dtgAddress)).BeginInit();
+            this.panel2.SuspendLayout();
             this.pnlOverview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction1)).BeginInit();
+            this.pnlZeronodes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgGlobalMN)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.masternodeDetailConvertedBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgMasternode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.masternodeBindingSource)).BeginInit();
+            this.pnlTransactions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transactionConvertedBindingSource)).BeginInit();
             this.pnlSendCoins.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.masternodeDetailConvertedBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.masternodeBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.addressBookBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.masternodeListBindingSource)).BeginInit();
-            this.pnlZeronodes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dtgGlobalMN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dtgMasternode)).BeginInit();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSignal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).BeginInit();
+            this.pnlReceiveCoins.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgAddress)).BeginInit();
+            this.pnlInfo.SuspendLayout();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgZeroNode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgWalletInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.addressBookBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.masternodeListBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.typesBindingSource)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnReindex
-            // 
-            this.btnReindex.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnReindex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReindex.ForeColor = System.Drawing.Color.Gold;
-            this.btnReindex.Location = new System.Drawing.Point(498, 434);
-            this.btnReindex.Name = "btnReindex";
-            this.btnReindex.Size = new System.Drawing.Size(180, 27);
-            this.btnReindex.TabIndex = 10;
-            this.btnReindex.Text = "Reindex the wallet";
-            this.btnReindex.UseVisualStyleBackColor = true;
-            this.btnReindex.Click += new System.EventHandler(this.btnReindex_Click);
-            // 
-            // btnRescan
-            // 
-            this.btnRescan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRescan.ForeColor = System.Drawing.Color.Gold;
-            this.btnRescan.Location = new System.Drawing.Point(684, 434);
-            this.btnRescan.Name = "btnRescan";
-            this.btnRescan.Size = new System.Drawing.Size(180, 27);
-            this.btnRescan.TabIndex = 10;
-            this.btnRescan.Text = "Rescan the transactions";
-            this.btnRescan.UseVisualStyleBackColor = true;
-            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
-            // 
-            // dtgTransactions
-            // 
-            this.dtgTransactions.AllowUserToResizeColumns = false;
-            this.dtgTransactions.AllowUserToResizeRows = false;
-            this.dtgTransactions.AutoGenerateColumns = false;
-            this.dtgTransactions.BackgroundColor = System.Drawing.SystemColors.ControlDark;
-            this.dtgTransactions.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dtgTransactions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtgTransactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.categoryDataGridViewTextBoxColumn,
-            this.confirmationsDataGridViewTextBoxColumn,
-            this.amountDataGridViewTextBoxColumn,
-            this.timeDataGridViewTextBoxColumn,
-            this.addressDataGridViewTextBoxColumn,
-            this.txidDataGridViewTextBoxColumn});
-            this.dtgTransactions.DataSource = this.transactionConvertedBindingSource;
-            this.dtgTransactions.Location = new System.Drawing.Point(10, 14);
-            this.dtgTransactions.MultiSelect = false;
-            this.dtgTransactions.Name = "dtgTransactions";
-            this.dtgTransactions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dtgTransactions.Size = new System.Drawing.Size(855, 414);
-            this.dtgTransactions.TabIndex = 0;
-            this.dtgTransactions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgTransactions_CellDoubleClick);
-            this.dtgTransactions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
-            // 
-            // categoryDataGridViewTextBoxColumn
-            // 
-            this.categoryDataGridViewTextBoxColumn.DataPropertyName = "category";
-            this.categoryDataGridViewTextBoxColumn.HeaderText = "category";
-            this.categoryDataGridViewTextBoxColumn.Name = "categoryDataGridViewTextBoxColumn";
-            // 
-            // confirmationsDataGridViewTextBoxColumn
-            // 
-            this.confirmationsDataGridViewTextBoxColumn.DataPropertyName = "confirmations";
-            this.confirmationsDataGridViewTextBoxColumn.HeaderText = "confirmations";
-            this.confirmationsDataGridViewTextBoxColumn.Name = "confirmationsDataGridViewTextBoxColumn";
-            // 
-            // amountDataGridViewTextBoxColumn
-            // 
-            this.amountDataGridViewTextBoxColumn.DataPropertyName = "amount";
-            this.amountDataGridViewTextBoxColumn.HeaderText = "amount";
-            this.amountDataGridViewTextBoxColumn.Name = "amountDataGridViewTextBoxColumn";
-            // 
-            // timeDataGridViewTextBoxColumn
-            // 
-            this.timeDataGridViewTextBoxColumn.DataPropertyName = "time";
-            this.timeDataGridViewTextBoxColumn.HeaderText = "time";
-            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
-            // 
-            // addressDataGridViewTextBoxColumn
-            // 
-            this.addressDataGridViewTextBoxColumn.DataPropertyName = "address";
-            this.addressDataGridViewTextBoxColumn.HeaderText = "address";
-            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
-            // 
-            // txidDataGridViewTextBoxColumn
-            // 
-            this.txidDataGridViewTextBoxColumn.DataPropertyName = "txid";
-            this.txidDataGridViewTextBoxColumn.HeaderText = "txid";
-            this.txidDataGridViewTextBoxColumn.Name = "txidDataGridViewTextBoxColumn";
-            // 
-            // transactionConvertedBindingSource
-            // 
-            this.transactionConvertedBindingSource.DataSource = typeof(SimpleWallet.Types.TransactionConverted);
             // 
             // imgList
             // 
@@ -450,36 +377,10 @@
             this.copyZeroconfDataToolStripMenuItem.Text = "Copy Zero.conf data";
             this.copyZeroconfDataToolStripMenuItem.Click += new System.EventHandler(this.copyZeroconfDataToolStripMenuItem_Click);
             // 
-            // btnRefresh
-            // 
-            this.btnRefresh.BackColor = System.Drawing.Color.Black;
-            this.btnRefresh.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.Location = new System.Drawing.Point(521, 228);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(87, 27);
-            this.btnRefresh.TabIndex = 14;
-            this.btnRefresh.Text = "Refresh";
-            this.ttStart.SetToolTip(this.btnRefresh, "Refresh address value");
-            this.btnRefresh.UseVisualStyleBackColor = false;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
-            // 
-            // pnlTransactions
-            // 
-            this.pnlTransactions.BackColor = System.Drawing.Color.Black;
-            this.pnlTransactions.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
-            this.pnlTransactions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pnlTransactions.Controls.Add(this.btnReindex);
-            this.pnlTransactions.Controls.Add(this.dtgTransactions);
-            this.pnlTransactions.Controls.Add(this.btnRescan);
-            this.pnlTransactions.Location = new System.Drawing.Point(169, 25);
-            this.pnlTransactions.Name = "pnlTransactions";
-            this.pnlTransactions.Size = new System.Drawing.Size(876, 500);
-            this.pnlTransactions.TabIndex = 9;
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Controls.Add(this.btnWalletInfo);
             this.panel1.Controls.Add(this.btnMasternode);
             this.panel1.Controls.Add(this.btnTransactions);
             this.panel1.Controls.Add(this.btnSendCoins);
@@ -487,8 +388,78 @@
             this.panel1.Controls.Add(this.btnOverview);
             this.panel1.Location = new System.Drawing.Point(0, 22);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(168, 503);
+            this.panel1.Size = new System.Drawing.Size(168, 669);
             this.panel1.TabIndex = 10;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Black;
+            this.panel2.Controls.Add(this.pbPercent);
+            this.panel2.Controls.Add(this.pbSignal);
+            this.panel2.Controls.Add(this.pbStatus);
+            this.panel2.Location = new System.Drawing.Point(1, 25);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1300, 666);
+            this.panel2.TabIndex = 20;
+            // 
+            // pbPercent
+            // 
+            this.pbPercent.Location = new System.Drawing.Point(201, 638);
+            this.pbPercent.Maximum = 10000;
+            this.pbPercent.Name = "pbPercent";
+            this.pbPercent.Size = new System.Drawing.Size(1041, 16);
+            this.pbPercent.Step = 1;
+            this.pbPercent.TabIndex = 1;
+            // 
+            // btnClose
+            // 
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.Gold;
+            this.btnClose.Location = new System.Drawing.Point(1276, 0);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(0);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(15, 25);
+            this.btnClose.TabIndex = 12;
+            this.btnClose.Text = "X";
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnMinimize
+            // 
+            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.btnMinimize.FlatAppearance.BorderSize = 0;
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMinimize.ForeColor = System.Drawing.Color.Gold;
+            this.btnMinimize.Location = new System.Drawing.Point(1258, 0);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(15, 25);
+            this.btnMinimize.TabIndex = 13;
+            this.btnMinimize.Text = "__";
+            this.btnMinimize.UseVisualStyleBackColor = false;
+            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
+            // 
+            // btnWalletInfo
+            // 
+            this.btnWalletInfo.BackColor = System.Drawing.Color.Black;
+            this.btnWalletInfo.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnWalletInfo.FlatAppearance.BorderSize = 0;
+            this.btnWalletInfo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnWalletInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnWalletInfo.ForeColor = System.Drawing.Color.Gold;
+            this.btnWalletInfo.Image = global::SimpleWallet.Properties.Resources.sm_logo_yellow;
+            this.btnWalletInfo.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnWalletInfo.Location = new System.Drawing.Point(0, 315);
+            this.btnWalletInfo.Name = "btnWalletInfo";
+            this.btnWalletInfo.Size = new System.Drawing.Size(168, 50);
+            this.btnWalletInfo.TabIndex = 5;
+            this.btnWalletInfo.Text = "Wallet Info";
+            this.btnWalletInfo.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnWalletInfo.UseVisualStyleBackColor = false;
+            this.btnWalletInfo.Click += new System.EventHandler(this.btnWalletInfo_Click);
             // 
             // btnMasternode
             // 
@@ -583,96 +554,13 @@
             this.btnOverview.UseVisualStyleBackColor = false;
             this.btnOverview.Click += new System.EventHandler(this.btnOverview_Click);
             // 
-            // pnlReceiveCoins
-            // 
-            this.pnlReceiveCoins.BackColor = System.Drawing.Color.Black;
-            this.pnlReceiveCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
-            this.pnlReceiveCoins.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pnlReceiveCoins.Controls.Add(this.btnNewSaplingAddress);
-            this.pnlReceiveCoins.Controls.Add(this.dtgAddress);
-            this.pnlReceiveCoins.Controls.Add(this.btnNewZAddress);
-            this.pnlReceiveCoins.Controls.Add(this.btnNewAddress);
-            this.pnlReceiveCoins.Controls.Add(this.btnAddressBook);
-            this.pnlReceiveCoins.Location = new System.Drawing.Point(169, 25);
-            this.pnlReceiveCoins.Name = "pnlReceiveCoins";
-            this.pnlReceiveCoins.Size = new System.Drawing.Size(876, 500);
-            this.pnlReceiveCoins.TabIndex = 9;
-            // 
-            // btnNewSaplingAddress
-            // 
-            this.btnNewSaplingAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnNewSaplingAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewSaplingAddress.ForeColor = System.Drawing.Color.Gold;
-            this.btnNewSaplingAddress.Location = new System.Drawing.Point(498, 434);
-            this.btnNewSaplingAddress.Name = "btnNewSaplingAddress";
-            this.btnNewSaplingAddress.Size = new System.Drawing.Size(180, 27);
-            this.btnNewSaplingAddress.TabIndex = 10;
-            this.btnNewSaplingAddress.Text = "Get new Z address (Sapling)";
-            this.btnNewSaplingAddress.UseVisualStyleBackColor = true;
-            this.btnNewSaplingAddress.Click += new System.EventHandler(this.btnNewSaplingAddress_Click);
-            // 
-            // dtgAddress
-            // 
-            this.dtgAddress.AllowUserToAddRows = false;
-            this.dtgAddress.AllowUserToDeleteRows = false;
-            this.dtgAddress.AllowUserToResizeColumns = false;
-            this.dtgAddress.AllowUserToResizeRows = false;
-            this.dtgAddress.BackgroundColor = System.Drawing.SystemColors.ControlDark;
-            this.dtgAddress.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dtgAddress.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtgAddress.Location = new System.Drawing.Point(10, 14);
-            this.dtgAddress.MultiSelect = false;
-            this.dtgAddress.Name = "dtgAddress";
-            this.dtgAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dtgAddress.Size = new System.Drawing.Size(855, 414);
-            this.dtgAddress.TabIndex = 9;
-            this.dtgAddress.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtgAddress_CellMouseClick);
-            this.dtgAddress.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
-            // 
-            // btnNewZAddress
-            // 
-            this.btnNewZAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnNewZAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewZAddress.ForeColor = System.Drawing.Color.Gold;
-            this.btnNewZAddress.Location = new System.Drawing.Point(684, 434);
-            this.btnNewZAddress.Name = "btnNewZAddress";
-            this.btnNewZAddress.Size = new System.Drawing.Size(180, 27);
-            this.btnNewZAddress.TabIndex = 7;
-            this.btnNewZAddress.Text = "Get new Z address (Sprout)";
-            this.btnNewZAddress.UseVisualStyleBackColor = true;
-            this.btnNewZAddress.Click += new System.EventHandler(this.btnNewZAddress_Click);
-            // 
-            // btnNewAddress
-            // 
-            this.btnNewAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnNewAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewAddress.ForeColor = System.Drawing.Color.Gold;
-            this.btnNewAddress.Location = new System.Drawing.Point(312, 434);
-            this.btnNewAddress.Name = "btnNewAddress";
-            this.btnNewAddress.Size = new System.Drawing.Size(180, 27);
-            this.btnNewAddress.TabIndex = 7;
-            this.btnNewAddress.Text = "Get new t address";
-            this.btnNewAddress.UseVisualStyleBackColor = true;
-            this.btnNewAddress.Click += new System.EventHandler(this.btnNewAddress_Click);
-            // 
-            // btnAddressBook
-            // 
-            this.btnAddressBook.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnAddressBook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddressBook.ForeColor = System.Drawing.Color.Gold;
-            this.btnAddressBook.Location = new System.Drawing.Point(126, 434);
-            this.btnAddressBook.Name = "btnAddressBook";
-            this.btnAddressBook.Size = new System.Drawing.Size(180, 27);
-            this.btnAddressBook.TabIndex = 7;
-            this.btnAddressBook.Text = "Address Book";
-            this.btnAddressBook.UseVisualStyleBackColor = true;
-            this.btnAddressBook.Click += new System.EventHandler(this.btnAddressBook_Click);
-            // 
             // pnlOverview
             // 
             this.pnlOverview.BackColor = System.Drawing.Color.Black;
             this.pnlOverview.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlOverview.Controls.Add(this.lbImmatureTxt);
+            this.pnlOverview.Controls.Add(this.lbImmature);
             this.pnlOverview.Controls.Add(this.lblLockedMessage);
             this.pnlOverview.Controls.Add(this.label3);
             this.pnlOverview.Controls.Add(this.lbLocked);
@@ -711,25 +599,24 @@
             this.pnlOverview.Controls.Add(this.label12);
             this.pnlOverview.Location = new System.Drawing.Point(169, 25);
             this.pnlOverview.Name = "pnlOverview";
-            this.pnlOverview.Size = new System.Drawing.Size(876, 500);
+            this.pnlOverview.Size = new System.Drawing.Size(1132, 620);
             this.pnlOverview.TabIndex = 8;
             // 
             // lblLockedMessage
             // 
             this.lblLockedMessage.BackColor = System.Drawing.Color.Transparent;
             this.lblLockedMessage.ForeColor = System.Drawing.Color.Gold;
-            this.lblLockedMessage.Location = new System.Drawing.Point(20, 175);
+            this.lblLockedMessage.Location = new System.Drawing.Point(21, 275);
             this.lblLockedMessage.Name = "lblLockedMessage";
             this.lblLockedMessage.Size = new System.Drawing.Size(345, 63);
             this.lblLockedMessage.TabIndex = 22;
-            this.lblLockedMessage.Text = "* Locked coins are not reported in any other balances throughout the wallet. Coin" +
-    "s can only be locked/unlocked via command line. Zeronodes automatically lock/unl" +
-    "ock coins used as collateral.";
+            this.lblLockedMessage.Text = "*Coins can only be locked/unlocked via command line. Zeronodes automatically lock" +
+    "/unlock coins used as collateral.";
             // 
             // pbTransaction4
             // 
             this.pbTransaction4.BackColor = System.Drawing.Color.Transparent;
-            this.pbTransaction4.Location = new System.Drawing.Point(448, 244);
+            this.pbTransaction4.Location = new System.Drawing.Point(578, 306);
             this.pbTransaction4.Name = "pbTransaction4";
             this.pbTransaction4.Size = new System.Drawing.Size(58, 58);
             this.pbTransaction4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -740,7 +627,7 @@
             // pbTransaction3
             // 
             this.pbTransaction3.BackColor = System.Drawing.Color.Transparent;
-            this.pbTransaction3.Location = new System.Drawing.Point(448, 180);
+            this.pbTransaction3.Location = new System.Drawing.Point(578, 224);
             this.pbTransaction3.Name = "pbTransaction3";
             this.pbTransaction3.Size = new System.Drawing.Size(58, 58);
             this.pbTransaction3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -751,7 +638,7 @@
             // pbTransaction2
             // 
             this.pbTransaction2.BackColor = System.Drawing.Color.Transparent;
-            this.pbTransaction2.Location = new System.Drawing.Point(448, 116);
+            this.pbTransaction2.Location = new System.Drawing.Point(578, 143);
             this.pbTransaction2.Name = "pbTransaction2";
             this.pbTransaction2.Size = new System.Drawing.Size(58, 58);
             this.pbTransaction2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -762,7 +649,7 @@
             // pbTransaction1
             // 
             this.pbTransaction1.BackColor = System.Drawing.Color.Transparent;
-            this.pbTransaction1.Location = new System.Drawing.Point(448, 52);
+            this.pbTransaction1.Location = new System.Drawing.Point(578, 63);
             this.pbTransaction1.Name = "pbTransaction1";
             this.pbTransaction1.Size = new System.Drawing.Size(58, 58);
             this.pbTransaction1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -770,295 +657,10 @@
             this.pbTransaction1.TabStop = false;
             this.pbTransaction1.Visible = false;
             // 
-            // pnlSendCoins
-            // 
-            this.pnlSendCoins.BackColor = System.Drawing.Color.Black;
-            this.pnlSendCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
-            this.pnlSendCoins.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pnlSendCoins.Controls.Add(this.groupBox2);
-            this.pnlSendCoins.Controls.Add(this.groupBox1);
-            this.pnlSendCoins.Location = new System.Drawing.Point(169, 25);
-            this.pnlSendCoins.Name = "pnlSendCoins";
-            this.pnlSendCoins.Size = new System.Drawing.Size(876, 500);
-            this.pnlSendCoins.TabIndex = 9;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.label15);
-            this.groupBox2.Controls.Add(this.btnSendMany);
-            this.groupBox2.Controls.Add(this.cbbAddress);
-            this.groupBox2.Controls.Add(this.cbDefaultFee);
-            this.groupBox2.Controls.Add(this.cbbFrom);
-            this.groupBox2.Controls.Add(this.btnSend);
-            this.groupBox2.Controls.Add(this.btnRefresh);
-            this.groupBox2.Controls.Add(this.tbAmount);
-            this.groupBox2.Controls.Add(this.cbUnit);
-            this.groupBox2.Controls.Add(this.tbFee);
-            this.groupBox2.Controls.Add(this.tbLabel);
-            this.groupBox2.Controls.Add(this.tbPayTo);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.label11);
-            this.groupBox2.ForeColor = System.Drawing.Color.Gold;
-            this.groupBox2.Location = new System.Drawing.Point(23, 21);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(831, 261);
-            this.groupBox2.TabIndex = 17;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Normal send";
-            // 
-            // label2
-            // 
-            this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(6, 234);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(506, 21);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "** Outbound transactions from Z addresses are not reported in the transaction log" +
-    ".";
-            // 
-            // label15
-            // 
-            this.label15.Location = new System.Drawing.Point(9, 162);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(816, 63);
-            this.label15.TabIndex = 9;
-            this.label15.Text = resources.GetString("label15.Text");
-            // 
-            // btnSendMany
-            // 
-            this.btnSendMany.BackColor = System.Drawing.Color.Black;
-            this.btnSendMany.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnSendMany.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSendMany.Location = new System.Drawing.Point(707, 228);
-            this.btnSendMany.Name = "btnSendMany";
-            this.btnSendMany.Size = new System.Drawing.Size(118, 27);
-            this.btnSendMany.TabIndex = 16;
-            this.btnSendMany.Text = "Send Many";
-            this.btnSendMany.UseVisualStyleBackColor = false;
-            this.btnSendMany.Click += new System.EventHandler(this.btnSendMany_Click);
-            // 
-            // cbbAddress
-            // 
-            this.cbbAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbAddress.FormattingEnabled = true;
-            this.cbbAddress.Location = new System.Drawing.Point(584, 48);
-            this.cbbAddress.Name = "cbbAddress";
-            this.cbbAddress.Size = new System.Drawing.Size(241, 23);
-            this.cbbAddress.Sorted = true;
-            this.cbbAddress.TabIndex = 2;
-            this.cbbAddress.SelectedIndexChanged += new System.EventHandler(this.cbbAddress_SelectedIndexChanged);
-            // 
-            // cbDefaultFee
-            // 
-            this.cbDefaultFee.AutoSize = true;
-            this.cbDefaultFee.Checked = true;
-            this.cbDefaultFee.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbDefaultFee.Location = new System.Drawing.Point(177, 132);
-            this.cbDefaultFee.Name = "cbDefaultFee";
-            this.cbDefaultFee.Size = new System.Drawing.Size(85, 19);
-            this.cbDefaultFee.TabIndex = 7;
-            this.cbDefaultFee.Text = "Default fee";
-            this.cbDefaultFee.UseVisualStyleBackColor = true;
-            this.cbDefaultFee.CheckedChanged += new System.EventHandler(this.cbFee_CheckedChanged);
-            // 
-            // cbbFrom
-            // 
-            this.cbbFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbFrom.FormattingEnabled = true;
-            this.cbbFrom.Location = new System.Drawing.Point(69, 20);
-            this.cbbFrom.Name = "cbbFrom";
-            this.cbbFrom.Size = new System.Drawing.Size(756, 23);
-            this.cbbFrom.Sorted = true;
-            this.cbbFrom.TabIndex = 0;
-            this.cbbFrom.SelectedIndexChanged += new System.EventHandler(this.cbbFrom_SelectedIndexChanged);
-            // 
-            // btnSend
-            // 
-            this.btnSend.BackColor = System.Drawing.Color.Black;
-            this.btnSend.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.btnSend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSend.Location = new System.Drawing.Point(614, 228);
-            this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(87, 27);
-            this.btnSend.TabIndex = 15;
-            this.btnSend.Text = "Send";
-            this.btnSend.UseVisualStyleBackColor = false;
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
-            // 
-            // tbAmount
-            // 
-            this.tbAmount.Location = new System.Drawing.Point(69, 103);
-            this.tbAmount.Name = "tbAmount";
-            this.tbAmount.Size = new System.Drawing.Size(102, 21);
-            this.tbAmount.TabIndex = 4;
-            this.tbAmount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
-            // 
-            // cbUnit
-            // 
-            this.cbUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbUnit.FormattingEnabled = true;
-            this.cbUnit.Items.AddRange(new object[] {
-            "Zer"});
-            this.cbUnit.Location = new System.Drawing.Point(177, 103);
-            this.cbUnit.Name = "cbUnit";
-            this.cbUnit.Size = new System.Drawing.Size(100, 23);
-            this.cbUnit.TabIndex = 5;
-            // 
-            // tbFee
-            // 
-            this.tbFee.Enabled = false;
-            this.tbFee.Location = new System.Drawing.Point(69, 130);
-            this.tbFee.Name = "tbFee";
-            this.tbFee.Size = new System.Drawing.Size(102, 21);
-            this.tbFee.TabIndex = 6;
-            this.tbFee.Text = "0.0001";
-            this.tbFee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
-            // 
-            // tbLabel
-            // 
-            this.tbLabel.Location = new System.Drawing.Point(69, 76);
-            this.tbLabel.Name = "tbLabel";
-            this.tbLabel.Size = new System.Drawing.Size(756, 21);
-            this.tbLabel.TabIndex = 3;
-            // 
-            // tbPayTo
-            // 
-            this.tbPayTo.Location = new System.Drawing.Point(69, 49);
-            this.tbPayTo.Name = "tbPayTo";
-            this.tbPayTo.Size = new System.Drawing.Size(507, 21);
-            this.tbPayTo.TabIndex = 1;
-            this.tbPayTo.Leave += new System.EventHandler(this.tbPayTo_Leave);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox1.Controls.Add(this.btShield);
-            this.groupBox1.Controls.Add(this.cbbShieldTo);
-            this.groupBox1.Controls.Add(this.cbbShieldFrom);
-            this.groupBox1.Controls.Add(this.tbShieldUtxo);
-            this.groupBox1.Controls.Add(this.cbShieldDefaultFee);
-            this.groupBox1.Controls.Add(this.tbShieldFee);
-            this.groupBox1.Controls.Add(this.transparentLabel3);
-            this.groupBox1.Controls.Add(this.transparentLabel6);
-            this.groupBox1.Controls.Add(this.transparentLabel5);
-            this.groupBox1.Controls.Add(this.transparentLabel4);
-            this.groupBox1.ForeColor = System.Drawing.Color.Gold;
-            this.groupBox1.Location = new System.Drawing.Point(23, 288);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(831, 182);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Shield coinbase";
-            // 
-            // cbbShieldTo
-            // 
-            this.cbbShieldTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbShieldTo.FormattingEnabled = true;
-            this.cbbShieldTo.Location = new System.Drawing.Point(69, 45);
-            this.cbbShieldTo.Name = "cbbShieldTo";
-            this.cbbShieldTo.Size = new System.Drawing.Size(756, 23);
-            this.cbbShieldTo.TabIndex = 9;
-            // 
-            // cbbShieldFrom
-            // 
-            this.cbbShieldFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbShieldFrom.FormattingEnabled = true;
-            this.cbbShieldFrom.Location = new System.Drawing.Point(69, 18);
-            this.cbbShieldFrom.Name = "cbbShieldFrom";
-            this.cbbShieldFrom.Size = new System.Drawing.Size(756, 23);
-            this.cbbShieldFrom.TabIndex = 8;
-            // 
-            // tbShieldUtxo
-            // 
-            this.tbShieldUtxo.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.tbShieldUtxo.Location = new System.Drawing.Point(69, 74);
-            this.tbShieldUtxo.Name = "tbShieldUtxo";
-            this.tbShieldUtxo.Size = new System.Drawing.Size(102, 21);
-            this.tbShieldUtxo.TabIndex = 10;
-            this.tbShieldUtxo.Text = "utxo to shield";
-            this.tbShieldUtxo.Enter += new System.EventHandler(this.tbShieldUtxo_Enter);
-            this.tbShieldUtxo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
-            this.tbShieldUtxo.Leave += new System.EventHandler(this.tbShieldUtxo_Leave);
-            // 
-            // cbShieldDefaultFee
-            // 
-            this.cbShieldDefaultFee.AutoSize = true;
-            this.cbShieldDefaultFee.Checked = true;
-            this.cbShieldDefaultFee.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbShieldDefaultFee.Location = new System.Drawing.Point(177, 104);
-            this.cbShieldDefaultFee.Name = "cbShieldDefaultFee";
-            this.cbShieldDefaultFee.Size = new System.Drawing.Size(85, 19);
-            this.cbShieldDefaultFee.TabIndex = 12;
-            this.cbShieldDefaultFee.Text = "Default fee";
-            this.cbShieldDefaultFee.UseVisualStyleBackColor = true;
-            this.cbShieldDefaultFee.CheckedChanged += new System.EventHandler(this.cbShieldDefaultFee_CheckedChanged);
-            // 
-            // tbShieldFee
-            // 
-            this.tbShieldFee.Enabled = false;
-            this.tbShieldFee.Location = new System.Drawing.Point(69, 101);
-            this.tbShieldFee.Name = "tbShieldFee";
-            this.tbShieldFee.Size = new System.Drawing.Size(102, 21);
-            this.tbShieldFee.TabIndex = 11;
-            this.tbShieldFee.Text = "0.0001";
-            this.tbShieldFee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
-            this.tbShieldFee.Leave += new System.EventHandler(this.tbPayTo_Leave);
-            // 
-            // masternodeDetailConvertedBindingSource
-            // 
-            this.masternodeDetailConvertedBindingSource.DataSource = typeof(SimpleWallet.Types.MasternodeDetailConverted);
-            // 
-            // masternodeBindingSource
-            // 
-            this.masternodeBindingSource.DataSource = typeof(SimpleWallet.Types.Masternode);
-            // 
-            // addressBookBindingSource
-            // 
-            this.addressBookBindingSource.DataSource = typeof(SimpleWallet.Types.AddressBook);
-            // 
-            // masternodeListBindingSource
-            // 
-            this.masternodeListBindingSource.DataSource = typeof(SimpleWallet.Types.MasternodeList);
-            // 
-            // btnClose
-            // 
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.ForeColor = System.Drawing.Color.Gold;
-            this.btnClose.Location = new System.Drawing.Point(1020, 0);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(0);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(15, 25);
-            this.btnClose.TabIndex = 12;
-            this.btnClose.Text = "X";
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMinimize.ForeColor = System.Drawing.Color.Gold;
-            this.btnMinimize.Location = new System.Drawing.Point(1000, -1);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(15, 25);
-            this.btnMinimize.TabIndex = 13;
-            this.btnMinimize.Text = "__";
-            this.btnMinimize.UseVisualStyleBackColor = false;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
             // pnlZeronodes
             // 
             this.pnlZeronodes.BackColor = System.Drawing.Color.Black;
+            this.pnlZeronodes.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
             this.pnlZeronodes.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlZeronodes.Controls.Add(this.btnSearch);
             this.pnlZeronodes.Controls.Add(this.btnClearMNCache);
@@ -1075,7 +677,7 @@
             this.pnlZeronodes.Controls.Add(this.dtgMasternode);
             this.pnlZeronodes.Location = new System.Drawing.Point(169, 25);
             this.pnlZeronodes.Name = "pnlZeronodes";
-            this.pnlZeronodes.Size = new System.Drawing.Size(876, 500);
+            this.pnlZeronodes.Size = new System.Drawing.Size(1132, 620);
             this.pnlZeronodes.TabIndex = 19;
             // 
             // btnClearMNCache
@@ -1086,9 +688,9 @@
             this.btnClearMNCache.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearMNCache.ForeColor = System.Drawing.Color.Gold;
             this.btnClearMNCache.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnClearMNCache.Location = new System.Drawing.Point(744, 453);
+            this.btnClearMNCache.Location = new System.Drawing.Point(978, 572);
             this.btnClearMNCache.Name = "btnClearMNCache";
-            this.btnClearMNCache.Size = new System.Drawing.Size(116, 35);
+            this.btnClearMNCache.Size = new System.Drawing.Size(135, 40);
             this.btnClearMNCache.TabIndex = 24;
             this.btnClearMNCache.Text = "Cleare ZN Cache";
             this.btnClearMNCache.UseVisualStyleBackColor = false;
@@ -1097,8 +699,9 @@
             // lbUpdateTime
             // 
             this.lbUpdateTime.AutoSize = true;
+            this.lbUpdateTime.BackColor = System.Drawing.Color.Transparent;
             this.lbUpdateTime.ForeColor = System.Drawing.Color.Gold;
-            this.lbUpdateTime.Location = new System.Drawing.Point(822, 421);
+            this.lbUpdateTime.Location = new System.Drawing.Point(1084, 545);
             this.lbUpdateTime.Name = "lbUpdateTime";
             this.lbUpdateTime.Size = new System.Drawing.Size(29, 15);
             this.lbUpdateTime.TabIndex = 23;
@@ -1112,9 +715,9 @@
             this.btnRefreshZeronode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefreshZeronode.ForeColor = System.Drawing.Color.Gold;
             this.btnRefreshZeronode.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnRefreshZeronode.Location = new System.Drawing.Point(12, 411);
+            this.btnRefreshZeronode.Location = new System.Drawing.Point(12, 572);
             this.btnRefreshZeronode.Name = "btnRefreshZeronode";
-            this.btnRefreshZeronode.Size = new System.Drawing.Size(116, 35);
+            this.btnRefreshZeronode.Size = new System.Drawing.Size(135, 40);
             this.btnRefreshZeronode.TabIndex = 22;
             this.btnRefreshZeronode.Text = "Refresh";
             this.btnRefreshZeronode.UseVisualStyleBackColor = false;
@@ -1128,9 +731,9 @@
             this.btnStartAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStartAll.ForeColor = System.Drawing.Color.Gold;
             this.btnStartAll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnStartAll.Location = new System.Drawing.Point(622, 453);
+            this.btnStartAll.Location = new System.Drawing.Point(840, 572);
             this.btnStartAll.Name = "btnStartAll";
-            this.btnStartAll.Size = new System.Drawing.Size(116, 35);
+            this.btnStartAll.Size = new System.Drawing.Size(135, 40);
             this.btnStartAll.TabIndex = 21;
             this.btnStartAll.Text = "Start All";
             this.btnStartAll.UseVisualStyleBackColor = false;
@@ -1144,9 +747,9 @@
             this.btnStartAlias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStartAlias.ForeColor = System.Drawing.Color.Gold;
             this.btnStartAlias.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnStartAlias.Location = new System.Drawing.Point(500, 453);
+            this.btnStartAlias.Location = new System.Drawing.Point(702, 572);
             this.btnStartAlias.Name = "btnStartAlias";
-            this.btnStartAlias.Size = new System.Drawing.Size(116, 35);
+            this.btnStartAlias.Size = new System.Drawing.Size(135, 40);
             this.btnStartAlias.TabIndex = 20;
             this.btnStartAlias.Text = "Start Alias";
             this.btnStartAlias.UseVisualStyleBackColor = false;
@@ -1160,9 +763,9 @@
             this.btnStartZeronode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStartZeronode.ForeColor = System.Drawing.Color.Gold;
             this.btnStartZeronode.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnStartZeronode.Location = new System.Drawing.Point(378, 453);
+            this.btnStartZeronode.Location = new System.Drawing.Point(564, 572);
             this.btnStartZeronode.Name = "btnStartZeronode";
-            this.btnStartZeronode.Size = new System.Drawing.Size(116, 35);
+            this.btnStartZeronode.Size = new System.Drawing.Size(135, 40);
             this.btnStartZeronode.TabIndex = 19;
             this.btnStartZeronode.Text = "Start ZN";
             this.btnStartZeronode.UseVisualStyleBackColor = false;
@@ -1176,9 +779,9 @@
             this.btnEditConfigFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditConfigFile.ForeColor = System.Drawing.Color.Gold;
             this.btnEditConfigFile.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnEditConfigFile.Location = new System.Drawing.Point(256, 453);
+            this.btnEditConfigFile.Location = new System.Drawing.Point(426, 572);
             this.btnEditConfigFile.Name = "btnEditConfigFile";
-            this.btnEditConfigFile.Size = new System.Drawing.Size(116, 35);
+            this.btnEditConfigFile.Size = new System.Drawing.Size(135, 40);
             this.btnEditConfigFile.TabIndex = 18;
             this.btnEditConfigFile.Text = "New ZN";
             this.btnEditConfigFile.UseVisualStyleBackColor = false;
@@ -1192,9 +795,9 @@
             this.btnGetOutputs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGetOutputs.ForeColor = System.Drawing.Color.Gold;
             this.btnGetOutputs.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnGetOutputs.Location = new System.Drawing.Point(134, 453);
+            this.btnGetOutputs.Location = new System.Drawing.Point(288, 572);
             this.btnGetOutputs.Name = "btnGetOutputs";
-            this.btnGetOutputs.Size = new System.Drawing.Size(116, 35);
+            this.btnGetOutputs.Size = new System.Drawing.Size(135, 40);
             this.btnGetOutputs.TabIndex = 17;
             this.btnGetOutputs.Text = "Unused Outputs";
             this.btnGetOutputs.UseVisualStyleBackColor = false;
@@ -1203,11 +806,11 @@
             // tbSearch
             // 
             this.tbSearch.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.tbSearch.Location = new System.Drawing.Point(134, 418);
+            this.tbSearch.Location = new System.Drawing.Point(12, 542);
             this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(640, 21);
+            this.tbSearch.Size = new System.Drawing.Size(549, 21);
             this.tbSearch.TabIndex = 16;
-            this.tbSearch.Text = "Masternode address or tx hash";
+            this.tbSearch.Text = "ZeroNode address or tx hash";
             this.tbSearch.Enter += new System.EventHandler(this.tbSearch_Enter);
             this.tbSearch.Leave += new System.EventHandler(this.tbSearch_Leave);
             // 
@@ -1219,9 +822,9 @@
             this.btnGetMNPrivKey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGetMNPrivKey.ForeColor = System.Drawing.Color.Gold;
             this.btnGetMNPrivKey.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnGetMNPrivKey.Location = new System.Drawing.Point(12, 453);
+            this.btnGetMNPrivKey.Location = new System.Drawing.Point(150, 572);
             this.btnGetMNPrivKey.Name = "btnGetMNPrivKey";
-            this.btnGetMNPrivKey.Size = new System.Drawing.Size(116, 35);
+            this.btnGetMNPrivKey.Size = new System.Drawing.Size(135, 40);
             this.btnGetMNPrivKey.TabIndex = 5;
             this.btnGetMNPrivKey.Text = "Get ZN Priv Key";
             this.btnGetMNPrivKey.UseVisualStyleBackColor = false;
@@ -1244,7 +847,7 @@
             this.dtgGlobalMN.DataSource = this.masternodeDetailConvertedBindingSource;
             this.dtgGlobalMN.Location = new System.Drawing.Point(11, 207);
             this.dtgGlobalMN.Name = "dtgGlobalMN";
-            this.dtgGlobalMN.Size = new System.Drawing.Size(854, 198);
+            this.dtgGlobalMN.Size = new System.Drawing.Size(1107, 328);
             this.dtgGlobalMN.TabIndex = 15;
             this.dtgGlobalMN.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtgGlobalMN_CellMouseClick);
             this.dtgGlobalMN.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
@@ -1303,6 +906,10 @@
             this.ipDataGridViewTextBoxColumn.HeaderText = "ip";
             this.ipDataGridViewTextBoxColumn.Name = "ipDataGridViewTextBoxColumn";
             // 
+            // masternodeDetailConvertedBindingSource
+            // 
+            this.masternodeDetailConvertedBindingSource.DataSource = typeof(SimpleWallet.Types.MasternodeDetailConverted);
+            // 
             // dtgMasternode
             // 
             this.dtgMasternode.AutoGenerateColumns = false;
@@ -1317,7 +924,7 @@
             this.dtgMasternode.DataSource = this.masternodeBindingSource;
             this.dtgMasternode.Location = new System.Drawing.Point(12, 11);
             this.dtgMasternode.Name = "dtgMasternode";
-            this.dtgMasternode.Size = new System.Drawing.Size(854, 190);
+            this.dtgMasternode.Size = new System.Drawing.Size(1106, 190);
             this.dtgMasternode.TabIndex = 14;
             this.dtgMasternode.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtgMasternode_CellMouseClick);
             this.dtgMasternode.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
@@ -1358,52 +965,328 @@
             this.indexDataGridViewTextBoxColumn.HeaderText = "index";
             this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
             // 
-            // panel2
+            // masternodeBindingSource
             // 
-            this.panel2.BackColor = System.Drawing.Color.Black;
-            this.panel2.Controls.Add(this.pbPercent);
-            this.panel2.Controls.Add(this.pbSignal);
-            this.panel2.Controls.Add(this.pbStatus);
-            this.panel2.Location = new System.Drawing.Point(0, 25);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1046, 530);
-            this.panel2.TabIndex = 20;
+            this.masternodeBindingSource.DataSource = typeof(SimpleWallet.Types.Masternode);
             // 
-            // pbPercent
+            // pnlTransactions
             // 
-            this.pbPercent.Location = new System.Drawing.Point(189, 506);
-            this.pbPercent.Maximum = 10000;
-            this.pbPercent.Name = "pbPercent";
-            this.pbPercent.Size = new System.Drawing.Size(800, 16);
-            this.pbPercent.Step = 1;
-            this.pbPercent.TabIndex = 1;
+            this.pnlTransactions.BackColor = System.Drawing.Color.Black;
+            this.pnlTransactions.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
+            this.pnlTransactions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlTransactions.Controls.Add(this.btnReindex);
+            this.pnlTransactions.Controls.Add(this.dtgTransactions);
+            this.pnlTransactions.Controls.Add(this.btnRescan);
+            this.pnlTransactions.Location = new System.Drawing.Point(169, 25);
+            this.pnlTransactions.Name = "pnlTransactions";
+            this.pnlTransactions.Size = new System.Drawing.Size(1132, 620);
+            this.pnlTransactions.TabIndex = 9;
             // 
-            // pbSignal
+            // btnReindex
             // 
-            this.pbSignal.BackgroundImage = global::SimpleWallet.Properties.Resources.connect0_16;
-            this.pbSignal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pbSignal.Location = new System.Drawing.Point(996, 506);
-            this.pbSignal.Name = "pbSignal";
-            this.pbSignal.Size = new System.Drawing.Size(16, 16);
-            this.pbSignal.TabIndex = 6;
-            this.pbSignal.TabStop = false;
+            this.btnReindex.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnReindex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReindex.ForeColor = System.Drawing.Color.Gold;
+            this.btnReindex.Location = new System.Drawing.Point(752, 585);
+            this.btnReindex.Name = "btnReindex";
+            this.btnReindex.Size = new System.Drawing.Size(180, 27);
+            this.btnReindex.TabIndex = 10;
+            this.btnReindex.Text = "Reindex the wallet";
+            this.btnReindex.UseVisualStyleBackColor = true;
+            this.btnReindex.Click += new System.EventHandler(this.btnReindex_Click);
             // 
-            // pbStatus
+            // dtgTransactions
             // 
-            this.pbStatus.BackgroundImage = global::SimpleWallet.Properties.Resources.notsynced;
-            this.pbStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pbStatus.Location = new System.Drawing.Point(1018, 506);
-            this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(16, 16);
-            this.pbStatus.TabIndex = 6;
-            this.pbStatus.TabStop = false;
+            this.dtgTransactions.AllowUserToResizeColumns = false;
+            this.dtgTransactions.AllowUserToResizeRows = false;
+            this.dtgTransactions.AutoGenerateColumns = false;
+            this.dtgTransactions.BackgroundColor = System.Drawing.SystemColors.ControlDark;
+            this.dtgTransactions.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dtgTransactions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgTransactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.categoryDataGridViewTextBoxColumn,
+            this.confirmationsDataGridViewTextBoxColumn,
+            this.amountDataGridViewTextBoxColumn,
+            this.timeDataGridViewTextBoxColumn,
+            this.addressDataGridViewTextBoxColumn,
+            this.txidDataGridViewTextBoxColumn});
+            this.dtgTransactions.DataSource = this.transactionConvertedBindingSource;
+            this.dtgTransactions.Location = new System.Drawing.Point(10, 14);
+            this.dtgTransactions.MultiSelect = false;
+            this.dtgTransactions.Name = "dtgTransactions";
+            this.dtgTransactions.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dtgTransactions.Size = new System.Drawing.Size(1108, 555);
+            this.dtgTransactions.TabIndex = 0;
+            this.dtgTransactions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgTransactions_CellDoubleClick);
+            this.dtgTransactions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
+            // 
+            // categoryDataGridViewTextBoxColumn
+            // 
+            this.categoryDataGridViewTextBoxColumn.DataPropertyName = "category";
+            this.categoryDataGridViewTextBoxColumn.HeaderText = "category";
+            this.categoryDataGridViewTextBoxColumn.Name = "categoryDataGridViewTextBoxColumn";
+            // 
+            // confirmationsDataGridViewTextBoxColumn
+            // 
+            this.confirmationsDataGridViewTextBoxColumn.DataPropertyName = "confirmations";
+            this.confirmationsDataGridViewTextBoxColumn.HeaderText = "confirmations";
+            this.confirmationsDataGridViewTextBoxColumn.Name = "confirmationsDataGridViewTextBoxColumn";
+            // 
+            // amountDataGridViewTextBoxColumn
+            // 
+            this.amountDataGridViewTextBoxColumn.DataPropertyName = "amount";
+            this.amountDataGridViewTextBoxColumn.HeaderText = "amount";
+            this.amountDataGridViewTextBoxColumn.Name = "amountDataGridViewTextBoxColumn";
+            // 
+            // timeDataGridViewTextBoxColumn
+            // 
+            this.timeDataGridViewTextBoxColumn.DataPropertyName = "time";
+            this.timeDataGridViewTextBoxColumn.HeaderText = "time";
+            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
+            // 
+            // addressDataGridViewTextBoxColumn
+            // 
+            this.addressDataGridViewTextBoxColumn.DataPropertyName = "address";
+            this.addressDataGridViewTextBoxColumn.HeaderText = "address";
+            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
+            // 
+            // txidDataGridViewTextBoxColumn
+            // 
+            this.txidDataGridViewTextBoxColumn.DataPropertyName = "txid";
+            this.txidDataGridViewTextBoxColumn.HeaderText = "txid";
+            this.txidDataGridViewTextBoxColumn.Name = "txidDataGridViewTextBoxColumn";
+            // 
+            // transactionConvertedBindingSource
+            // 
+            this.transactionConvertedBindingSource.DataSource = typeof(SimpleWallet.Types.TransactionConverted);
+            // 
+            // btnRescan
+            // 
+            this.btnRescan.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRescan.ForeColor = System.Drawing.Color.Gold;
+            this.btnRescan.Location = new System.Drawing.Point(938, 585);
+            this.btnRescan.Name = "btnRescan";
+            this.btnRescan.Size = new System.Drawing.Size(180, 27);
+            this.btnRescan.TabIndex = 10;
+            this.btnRescan.Text = "Rescan the transactions";
+            this.btnRescan.UseVisualStyleBackColor = true;
+            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
+            // 
+            // pnlSendCoins
+            // 
+            this.pnlSendCoins.BackColor = System.Drawing.Color.Black;
+            this.pnlSendCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
+            this.pnlSendCoins.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlSendCoins.Controls.Add(this.groupBox2);
+            this.pnlSendCoins.Controls.Add(this.label2);
+            this.pnlSendCoins.Controls.Add(this.groupBox1);
+            this.pnlSendCoins.Controls.Add(this.label15);
+            this.pnlSendCoins.Location = new System.Drawing.Point(169, 25);
+            this.pnlSendCoins.Name = "pnlSendCoins";
+            this.pnlSendCoins.Size = new System.Drawing.Size(1132, 620);
+            this.pnlSendCoins.TabIndex = 9;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.groupBox2.Controls.Add(this.btnMaxAmount);
+            this.groupBox2.Controls.Add(this.btnSendMany);
+            this.groupBox2.Controls.Add(this.cbbAddress);
+            this.groupBox2.Controls.Add(this.cbDefaultFee);
+            this.groupBox2.Controls.Add(this.cbbFrom);
+            this.groupBox2.Controls.Add(this.btnSend);
+            this.groupBox2.Controls.Add(this.btnRefresh);
+            this.groupBox2.Controls.Add(this.tbAmount);
+            this.groupBox2.Controls.Add(this.cbUnit);
+            this.groupBox2.Controls.Add(this.tbFee);
+            this.groupBox2.Controls.Add(this.tbLabel);
+            this.groupBox2.Controls.Add(this.tbPayTo);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.label11);
+            this.groupBox2.ForeColor = System.Drawing.Color.Gold;
+            this.groupBox2.Location = new System.Drawing.Point(12, 21);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(1106, 201);
+            this.groupBox2.TabIndex = 17;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Normal send";
+            // 
+            // btnMaxAmount
+            // 
+            this.btnMaxAmount.BackColor = System.Drawing.Color.Black;
+            this.btnMaxAmount.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnMaxAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMaxAmount.Location = new System.Drawing.Point(69, 159);
+            this.btnMaxAmount.Margin = new System.Windows.Forms.Padding(0);
+            this.btnMaxAmount.Name = "btnMaxAmount";
+            this.btnMaxAmount.Size = new System.Drawing.Size(87, 27);
+            this.btnMaxAmount.TabIndex = 18;
+            this.btnMaxAmount.Text = "Max Amount";
+            this.ttStart.SetToolTip(this.btnMaxAmount, "Refresh address value");
+            this.btnMaxAmount.UseVisualStyleBackColor = false;
+            this.btnMaxAmount.Click += new System.EventHandler(this.btnMaxAmount_Click);
+            // 
+            // btnSendMany
+            // 
+            this.btnSendMany.BackColor = System.Drawing.Color.Black;
+            this.btnSendMany.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnSendMany.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendMany.Location = new System.Drawing.Point(974, 159);
+            this.btnSendMany.Name = "btnSendMany";
+            this.btnSendMany.Size = new System.Drawing.Size(118, 27);
+            this.btnSendMany.TabIndex = 16;
+            this.btnSendMany.Text = "Send Many";
+            this.btnSendMany.UseVisualStyleBackColor = false;
+            this.btnSendMany.Click += new System.EventHandler(this.btnSendMany_Click);
+            // 
+            // cbbAddress
+            // 
+            this.cbbAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbAddress.FormattingEnabled = true;
+            this.cbbAddress.Location = new System.Drawing.Point(851, 49);
+            this.cbbAddress.Name = "cbbAddress";
+            this.cbbAddress.Size = new System.Drawing.Size(241, 23);
+            this.cbbAddress.Sorted = true;
+            this.cbbAddress.TabIndex = 2;
+            this.cbbAddress.SelectedIndexChanged += new System.EventHandler(this.cbbAddress_SelectedIndexChanged);
+            // 
+            // cbDefaultFee
+            // 
+            this.cbDefaultFee.AutoSize = true;
+            this.cbDefaultFee.Checked = true;
+            this.cbDefaultFee.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDefaultFee.Location = new System.Drawing.Point(226, 133);
+            this.cbDefaultFee.Name = "cbDefaultFee";
+            this.cbDefaultFee.Size = new System.Drawing.Size(85, 19);
+            this.cbDefaultFee.TabIndex = 7;
+            this.cbDefaultFee.Text = "Default fee";
+            this.cbDefaultFee.UseVisualStyleBackColor = true;
+            this.cbDefaultFee.CheckedChanged += new System.EventHandler(this.cbFee_CheckedChanged);
+            // 
+            // cbbFrom
+            // 
+            this.cbbFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbFrom.FormattingEnabled = true;
+            this.cbbFrom.Location = new System.Drawing.Point(69, 20);
+            this.cbbFrom.Name = "cbbFrom";
+            this.cbbFrom.Size = new System.Drawing.Size(1023, 23);
+            this.cbbFrom.Sorted = true;
+            this.cbbFrom.TabIndex = 0;
+            this.cbbFrom.SelectedIndexChanged += new System.EventHandler(this.cbbFrom_SelectedIndexChanged);
+            // 
+            // btnSend
+            // 
+            this.btnSend.BackColor = System.Drawing.Color.Black;
+            this.btnSend.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnSend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSend.Location = new System.Drawing.Point(881, 159);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(87, 27);
+            this.btnSend.TabIndex = 15;
+            this.btnSend.Text = "Send";
+            this.btnSend.UseVisualStyleBackColor = false;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.BackColor = System.Drawing.Color.Black;
+            this.btnRefresh.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Location = new System.Drawing.Point(788, 159);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(87, 27);
+            this.btnRefresh.TabIndex = 14;
+            this.btnRefresh.Text = "Refresh";
+            this.ttStart.SetToolTip(this.btnRefresh, "Refresh address value");
+            this.btnRefresh.UseVisualStyleBackColor = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // tbAmount
+            // 
+            this.tbAmount.Location = new System.Drawing.Point(69, 103);
+            this.tbAmount.Name = "tbAmount";
+            this.tbAmount.Size = new System.Drawing.Size(151, 21);
+            this.tbAmount.TabIndex = 4;
+            this.tbAmount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
+            // 
+            // cbUnit
+            // 
+            this.cbUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbUnit.FormattingEnabled = true;
+            this.cbUnit.Items.AddRange(new object[] {
+            "Zer"});
+            this.cbUnit.Location = new System.Drawing.Point(226, 101);
+            this.cbUnit.Name = "cbUnit";
+            this.cbUnit.Size = new System.Drawing.Size(100, 23);
+            this.cbUnit.TabIndex = 5;
+            // 
+            // tbFee
+            // 
+            this.tbFee.Enabled = false;
+            this.tbFee.Location = new System.Drawing.Point(69, 130);
+            this.tbFee.Name = "tbFee";
+            this.tbFee.Size = new System.Drawing.Size(151, 21);
+            this.tbFee.TabIndex = 6;
+            this.tbFee.Text = "0.0001";
+            this.tbFee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
+            // 
+            // tbLabel
+            // 
+            this.tbLabel.Location = new System.Drawing.Point(69, 76);
+            this.tbLabel.Name = "tbLabel";
+            this.tbLabel.Size = new System.Drawing.Size(756, 21);
+            this.tbLabel.TabIndex = 3;
+            // 
+            // tbPayTo
+            // 
+            this.tbPayTo.Location = new System.Drawing.Point(69, 49);
+            this.tbPayTo.Name = "tbPayTo";
+            this.tbPayTo.Size = new System.Drawing.Size(776, 21);
+            this.tbPayTo.TabIndex = 1;
+            this.tbPayTo.Leave += new System.EventHandler(this.tbPayTo_Leave);
+            // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label2.Location = new System.Drawing.Point(18, 538);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(506, 21);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "** Outbound transactions from Z (sprout) addresses are not reported in the transa" +
+    "ction log.";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.groupBox1.Controls.Add(this.btShield);
+            this.groupBox1.Controls.Add(this.cbbShieldTo);
+            this.groupBox1.Controls.Add(this.cbbShieldFrom);
+            this.groupBox1.Controls.Add(this.tbShieldUtxo);
+            this.groupBox1.Controls.Add(this.cbShieldDefaultFee);
+            this.groupBox1.Controls.Add(this.tbShieldFee);
+            this.groupBox1.Controls.Add(this.transparentLabel3);
+            this.groupBox1.Controls.Add(this.transparentLabel6);
+            this.groupBox1.Controls.Add(this.transparentLabel5);
+            this.groupBox1.Controls.Add(this.transparentLabel4);
+            this.groupBox1.ForeColor = System.Drawing.Color.Gold;
+            this.groupBox1.Location = new System.Drawing.Point(12, 233);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(1106, 152);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Shield coinbase";
             // 
             // btShield
             // 
             this.btShield.BackColor = System.Drawing.Color.Black;
             this.btShield.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
             this.btShield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btShield.Location = new System.Drawing.Point(707, 146);
+            this.btShield.Location = new System.Drawing.Point(285, 95);
             this.btShield.Name = "btShield";
             this.btShield.Size = new System.Drawing.Size(118, 27);
             this.btShield.TabIndex = 18;
@@ -1411,27 +1294,287 @@
             this.btShield.UseVisualStyleBackColor = false;
             this.btShield.Click += new System.EventHandler(this.btnShield_Click);
             // 
-            // btnSearch
+            // cbbShieldTo
             // 
-            this.btnSearch.BackColor = System.Drawing.Color.Transparent;
-            this.btnSearch.BackgroundImage = global::SimpleWallet.Properties.Resources.search_dark;
-            this.btnSearch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearch.Location = new System.Drawing.Point(780, 414);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(25, 25);
-            this.btnSearch.TabIndex = 25;
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-            this.btnSearch.MouseEnter += new System.EventHandler(this.btnSearch_MouseEnter);
-            this.btnSearch.MouseLeave += new System.EventHandler(this.btnSearch_MouseLeave);
+            this.cbbShieldTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbShieldTo.FormattingEnabled = true;
+            this.cbbShieldTo.Location = new System.Drawing.Point(69, 45);
+            this.cbbShieldTo.Name = "cbbShieldTo";
+            this.cbbShieldTo.Size = new System.Drawing.Size(1023, 23);
+            this.cbbShieldTo.TabIndex = 9;
+            // 
+            // cbbShieldFrom
+            // 
+            this.cbbShieldFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbShieldFrom.FormattingEnabled = true;
+            this.cbbShieldFrom.Location = new System.Drawing.Point(69, 18);
+            this.cbbShieldFrom.Name = "cbbShieldFrom";
+            this.cbbShieldFrom.Size = new System.Drawing.Size(1023, 23);
+            this.cbbShieldFrom.TabIndex = 8;
+            // 
+            // tbShieldUtxo
+            // 
+            this.tbShieldUtxo.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.tbShieldUtxo.Location = new System.Drawing.Point(69, 74);
+            this.tbShieldUtxo.Name = "tbShieldUtxo";
+            this.tbShieldUtxo.Size = new System.Drawing.Size(102, 21);
+            this.tbShieldUtxo.TabIndex = 10;
+            this.tbShieldUtxo.Text = "utxo to shield";
+            this.tbShieldUtxo.Enter += new System.EventHandler(this.tbShieldUtxo_Enter);
+            this.tbShieldUtxo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
+            this.tbShieldUtxo.Leave += new System.EventHandler(this.tbShieldUtxo_Leave);
+            // 
+            // cbShieldDefaultFee
+            // 
+            this.cbShieldDefaultFee.AutoSize = true;
+            this.cbShieldDefaultFee.Checked = true;
+            this.cbShieldDefaultFee.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbShieldDefaultFee.Location = new System.Drawing.Point(177, 104);
+            this.cbShieldDefaultFee.Name = "cbShieldDefaultFee";
+            this.cbShieldDefaultFee.Size = new System.Drawing.Size(85, 19);
+            this.cbShieldDefaultFee.TabIndex = 12;
+            this.cbShieldDefaultFee.Text = "Default fee";
+            this.cbShieldDefaultFee.UseVisualStyleBackColor = true;
+            this.cbShieldDefaultFee.CheckedChanged += new System.EventHandler(this.cbShieldDefaultFee_CheckedChanged);
+            // 
+            // tbShieldFee
+            // 
+            this.tbShieldFee.Enabled = false;
+            this.tbShieldFee.Location = new System.Drawing.Point(69, 101);
+            this.tbShieldFee.Name = "tbShieldFee";
+            this.tbShieldFee.Size = new System.Drawing.Size(102, 21);
+            this.tbShieldFee.TabIndex = 11;
+            this.tbShieldFee.Text = "0.0001";
+            this.tbShieldFee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAmount_KeyPress);
+            this.tbShieldFee.Leave += new System.EventHandler(this.tbPayTo_Leave);
+            // 
+            // label15
+            // 
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.ForeColor = System.Drawing.Color.Gold;
+            this.label15.Location = new System.Drawing.Point(18, 422);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(499, 99);
+            this.label15.TabIndex = 9;
+            this.label15.Text = resources.GetString("label15.Text");
+            // 
+            // pbSignal
+            // 
+            this.pbSignal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pbSignal.Location = new System.Drawing.Point(1249, 638);
+            this.pbSignal.Name = "pbSignal";
+            this.pbSignal.Size = new System.Drawing.Size(16, 16);
+            this.pbSignal.TabIndex = 6;
+            this.pbSignal.TabStop = false;
+            // 
+            // pbStatus
+            // 
+            this.pbStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pbStatus.Location = new System.Drawing.Point(1271, 638);
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(16, 16);
+            this.pbStatus.TabIndex = 6;
+            this.pbStatus.TabStop = false;
+            // 
+            // pnlReceiveCoins
+            // 
+            this.pnlReceiveCoins.BackColor = System.Drawing.Color.Black;
+            this.pnlReceiveCoins.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
+            this.pnlReceiveCoins.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlReceiveCoins.Controls.Add(this.btnNewSaplingAddress);
+            this.pnlReceiveCoins.Controls.Add(this.dtgAddress);
+            this.pnlReceiveCoins.Controls.Add(this.btnNewAddress);
+            this.pnlReceiveCoins.Controls.Add(this.btnAddressBook);
+            this.pnlReceiveCoins.Location = new System.Drawing.Point(169, 25);
+            this.pnlReceiveCoins.Name = "pnlReceiveCoins";
+            this.pnlReceiveCoins.Size = new System.Drawing.Size(1132, 620);
+            this.pnlReceiveCoins.TabIndex = 9;
+            // 
+            // btnNewSaplingAddress
+            // 
+            this.btnNewSaplingAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnNewSaplingAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNewSaplingAddress.ForeColor = System.Drawing.Color.Gold;
+            this.btnNewSaplingAddress.Location = new System.Drawing.Point(944, 585);
+            this.btnNewSaplingAddress.Name = "btnNewSaplingAddress";
+            this.btnNewSaplingAddress.Size = new System.Drawing.Size(180, 27);
+            this.btnNewSaplingAddress.TabIndex = 10;
+            this.btnNewSaplingAddress.Text = "Get new Z address (Sapling)";
+            this.btnNewSaplingAddress.UseVisualStyleBackColor = true;
+            this.btnNewSaplingAddress.Click += new System.EventHandler(this.btnNewSaplingAddress_Click);
+            // 
+            // dtgAddress
+            // 
+            this.dtgAddress.AllowUserToAddRows = false;
+            this.dtgAddress.AllowUserToDeleteRows = false;
+            this.dtgAddress.AllowUserToResizeColumns = false;
+            this.dtgAddress.AllowUserToResizeRows = false;
+            this.dtgAddress.BackgroundColor = System.Drawing.SystemColors.ControlDark;
+            this.dtgAddress.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dtgAddress.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgAddress.Location = new System.Drawing.Point(10, 14);
+            this.dtgAddress.MultiSelect = false;
+            this.dtgAddress.Name = "dtgAddress";
+            this.dtgAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dtgAddress.Size = new System.Drawing.Size(1112, 555);
+            this.dtgAddress.TabIndex = 9;
+            this.dtgAddress.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtgAddress_CellMouseClick);
+            this.dtgAddress.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dtg_MouseClick);
+            // 
+            // btnNewAddress
+            // 
+            this.btnNewAddress.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnNewAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNewAddress.ForeColor = System.Drawing.Color.Gold;
+            this.btnNewAddress.Location = new System.Drawing.Point(758, 585);
+            this.btnNewAddress.Name = "btnNewAddress";
+            this.btnNewAddress.Size = new System.Drawing.Size(180, 27);
+            this.btnNewAddress.TabIndex = 7;
+            this.btnNewAddress.Text = "Get new t address";
+            this.btnNewAddress.UseVisualStyleBackColor = true;
+            this.btnNewAddress.Click += new System.EventHandler(this.btnNewAddress_Click);
+            // 
+            // btnAddressBook
+            // 
+            this.btnAddressBook.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btnAddressBook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddressBook.ForeColor = System.Drawing.Color.Gold;
+            this.btnAddressBook.Location = new System.Drawing.Point(572, 585);
+            this.btnAddressBook.Name = "btnAddressBook";
+            this.btnAddressBook.Size = new System.Drawing.Size(180, 27);
+            this.btnAddressBook.TabIndex = 7;
+            this.btnAddressBook.Text = "Address Book";
+            this.btnAddressBook.UseVisualStyleBackColor = true;
+            this.btnAddressBook.Click += new System.EventHandler(this.btnAddressBook_Click);
+            // 
+            // pnlInfo
+            // 
+            this.pnlInfo.BackColor = System.Drawing.Color.Black;
+            this.pnlInfo.BackgroundImage = global::SimpleWallet.Properties.Resources.zero05;
+            this.pnlInfo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlInfo.Controls.Add(this.transparentLabel66);
+            this.pnlInfo.Controls.Add(this.panel5);
+            this.pnlInfo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.pnlInfo.Location = new System.Drawing.Point(169, 25);
+            this.pnlInfo.Name = "pnlInfo";
+            this.pnlInfo.Size = new System.Drawing.Size(1132, 620);
+            this.pnlInfo.TabIndex = 67;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.panel5.Controls.Add(this.transparentLabel45);
+            this.panel5.Controls.Add(this.dtgZeroNode);
+            this.panel5.Controls.Add(this.dtgWalletInfo);
+            this.panel5.Controls.Add(this.progressBar2);
+            this.panel5.Controls.Add(this.pictureBox3);
+            this.panel5.Controls.Add(this.pictureBox4);
+            this.panel5.ForeColor = System.Drawing.Color.Black;
+            this.panel5.Location = new System.Drawing.Point(5, 6);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1119, 383);
+            this.panel5.TabIndex = 50;
+            // 
+            // dtgZeroNode
+            // 
+            this.dtgZeroNode.AllowUserToAddRows = false;
+            this.dtgZeroNode.AllowUserToDeleteRows = false;
+            this.dtgZeroNode.AllowUserToResizeColumns = false;
+            this.dtgZeroNode.AllowUserToResizeRows = false;
+            this.dtgZeroNode.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.dtgZeroNode.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dtgZeroNode.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgZeroNode.Location = new System.Drawing.Point(581, 36);
+            this.dtgZeroNode.MultiSelect = false;
+            this.dtgZeroNode.Name = "dtgZeroNode";
+            this.dtgZeroNode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dtgZeroNode.Size = new System.Drawing.Size(518, 332);
+            this.dtgZeroNode.TabIndex = 50;
+            // 
+            // dtgWalletInfo
+            // 
+            this.dtgWalletInfo.AllowUserToAddRows = false;
+            this.dtgWalletInfo.AllowUserToDeleteRows = false;
+            this.dtgWalletInfo.AllowUserToResizeColumns = false;
+            this.dtgWalletInfo.AllowUserToResizeRows = false;
+            this.dtgWalletInfo.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.dtgWalletInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dtgWalletInfo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgWalletInfo.Location = new System.Drawing.Point(16, 36);
+            this.dtgWalletInfo.MultiSelect = false;
+            this.dtgWalletInfo.Name = "dtgWalletInfo";
+            this.dtgWalletInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dtgWalletInfo.Size = new System.Drawing.Size(518, 332);
+            this.dtgWalletInfo.TabIndex = 49;
+            // 
+            // progressBar2
+            // 
+            this.progressBar2.Location = new System.Drawing.Point(201, 638);
+            this.progressBar2.Maximum = 10000;
+            this.progressBar2.Name = "progressBar2";
+            this.progressBar2.Size = new System.Drawing.Size(1041, 16);
+            this.progressBar2.Step = 1;
+            this.progressBar2.TabIndex = 1;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox3.Location = new System.Drawing.Point(1249, 638);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox3.TabIndex = 6;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox4.Location = new System.Drawing.Point(1271, 638);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox4.TabIndex = 6;
+            this.pictureBox4.TabStop = false;
+            // 
+            // addressBookBindingSource
+            // 
+            this.addressBookBindingSource.DataSource = typeof(SimpleWallet.Types.AddressBook);
+            // 
+            // masternodeListBindingSource
+            // 
+            this.masternodeListBindingSource.DataSource = typeof(SimpleWallet.Types.MasternodeList);
+            // 
+            // lbImmatureTxt
+            // 
+            this.lbImmatureTxt.AutoSize = true;
+            this.lbImmatureTxt.BackColor = System.Drawing.Color.Transparent;
+            this.lbImmatureTxt.ForeColor = System.Drawing.Color.Gold;
+            this.lbImmatureTxt.Location = new System.Drawing.Point(21, 186);
+            this.lbImmatureTxt.Name = "lbImmatureTxt";
+            this.lbImmatureTxt.Opacity = 0;
+            this.lbImmatureTxt.Size = new System.Drawing.Size(60, 15);
+            this.lbImmatureTxt.TabIndex = 23;
+            this.lbImmatureTxt.Text = "Immature";
+            this.lbImmatureTxt.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // lbImmature
+            // 
+            this.lbImmature.AutoSize = true;
+            this.lbImmature.BackColor = System.Drawing.Color.Transparent;
+            this.lbImmature.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbImmature.ForeColor = System.Drawing.Color.Gold;
+            this.lbImmature.Location = new System.Drawing.Point(142, 186);
+            this.lbImmature.Name = "lbImmature";
+            this.lbImmature.Opacity = 0;
+            this.lbImmature.Size = new System.Drawing.Size(103, 15);
+            this.lbImmature.TabIndex = 24;
+            this.lbImmature.Text = "Loading data...";
+            this.lbImmature.TransparentBackColor = System.Drawing.Color.Blue;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.ForeColor = System.Drawing.Color.Gold;
-            this.label3.Location = new System.Drawing.Point(20, 148);
+            this.label3.Location = new System.Drawing.Point(20, 207);
             this.label3.Name = "label3";
             this.label3.Opacity = 0;
             this.label3.Size = new System.Drawing.Size(47, 15);
@@ -1445,7 +1588,7 @@
             this.lbLocked.BackColor = System.Drawing.Color.Transparent;
             this.lbLocked.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbLocked.ForeColor = System.Drawing.Color.Gold;
-            this.lbLocked.Location = new System.Drawing.Point(106, 148);
+            this.lbLocked.Location = new System.Drawing.Point(141, 207);
             this.lbLocked.Name = "lbLocked";
             this.lbLocked.Opacity = 0;
             this.lbLocked.Size = new System.Drawing.Size(103, 15);
@@ -1459,7 +1602,7 @@
             this.lblConfirmed.BackColor = System.Drawing.Color.Transparent;
             this.lblConfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblConfirmed.ForeColor = System.Drawing.Color.Gold;
-            this.lblConfirmed.Location = new System.Drawing.Point(106, 37);
+            this.lblConfirmed.Location = new System.Drawing.Point(142, 52);
             this.lblConfirmed.Name = "lblConfirmed";
             this.lblConfirmed.Opacity = 0;
             this.lblConfirmed.Size = new System.Drawing.Size(78, 16);
@@ -1473,7 +1616,7 @@
             this.lblUnconfirmedHeader.BackColor = System.Drawing.Color.Transparent;
             this.lblUnconfirmedHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUnconfirmedHeader.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblUnconfirmedHeader.Location = new System.Drawing.Point(233, 37);
+            this.lblUnconfirmedHeader.Location = new System.Drawing.Point(269, 52);
             this.lblUnconfirmedHeader.Name = "lblUnconfirmedHeader";
             this.lblUnconfirmedHeader.Opacity = 0;
             this.lblUnconfirmedHeader.Size = new System.Drawing.Size(95, 16);
@@ -1487,7 +1630,7 @@
             this.lblTotalUnconfirmed.BackColor = System.Drawing.Color.Transparent;
             this.lblTotalUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalUnconfirmed.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblTotalUnconfirmed.Location = new System.Drawing.Point(233, 86);
+            this.lblTotalUnconfirmed.Location = new System.Drawing.Point(268, 106);
             this.lblTotalUnconfirmed.Name = "lblTotalUnconfirmed";
             this.lblTotalUnconfirmed.Opacity = 0;
             this.lblTotalUnconfirmed.Size = new System.Drawing.Size(103, 15);
@@ -1501,7 +1644,7 @@
             this.lblPrivateUnconfirmed.BackColor = System.Drawing.Color.Transparent;
             this.lblPrivateUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrivateUnconfirmed.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblPrivateUnconfirmed.Location = new System.Drawing.Point(233, 68);
+            this.lblPrivateUnconfirmed.Location = new System.Drawing.Point(268, 88);
             this.lblPrivateUnconfirmed.Name = "lblPrivateUnconfirmed";
             this.lblPrivateUnconfirmed.Opacity = 0;
             this.lblPrivateUnconfirmed.Size = new System.Drawing.Size(103, 15);
@@ -1515,7 +1658,7 @@
             this.lblTransparentUnconfirmed.BackColor = System.Drawing.Color.Transparent;
             this.lblTransparentUnconfirmed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTransparentUnconfirmed.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblTransparentUnconfirmed.Location = new System.Drawing.Point(233, 52);
+            this.lblTransparentUnconfirmed.Location = new System.Drawing.Point(268, 72);
             this.lblTransparentUnconfirmed.Name = "lblTransparentUnconfirmed";
             this.lblTransparentUnconfirmed.Opacity = 0;
             this.lblTransparentUnconfirmed.Size = new System.Drawing.Size(103, 15);
@@ -1529,7 +1672,7 @@
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.Gold;
-            this.label5.Location = new System.Drawing.Point(443, 20);
+            this.label5.Location = new System.Drawing.Point(573, 31);
             this.label5.Name = "label5";
             this.label5.Opacity = 0;
             this.label5.Size = new System.Drawing.Size(201, 24);
@@ -1542,7 +1685,7 @@
             this.lbBestTime.AutoSize = true;
             this.lbBestTime.BackColor = System.Drawing.Color.Transparent;
             this.lbBestTime.ForeColor = System.Drawing.Color.Gold;
-            this.lbBestTime.Location = new System.Drawing.Point(153, 434);
+            this.lbBestTime.Location = new System.Drawing.Point(161, 572);
             this.lbBestTime.Name = "lbBestTime";
             this.lbBestTime.Opacity = 0;
             this.lbBestTime.Size = new System.Drawing.Size(0, 15);
@@ -1554,7 +1697,7 @@
             this.lbBestHash.AutoSize = true;
             this.lbBestHash.BackColor = System.Drawing.Color.Transparent;
             this.lbBestHash.ForeColor = System.Drawing.Color.Gold;
-            this.lbBestHash.Location = new System.Drawing.Point(153, 449);
+            this.lbBestHash.Location = new System.Drawing.Point(161, 587);
             this.lbBestHash.Name = "lbBestHash";
             this.lbBestHash.Opacity = 0;
             this.lbBestHash.Size = new System.Drawing.Size(0, 15);
@@ -1566,7 +1709,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.ForeColor = System.Drawing.Color.Gold;
-            this.label1.Location = new System.Drawing.Point(20, 86);
+            this.label1.Location = new System.Drawing.Point(20, 106);
             this.label1.Name = "label1";
             this.label1.Opacity = 0;
             this.label1.Size = new System.Drawing.Size(34, 15);
@@ -1579,7 +1722,7 @@
             this.lbAddress4.AutoSize = true;
             this.lbAddress4.BackColor = System.Drawing.Color.Transparent;
             this.lbAddress4.ForeColor = System.Drawing.Color.Gold;
-            this.lbAddress4.Location = new System.Drawing.Point(512, 278);
+            this.lbAddress4.Location = new System.Drawing.Point(642, 340);
             this.lbAddress4.Name = "lbAddress4";
             this.lbAddress4.Opacity = 0;
             this.lbAddress4.Size = new System.Drawing.Size(51, 15);
@@ -1594,7 +1737,7 @@
             this.lbTotal.BackColor = System.Drawing.Color.Transparent;
             this.lbTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTotal.ForeColor = System.Drawing.Color.Gold;
-            this.lbTotal.Location = new System.Drawing.Point(106, 86);
+            this.lbTotal.Location = new System.Drawing.Point(141, 106);
             this.lbTotal.Name = "lbTotal";
             this.lbTotal.Opacity = 0;
             this.lbTotal.Size = new System.Drawing.Size(103, 15);
@@ -1607,7 +1750,7 @@
             this.lbAddress3.AutoSize = true;
             this.lbAddress3.BackColor = System.Drawing.Color.Transparent;
             this.lbAddress3.ForeColor = System.Drawing.Color.Gold;
-            this.lbAddress3.Location = new System.Drawing.Point(512, 214);
+            this.lbAddress3.Location = new System.Drawing.Point(642, 258);
             this.lbAddress3.Name = "lbAddress3";
             this.lbAddress3.Opacity = 0;
             this.lbAddress3.Size = new System.Drawing.Size(51, 15);
@@ -1621,7 +1764,7 @@
             this.transparentLabel1.AutoSize = true;
             this.transparentLabel1.BackColor = System.Drawing.Color.Transparent;
             this.transparentLabel1.ForeColor = System.Drawing.Color.Gold;
-            this.transparentLabel1.Location = new System.Drawing.Point(20, 68);
+            this.transparentLabel1.Location = new System.Drawing.Point(20, 88);
             this.transparentLabel1.Name = "transparentLabel1";
             this.transparentLabel1.Opacity = 0;
             this.transparentLabel1.Size = new System.Drawing.Size(44, 15);
@@ -1634,7 +1777,7 @@
             this.lbAddress2.AutoSize = true;
             this.lbAddress2.BackColor = System.Drawing.Color.Transparent;
             this.lbAddress2.ForeColor = System.Drawing.Color.Gold;
-            this.lbAddress2.Location = new System.Drawing.Point(512, 150);
+            this.lbAddress2.Location = new System.Drawing.Point(642, 177);
             this.lbAddress2.Name = "lbAddress2";
             this.lbAddress2.Opacity = 0;
             this.lbAddress2.Size = new System.Drawing.Size(51, 15);
@@ -1648,7 +1791,7 @@
             this.lbAddress1.AutoSize = true;
             this.lbAddress1.BackColor = System.Drawing.Color.Transparent;
             this.lbAddress1.ForeColor = System.Drawing.Color.Gold;
-            this.lbAddress1.Location = new System.Drawing.Point(512, 86);
+            this.lbAddress1.Location = new System.Drawing.Point(642, 97);
             this.lbAddress1.Name = "lbAddress1";
             this.lbAddress1.Opacity = 0;
             this.lbAddress1.Size = new System.Drawing.Size(51, 15);
@@ -1663,7 +1806,7 @@
             this.lbPrivate.BackColor = System.Drawing.Color.Transparent;
             this.lbPrivate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbPrivate.ForeColor = System.Drawing.Color.Gold;
-            this.lbPrivate.Location = new System.Drawing.Point(106, 68);
+            this.lbPrivate.Location = new System.Drawing.Point(141, 88);
             this.lbPrivate.Name = "lbPrivate";
             this.lbPrivate.Opacity = 0;
             this.lbPrivate.Size = new System.Drawing.Size(103, 15);
@@ -1676,7 +1819,7 @@
             this.lbValue4.AutoSize = true;
             this.lbValue4.BackColor = System.Drawing.Color.Transparent;
             this.lbValue4.ForeColor = System.Drawing.Color.Gold;
-            this.lbValue4.Location = new System.Drawing.Point(663, 254);
+            this.lbValue4.Location = new System.Drawing.Point(793, 316);
             this.lbValue4.Name = "lbValue4";
             this.lbValue4.Opacity = 0;
             this.lbValue4.Size = new System.Drawing.Size(36, 15);
@@ -1690,7 +1833,7 @@
             this.lbValue3.AutoSize = true;
             this.lbValue3.BackColor = System.Drawing.Color.Transparent;
             this.lbValue3.ForeColor = System.Drawing.Color.Gold;
-            this.lbValue3.Location = new System.Drawing.Point(663, 189);
+            this.lbValue3.Location = new System.Drawing.Point(793, 233);
             this.lbValue3.Name = "lbValue3";
             this.lbValue3.Opacity = 0;
             this.lbValue3.Size = new System.Drawing.Size(36, 15);
@@ -1704,7 +1847,7 @@
             this.tlTransparentBalance.AutoSize = true;
             this.tlTransparentBalance.BackColor = System.Drawing.Color.Transparent;
             this.tlTransparentBalance.ForeColor = System.Drawing.Color.Gold;
-            this.tlTransparentBalance.Location = new System.Drawing.Point(20, 52);
+            this.tlTransparentBalance.Location = new System.Drawing.Point(20, 72);
             this.tlTransparentBalance.Name = "tlTransparentBalance";
             this.tlTransparentBalance.Opacity = 0;
             this.tlTransparentBalance.Size = new System.Drawing.Size(73, 15);
@@ -1717,7 +1860,7 @@
             this.lbValue2.AutoSize = true;
             this.lbValue2.BackColor = System.Drawing.Color.Transparent;
             this.lbValue2.ForeColor = System.Drawing.Color.Gold;
-            this.lbValue2.Location = new System.Drawing.Point(663, 125);
+            this.lbValue2.Location = new System.Drawing.Point(793, 152);
             this.lbValue2.Name = "lbValue2";
             this.lbValue2.Opacity = 0;
             this.lbValue2.Size = new System.Drawing.Size(36, 15);
@@ -1732,7 +1875,7 @@
             this.lbTransparent.BackColor = System.Drawing.Color.Transparent;
             this.lbTransparent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTransparent.ForeColor = System.Drawing.Color.Gold;
-            this.lbTransparent.Location = new System.Drawing.Point(106, 52);
+            this.lbTransparent.Location = new System.Drawing.Point(141, 72);
             this.lbTransparent.Name = "lbTransparent";
             this.lbTransparent.Opacity = 0;
             this.lbTransparent.Size = new System.Drawing.Size(103, 15);
@@ -1745,7 +1888,7 @@
             this.lbValue1.AutoSize = true;
             this.lbValue1.BackColor = System.Drawing.Color.Transparent;
             this.lbValue1.ForeColor = System.Drawing.Color.Gold;
-            this.lbValue1.Location = new System.Drawing.Point(663, 61);
+            this.lbValue1.Location = new System.Drawing.Point(793, 72);
             this.lbValue1.Name = "lbValue1";
             this.lbValue1.Opacity = 0;
             this.lbValue1.Size = new System.Drawing.Size(36, 15);
@@ -1759,7 +1902,7 @@
             this.lbTime4.AutoSize = true;
             this.lbTime4.BackColor = System.Drawing.Color.Transparent;
             this.lbTime4.ForeColor = System.Drawing.Color.Gold;
-            this.lbTime4.Location = new System.Drawing.Point(512, 254);
+            this.lbTime4.Location = new System.Drawing.Point(642, 316);
             this.lbTime4.Name = "lbTime4";
             this.lbTime4.Opacity = 0;
             this.lbTime4.Size = new System.Drawing.Size(31, 15);
@@ -1773,7 +1916,7 @@
             this.lbTime3.AutoSize = true;
             this.lbTime3.BackColor = System.Drawing.Color.Transparent;
             this.lbTime3.ForeColor = System.Drawing.Color.Gold;
-            this.lbTime3.Location = new System.Drawing.Point(512, 189);
+            this.lbTime3.Location = new System.Drawing.Point(642, 233);
             this.lbTime3.Name = "lbTime3";
             this.lbTime3.Opacity = 0;
             this.lbTime3.Size = new System.Drawing.Size(31, 15);
@@ -1788,7 +1931,7 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Gold;
-            this.label4.Location = new System.Drawing.Point(16, 20);
+            this.label4.Location = new System.Drawing.Point(19, 31);
             this.label4.Name = "label4";
             this.label4.Opacity = 0;
             this.label4.Size = new System.Drawing.Size(79, 20);
@@ -1801,7 +1944,7 @@
             this.lbTime2.AutoSize = true;
             this.lbTime2.BackColor = System.Drawing.Color.Transparent;
             this.lbTime2.ForeColor = System.Drawing.Color.Gold;
-            this.lbTime2.Location = new System.Drawing.Point(512, 125);
+            this.lbTime2.Location = new System.Drawing.Point(642, 152);
             this.lbTime2.Name = "lbTime2";
             this.lbTime2.Opacity = 0;
             this.lbTime2.Size = new System.Drawing.Size(31, 15);
@@ -1815,7 +1958,7 @@
             this.label7.AutoSize = true;
             this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.ForeColor = System.Drawing.Color.Gold;
-            this.label7.Location = new System.Drawing.Point(21, 434);
+            this.label7.Location = new System.Drawing.Point(29, 572);
             this.label7.Name = "label7";
             this.label7.Opacity = 0;
             this.label7.Size = new System.Drawing.Size(102, 15);
@@ -1828,7 +1971,7 @@
             this.lbTime1.AutoSize = true;
             this.lbTime1.BackColor = System.Drawing.Color.Transparent;
             this.lbTime1.ForeColor = System.Drawing.Color.Gold;
-            this.lbTime1.Location = new System.Drawing.Point(512, 61);
+            this.lbTime1.Location = new System.Drawing.Point(642, 72);
             this.lbTime1.Name = "lbTime1";
             this.lbTime1.Opacity = 0;
             this.lbTime1.Size = new System.Drawing.Size(31, 15);
@@ -1842,13 +1985,28 @@
             this.label12.AutoSize = true;
             this.label12.BackColor = System.Drawing.Color.Transparent;
             this.label12.ForeColor = System.Drawing.Color.Gold;
-            this.label12.Location = new System.Drawing.Point(21, 449);
+            this.label12.Location = new System.Drawing.Point(29, 587);
             this.label12.Name = "label12";
             this.label12.Opacity = 0;
             this.label12.Size = new System.Drawing.Size(105, 15);
             this.label12.TabIndex = 3;
             this.label12.Text = "Latest block hash:";
             this.label12.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.BackColor = System.Drawing.Color.Transparent;
+            this.btnSearch.BackgroundImage = global::SimpleWallet.Properties.Resources.search;
+            this.btnSearch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearch.Location = new System.Drawing.Point(570, 541);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(25, 25);
+            this.btnSearch.TabIndex = 25;
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            this.btnSearch.MouseEnter += new System.EventHandler(this.btnSearch_MouseEnter);
+            this.btnSearch.MouseLeave += new System.EventHandler(this.btnSearch_MouseLeave);
             // 
             // label6
             // 
@@ -1958,6 +2116,34 @@
             this.transparentLabel4.Text = "To";
             this.transparentLabel4.TransparentBackColor = System.Drawing.Color.Blue;
             // 
+            // transparentLabel66
+            // 
+            this.transparentLabel66.AutoSize = true;
+            this.transparentLabel66.BackColor = System.Drawing.Color.Transparent;
+            this.transparentLabel66.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.transparentLabel66.ForeColor = System.Drawing.Color.Gold;
+            this.transparentLabel66.Location = new System.Drawing.Point(20, 14);
+            this.transparentLabel66.Name = "transparentLabel66";
+            this.transparentLabel66.Opacity = 0;
+            this.transparentLabel66.Size = new System.Drawing.Size(184, 25);
+            this.transparentLabel66.TabIndex = 27;
+            this.transparentLabel66.Text = "Wallet Information";
+            this.transparentLabel66.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
+            // transparentLabel45
+            // 
+            this.transparentLabel45.AutoSize = true;
+            this.transparentLabel45.BackColor = System.Drawing.Color.Transparent;
+            this.transparentLabel45.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.transparentLabel45.ForeColor = System.Drawing.Color.Gold;
+            this.transparentLabel45.Location = new System.Drawing.Point(576, 8);
+            this.transparentLabel45.Name = "transparentLabel45";
+            this.transparentLabel45.Opacity = 0;
+            this.transparentLabel45.Size = new System.Drawing.Size(219, 25);
+            this.transparentLabel45.TabIndex = 48;
+            this.transparentLabel45.Text = "ZeroNode Information";
+            this.transparentLabel45.TransparentBackColor = System.Drawing.Color.Blue;
+            // 
             // typesBindingSource
             // 
             this.typesBindingSource.DataSource = typeof(SimpleWallet.Types);
@@ -1967,19 +2153,21 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
-            this.ClientSize = new System.Drawing.Size(1044, 555);
+            this.ClientSize = new System.Drawing.Size(1300, 691);
             this.Controls.Add(this.btnMinimize);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.pnlOverview);
-            this.Controls.Add(this.pnlSendCoins);
-            this.Controls.Add(this.pnlTransactions);
-            this.Controls.Add(this.pnlReceiveCoins);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlZeronodes);
+            this.Controls.Add(this.pnlTransactions);
+            this.Controls.Add(this.pnlSendCoins);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.pnlReceiveCoins);
+            this.Controls.Add(this.pnlInfo);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -1990,36 +2178,44 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Start_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Start_FormClosed);
             this.Load += new System.EventHandler(this.Start_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.transactionConvertedBindingSource)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.pnlTransactions.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.pnlReceiveCoins.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dtgAddress)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.pnlOverview.ResumeLayout(false);
             this.pnlOverview.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTransaction1)).EndInit();
+            this.pnlZeronodes.ResumeLayout(false);
+            this.pnlZeronodes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgGlobalMN)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.masternodeDetailConvertedBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgMasternode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.masternodeBindingSource)).EndInit();
+            this.pnlTransactions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dtgTransactions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transactionConvertedBindingSource)).EndInit();
             this.pnlSendCoins.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.masternodeDetailConvertedBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.masternodeBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.addressBookBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.masternodeListBindingSource)).EndInit();
-            this.pnlZeronodes.ResumeLayout(false);
-            this.pnlZeronodes.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dtgGlobalMN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dtgMasternode)).EndInit();
-            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSignal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).EndInit();
+            this.pnlReceiveCoins.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dtgAddress)).EndInit();
+            this.pnlInfo.ResumeLayout(false);
+            this.pnlInfo.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgZeroNode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgWalletInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.addressBookBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.masternodeListBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.typesBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -2048,7 +2244,6 @@
         private System.Windows.Forms.CheckBox cbDefaultFee;
         private TransparentLabel label12;
         private TransparentLabel label7;
-        private System.Windows.Forms.Button btnNewZAddress;
         private System.Windows.Forms.Button btnNewAddress;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -2184,6 +2379,19 @@
         private TransparentLabel label3;
         private TransparentLabel lbLocked;
         private System.Windows.Forms.Button btShield;
+        private TransparentLabel lbImmatureTxt;
+        private TransparentLabel lbImmature;
+        private System.Windows.Forms.Button btnWalletInfo;
+        private System.Windows.Forms.Panel pnlInfo;
+        private TransparentLabel transparentLabel66;
+        private System.Windows.Forms.Panel panel5;
+        private TransparentLabel transparentLabel45;
+        private System.Windows.Forms.DataGridView dtgZeroNode;
+        private System.Windows.Forms.DataGridView dtgWalletInfo;
+        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.Button btnMaxAmount;
 
     }
 }

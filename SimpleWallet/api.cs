@@ -667,184 +667,123 @@ namespace SimpleWallet
         }
 
 
-        public Types.AllData getAllData()
+        public List<Types.Transaction> convertTransactionList(List<Types.ZeroTransaction> parse)
         {
-            Types.AllData data = new Types.AllData();
-            try
-            {
-                //locked balance
-                string rpcdata = getAllData_New();
-                dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
-                data.lockedbalance = parse.lockedbalance;
+            List<Types.Transaction> transactions = new List<Types.Transaction>();
 
-                //connections
-                data.connectionCount = checkConnections();
+            for (int i = 0; i < parse.Count; i++) {
 
-                //balances
-                rpcdata = getZTotalBalance();
-                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
-                data.privatebalance = parse.@private;
-                data.transparentbalance = parse.transparent;
-                data.totalbalance = parse.total;
-                data.unconfirmedbalance = getUnconfirmedBalance();
+                Int64 sproutSpends = 0;
+                Int64 sproutSends = 0;
+                Int64 vpub_old = 0;
+                Int64 vpub_new = 0;
+                Int64 sends = 0;
+                String varianceType = "";
 
-                rpcdata = getZTotalBalanceUnconfirmed();
-                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
-                data.privatebalanceunconfirmed = parse.@private;
-                data.transparentbalanceunconfirmed = parse.transparent;
-                data.totalbalanceunconfirmed = parse.total;
-
-                
-
-                //blockhash info
-                rpcdata = getBestBlockhash();
-                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
-                data.bestblockhash = parse.bestblockhash;
-
-                //bestblock time
-                rpcdata = getBestTime(data.bestblockhash);
-                parse = JsonConvert.DeserializeObject<Types.AllData>(rpcdata);
-                //data.time = parse.time;
-                data.besttime = parse.time;
-
-                //address lists
-                Dictionary<String, String> addressDictionary = new Dictionary<String, String>();
-                Dictionary<String, String> validatedAddressDictionary = new Dictionary<String, String>();
-                Dictionary<String, String> validatedZAddressDictionary = new Dictionary<String, String>(); 
-                List<Dictionary<String, String>> addressList = new List<Dictionary<String, String>>();
-                List<Dictionary<String, String>> ValidatedList = new List<Dictionary<String, String>>();
-                List<Dictionary<String, String>> ValidatedZList = new List<Dictionary<String, String>>();
-
-                //add t-addresses
-                rpcdata = getTAddress();
-                parse = JsonConvert.DeserializeObject<List<String>>(rpcdata);
-
-                for (int i = 0; i < parse.Count; i++)
-                {
-                    addressDictionary.Add(parse[i], "0");
-                }
-
-                //add unspent t-addresses
-                rpcdata = getTAddressUnspent();
-                parse = JsonConvert.DeserializeObject<List<Types.AddressData>>(rpcdata);
- 
-                for (int i = 0; i < parse.Count; i++)
-                {
-                    try
-                    {
-                        addressDictionary.Add(parse[i].address, "0");
+                if (parse[i].spends.totalSpends != "0.00000000") {
+                    
+                    for (int j = 0; j < parse[i].sends.transparentSends.Count; j++) {
+                        transactions.Add(new Types.Transaction("send", parse[i].confirmations, parse[i].sends.transparentSends[j].amount, parse[i].time, parse[i].sends.transparentSends[j].address, parse[i].txid));
                     }
-                    catch { }
-                }
+                    for (int j = 0; j < parse[i].sends.saplingSends.Count; j++) {
+                        transactions.Add(new Types.Transaction("send", parse[i].confirmations, parse[i].sends.saplingSends[j].amount, parse[i].time, parse[i].sends.saplingSends[j].address, parse[i].txid));
+                    }
 
-                addressList.Add(addressDictionary);
-
-                //Validate wallet t-addresses have spend keys 
-                foreach (String a in addressList[0].Keys.ToList())
-                {
-                    try
+                    //Sprout
+                    for (int j = 0; j < parse[i].sends.sproutSends.Count; j++)
                     {
-                        String Validate = ValidateTAddress(a);
-                        dynamic ValidAddresses = JsonConvert.DeserializeObject<Types.ValidAddress>(Validate);
-                        if (ValidAddresses.isvalid == "true")
+                        vpub_old += Convert.ToInt64(Convert.ToDouble(parse[i].sends.sproutSends[j].vpub_old) * 10e8);
+                        vpub_new += Convert.ToInt64(Convert.ToDouble(parse[i].sends.sproutSends[j].vpub_new) * 10e8);
+                    }
+                        
+                    if (parse[i].sends.sproutSends.Count != 0)
+                    {
+                        for (int j = 0; j < parse[i].spends.sproutSpends.Count; j++)
                         {
-                            validatedAddressDictionary.Add(a, "0");
+                            sproutSpends = Convert.ToInt64(Convert.ToDouble(parse[i].spends.sproutSpends[j].amount) * 10e8);
                         }
                     }
-                    catch { }
-                }
 
-                //reset dictionaries
-                addressDictionary = new Dictionary<String, String>(); 
-                addressList = new List<Dictionary<String, String>>();
-
-
-                //add z-addresses
-                rpcdata = getZAddress();
-                parse = JsonConvert.DeserializeObject<List<String>>(rpcdata);
-
-                for (int i = 0; i < parse.Count; i++)
-                {
-                    try
+                    sproutSends = -(vpub_old - vpub_new) + sproutSpends;
+                    if (sproutSends != 0)
                     {
-                        addressDictionary.Add(parse[i], "0");
+                        transactions.Add(new Types.Transaction("send", parse[i].confirmations, Convert.ToString(Convert.ToDouble(sproutSends) / 10e8), parse[i].time, "Encypted Sprout Z Address", parse[i].txid));
                     }
-                    catch { }
-                }
+                    // End Sprout
 
-                addressList.Add(addressDictionary);
+                    sends = sproutSends + Convert.ToInt64(Convert.ToDouble(parse[i].sends.totalSends) * 10e8);
 
-                //Validate wallet z-addresses have spend keys 
-                foreach (String a in addressList[0].Keys.ToList())
-                {
-                    try
+                    Int64 sendVariance = Convert.ToInt64(Convert.ToDouble(parse[i].spends.totalSpends) * 10e8) - sends;
+
+                    if (sendVariance != 0)
                     {
-                        String Validate = ValidateZAddress(a);
-                        dynamic ValidAddresses = JsonConvert.DeserializeObject<Types.ValidAddress>(Validate);
-                        if (ValidAddresses.isvalid == "true")
+                        Boolean missingKey = Convert.ToBoolean(parse[i].spends.missingSpendingKeys);
+                        Boolean missingOVK = Convert.ToBoolean(parse[i].sends.missingSaplingOVK);    
+                        varianceType = "receive";
+
+                        if (missingKey == false && missingOVK == false) 
                         {
-                            validatedAddressDictionary.Add(a, "0");
-                            validatedZAddressDictionary.Add(a, "0");
+                            if (sendVariance < 0) { varianceType = "send";}
+                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Transaction Fee", parse[i].txid));
+                            sends += sendVariance;
                         }
-                    }
-                    catch { }
-                }
-
-                ValidatedZList.Add(validatedZAddressDictionary);
-                ValidatedList.Add(validatedAddressDictionary);
-
-                foreach (String a in ValidatedList[0].Keys.ToList())
-                {
-                    //get current balance of the address
-                    String balance = Task.Run(() => getAddressBalance(a)).Result;
-                    //update balance
-                    ValidatedList[0][a] = balance;
-                }
-
-                data.addressbalance = ValidatedList;
-
-                //t-address transaction list
-                rpcdata = getListTransactions();
-                data.listtransactions = JsonConvert.DeserializeObject<List<Types.Transaction>>(rpcdata);
-
-
-                //z-received by transactions
-                foreach (String a in ValidatedZList[0].Keys.ToList())
-                {
-                    try
-                    {
-                        String ZTxidRPC = getZReceiveTransactions(a);
-                        dynamic ZTxid = JsonConvert.DeserializeObject<List<Types.Transaction>>(ZTxidRPC);
-
-                        for (int i = 0; i < ZTxid.Count; i++)
+                        else if (missingKey == true && missingOVK == false)
                         {
-                            try
-                            {
-                                String ZTransactionsRPC = getTransaction(ZTxid[i].txid);
-                                dynamic ZTransactions = JsonConvert.DeserializeObject<Types.Transaction>(ZTransactionsRPC);
-                                ZTransactions.amount = ZTxid[i].amount;
-                                ZTransactions.address = "Z-Address ...." + a.Substring(a.Length - 6);
-                                data.listtransactions.Add(ZTransactions);
-                            }
-                            catch { }
+                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Missing Spending Key Adj & Fee", parse[i].txid));
+                            sends += sendVariance;
                         }
+                        else if (missingKey == false && missingOVK == true)
+                        {
+                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Encypted Sapling Z Address & Fee", parse[i].txid));
+                            sends += sendVariance;
+                        }
+
                     }
-                    catch { }
+                    
+                    Int64 totalSpends = Convert.ToInt64(Convert.ToDouble(parse[i].spends.totalSpends) * 10e8);
+                    varianceType = "receive";
+                    if (totalSpends - sends < 0) { varianceType = "send"; }
+
+                    if (sends != totalSpends)
+                    {
+                        transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(totalSpends - sends) / 10e8), parse[i].time, "Multiple Issue Adjustment & Fee", parse[i].txid));
+                    }
                 }
-                data.listtransactions.Sort((x, y) => x.time.CompareTo(y.time));
+                if (parse[i].received.totalReceived != "0.00000000") {
+                    String transType = "";
+                    if (Convert.ToBoolean(parse[i].coinbase) == true) {
+                        transType = parse[i].category;
+                    } else {
+                        transType = "receive";
+                    }
+                    for (int j = 0; j < parse[i].received.transparentReceived.Count; j++) {
+                        transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.transparentReceived[j].amount, parse[i].time, parse[i].received.transparentReceived[j].address, parse[i].txid));
+                    }
+                    for (int j = 0; j < parse[i].received.saplingReceived.Count; j++) {
+                        transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.saplingReceived[j].amount, parse[i].time, parse[i].received.saplingReceived[j].address, parse[i].txid));
+                    }
+                    for (int j = 0; j < parse[i].received.sproutReceived.Count; j++) {
+                        transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.sproutReceived[j].amount, parse[i].time, parse[i].received.sproutReceived[j].address, parse[i].txid));
+                    }
+                }
+             
             }
-            catch
-            {
-                
-            }
-            return data;
+
+            return transactions;
         }
 
-
-        public String getAllData_New()
+        public String getZeroTransaction(String txid)
         {
             String data = "";
-            List<String> command = new List<String> { "getalldata", "3" };
+            List<String> command = new List<String> { "zs_gettransaction", txid };
+            String ret = Task.Run(() => exec.executeGetTransaction(command, data)).Result;
+            return ret;
+        }
+
+        public String getAllData(Types.GetAllDataType type, int nCount)
+        {
+            String data = "";
+            List<String> command = new List<String> { "getalldata", ((int)type).ToString(), "6", nCount.ToString() };
             String ret = Task.Run(() => exec.executeSync(command, data)).Result;
             return ret;
         }
@@ -862,6 +801,14 @@ namespace SimpleWallet
             String data = "";
             List<String> command = new List<String> { "getinfo" };
             String ret = Task.Run(() => exec.executeOthers(command, data)).Result;
+            return ret;
+        }
+
+        public String getZeroNodeCount()
+        {
+            String data = "zeronodecount";
+            List<String> command = new List<String> { "getzeronodecount" };
+            String ret = Task.Run(() => exec.executeSync(command, data)).Result;
             return ret;
         }
 
@@ -977,18 +924,18 @@ namespace SimpleWallet
             return ret;
         }
 
-        public String newZAddress()
-        {
-            String data = "";
-            List<String> command = new List<String> { "z_getnewaddress","sprout" };
-            String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
-            return ret;
-        }
+        //public String newZAddress()
+        //{
+        //    String data = "";
+        //    List<String> command = new List<String> { "z_getnewaddress","sprout" };
+        //    String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
+        //    return ret;
+        //}
 
         public String newSaplingAddress()
         {
             String data = "";
-            List<String> command = new List<String> { "z_getnewaddress","sapling" };
+            List<String> command = new List<String> { "z_getnewaddress" };
             String ret = Task.Run(() => exec.executeBalance(command, data)).Result;
             return ret;
         }

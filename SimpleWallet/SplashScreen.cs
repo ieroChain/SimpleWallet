@@ -91,35 +91,32 @@ namespace SimpleWallet
         {
             beginning(e);
 
-                Types.AllData dataimport = new Types.AllData();
-                dataimport = api.getAllData();
+                //get data
+                String data = api.getAllData(Types.GetAllDataType.ALL, 200);
+                dynamic parse = JsonConvert.DeserializeObject<Types.AllData>(data);
 
-                //connections
-                start.connections = dataimport.connectionCount;
-                
-                //balance info
-                start.privatebalance = dataimport.privatebalance;
-                start.transparentbalance = dataimport.transparentbalance;
-                start.totalbalance = dataimport.totalbalance;
-                start.unconfirmedbalance = dataimport.unconfirmedbalance;
-                start.privatebalanceunconfirmed = dataimport.privatebalanceunconfirmed;
-                start.transparentbalanceunconfirmed = dataimport.transparentbalanceunconfirmed;
-                start.totalbalanceunconfirmed = dataimport.totalbalanceunconfirmed;
-                start.lockedbalance = dataimport.lockedbalance;
+                //Info
+                start.bestHash = parse.bestblockhash;
+                start.bestTime = parse.besttime;
+                start.connections = parse.connectionCount;
 
-                //blockhash info
-                start.bestHash = dataimport.bestblockhash;
+                //Balance Info
+                start.totalbalance = parse.totalbalance;
+                start.totalbalanceunconfirmed = parse.totalunconfirmed;
+                start.unconfirmedbalance = parse.totalunconfirmed;
+                start.privatebalance = parse.privatebalance;
+                start.privatebalanceunconfirmed = parse.privatebalanceunconfirmed;
+                start.lockedbalance = parse.lockedbalance;
+                start.transparentbalance = parse.transparentbalance;
+                start.transparentbalanceunconfirmed = parse.transparentbalanceunconfirmed;
+                start.immaturebalance = parse.immaturebalance;
 
-                //bestblock time
-                start.bestTime = dataimport.time;
-                
-                //transaction list
-                start.listtransactions = dataimport.listtransactions;
-
-                //Address List
-                if (dataimport.addressbalance != null && dataimport.addressbalance.Count > 0)
+                //Addresses and transactions
+                start.listtransactions = api.convertTransactionList(parse.listtransactions);
+                List<Dictionary<String, Types.AllDataAddress>> addressbalance = parse.addressbalance;
+                if (addressbalance != null && addressbalance.Count > 0)
                 {
-                    start.walletDic = new Dictionary<String, String>(dataimport.addressbalance[0]);
+                    start.walletDic = new Dictionary<String, Types.AllDataAddress>(addressbalance[0]);
                 }
 
 

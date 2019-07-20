@@ -54,7 +54,7 @@ namespace SimpleWallet
                                                   DaemonEventArgs e);
     public class Types
     {
-        public static String version = "Zero Simple Wallet - Version 1.0.3";
+        public static String version = "Zero Simple Wallet - Version 2.0.0";
 
         public static String startCommandsFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                         "\\zero\\simplewallet\\commands.dat";
@@ -189,23 +189,139 @@ namespace SimpleWallet
         public class AllData
         {
             public String connectionCount { get; set; }
-            public String besttime { get; set; } //remove
-            public String time { get; set; }
+            public String besttime { get; set; }
             public String bestblockhash { get; set; }
             public String transparentbalance { get; set; }
             public String transparentbalanceunconfirmed { get; set; }
-            public String transparent { get; set; }
             public String privatebalance { get; set; }
             public String privatebalanceunconfirmed { get; set; }
-            public String @private { get; set; }
             public String totalbalance { get; set; }
-            public String totalbalanceunconfirmed { get; set; }
-            public String total { get; set; }
-            public String unconfirmedbalance { get; set; }
+            public String totalunconfirmed { get; set; }
             public String lockedbalance { get; set; }
-            public List<Dictionary<String, String>> addressbalance { get; set; }
-            public List<Transaction> listtransactions { get; set; }
+            public String immaturebalance { get; set; }
+            public List<Dictionary<String, AllDataAddress>> addressbalance { get; set; }
+            public List<ZeroTransaction> listtransactions { get; set; }
         }
+
+        public class AllDataAddress
+        {
+            public String amount { get; set; }
+            public String unconfirmed { get; set; }
+            public String locked { get; set; }
+            public String immature { get; set; }
+            public String ismine { get; set; }
+        }
+
+        public class ZeroTransaction
+        {
+            public String txid { get; set; }
+            public String coinbase { get; set; }
+            public String category { get; set; }
+            public String blockhash { get; set; }
+            public String blockindex { get; set; }
+            public String blocktime { get; set; }
+            public String expiryheight { get; set; }
+            public String confirmations { get; set; }
+            public String time { get; set; }
+            public String size { get; set; }
+            public List<String> conflicts { get; set; }
+            public spendList spends { get; set; }
+            public receivedList received { get; set; }
+            public sendList sends { get; set; }
+        }
+
+        public class spendList
+        {
+             public List<transparentSpendList> transparentSpends { get; set; }
+             public List<saplingSpendList> saplingSpends { get; set; }
+             public List<sproutSpendList> sproutSpends { get; set; }
+             public String totalSpends { get; set; }
+             public Boolean missingSpendingKeys { get; set; }
+        }
+
+        public class transparentSpendList
+        {
+            public String address { get; set; }
+            public String scriptPubKey { get; set; }
+            public String amount { get; set; }
+            public String vout { get; set; }
+
+        }
+
+        public class saplingSpendList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class sproutSpendList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class receivedList
+        {
+            public List<transparentReceivedList> transparentReceived { get; set; }
+            public List<saplingReceivedList> saplingReceived { get; set; }
+            public List<sproutReceivedList> sproutReceived { get; set; }
+            public String totalReceived { get; set; }
+        }
+
+        public class transparentReceivedList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class saplingReceivedList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class sproutReceivedList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class sendList
+        {
+            public List<transparentSendList> transparentSends { get; set; }
+            public List<saplingSendList> saplingSends { get; set; }
+            public List<sproutSendList> sproutSends { get; set; }
+            public String totalSends { get; set; }
+            public String missingSaplingOVK { get; set; }
+        }
+
+        public class transparentSendList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class saplingSendList
+        {
+            public String address { get; set; }
+            public String amount { get; set; }
+
+        }
+
+        public class sproutSendList
+        {
+            public String vpub_old { get; set; }
+            public String vpub_new { get; set; }
+
+        }
+
+
 
         public class BlockFormat
         {
@@ -245,6 +361,21 @@ namespace SimpleWallet
             public String confirmations { get; set; }
             public String time { get; set; }
             public String txid { get; set; }
+
+            public Transaction()
+            {
+
+            }
+
+            public Transaction(String category, String confirmations, String amount, String time, String address, String txid)
+            {
+                this.category = category;
+                this.confirmations = confirmations;
+                this.amount = amount;
+                this.time = time;
+                this.address = address;
+                this.txid = txid;
+            }
         }
 
         public class TransactionConverted
@@ -302,7 +433,18 @@ namespace SimpleWallet
         public class BlockChainInfo
         {
             public String bestblockhash { get; set; }
+            public List<valuePool> valuePools { get; set; }
+            public String blocks { get; set; }
         }
+
+        public class valuePool
+        {
+            public String id { get; set; }
+            public String monitored { get; set; }
+            public String chainValue { get; set; }
+            public String chainValueZat { get; set; }
+        }
+
 
         public class PeerInfo
         {
@@ -311,7 +453,13 @@ namespace SimpleWallet
 
         public class Info
         {
+            public String version { get; set; }
+            public String protocolversion { get; set; }
+            public String walletversion { get; set; }
             public String blocks { get; set; }
+            public String connections { get; set; }
+            public String difficulty { get; set; }
+            public String testnet { get; set; }
         }
 
         public class Outputs
@@ -323,6 +471,17 @@ namespace SimpleWallet
         public class OutputsList
         {
             public List<Outputs> outputslist { get; set; }
+        }
+
+        public class ZeroNodeCount
+        {
+            public String total { get; set; }
+            public String stable { get; set; }
+            public String enabled { get; set; }
+            public String inqueue { get; set; }
+            public String ipv4 { get; set; }
+            public String ipv6 { get; set; }
+            public String onion { get; set; }
         }
 
         public class Masternode
