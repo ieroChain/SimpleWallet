@@ -293,6 +293,7 @@
     <Content Include="Images\connect2_16.png" />
     <Content Include="Images\connect3_16.png" />
     <Content Include="Images\connect4_16.png" />
+    <Content Include="Images\info.png" />
     <Content Include="Images\Large Globe_Small Nodes.png" />
     <Content Include="Images\Large Globe_Smaller Nodes.png" />
     <Content Include="Images\logo.ico" />
@@ -301,6 +302,7 @@
     <Content Include="Images\notsynced.png" />
     <Content Include="Images\sm_Large Globe_Small Nodes.png" />
     <Content Include="Images\sm_Large Globe_Smaller Nodes.png" />
+    <Content Include="Images\sm_logo_yellow.png" />
     <Content Include="Images\synced.png" />
     <Content Include="Images\zeronode.png" />
     <Content Include="Resources\zero01.bmp" />
