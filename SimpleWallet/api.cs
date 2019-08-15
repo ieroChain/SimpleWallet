@@ -672,101 +672,117 @@ namespace SimpleWallet
             List<Types.Transaction> transactions = new List<Types.Transaction>();
 
             for (int i = 0; i < parse.Count; i++) {
+                try
+                {
 
-                Int64 sproutSpends = 0;
-                Int64 sproutSends = 0;
-                Int64 vpub_old = 0;
-                Int64 vpub_new = 0;
-                Int64 sends = 0;
-                String varianceType = "";
+                    Int64 sproutSpends = 0;
+                    Int64 sproutSends = 0;
+                    Int64 vpub_old = 0;
+                    Int64 vpub_new = 0;
+                    Int64 sends = 0;
+                    String varianceType = "";
 
-                if (parse[i].spends.totalSpends != "0.00000000") {
-                    
-                    for (int j = 0; j < parse[i].sends.transparentSends.Count; j++) {
-                        transactions.Add(new Types.Transaction("send", parse[i].confirmations, parse[i].sends.transparentSends[j].amount, parse[i].time, parse[i].sends.transparentSends[j].address, parse[i].txid));
-                    }
-                    for (int j = 0; j < parse[i].sends.saplingSends.Count; j++) {
-                        transactions.Add(new Types.Transaction("send", parse[i].confirmations, parse[i].sends.saplingSends[j].amount, parse[i].time, parse[i].sends.saplingSends[j].address, parse[i].txid));
-                    }
-
-                    //Sprout
-                    for (int j = 0; j < parse[i].sends.sproutSends.Count; j++)
+                    if (parse[i].spends.totalSpends != "0.00000000")
                     {
-                        vpub_old += Convert.ToInt64(Convert.ToDouble(parse[i].sends.sproutSends[j].vpub_old) * 10e8);
-                        vpub_new += Convert.ToInt64(Convert.ToDouble(parse[i].sends.sproutSends[j].vpub_new) * 10e8);
-                    }
-                        
-                    if (parse[i].sends.sproutSends.Count != 0)
-                    {
-                        for (int j = 0; j < parse[i].spends.sproutSpends.Count; j++)
+
+                        for (int j = 0; j < parse[i].sends.transparentSends.Count; j++)
                         {
-                            sproutSpends = Convert.ToInt64(Convert.ToDouble(parse[i].spends.sproutSpends[j].amount) * 10e8);
+                            transactions.Add(new Types.Transaction("send", parse[i].confirmations, parse[i].sends.transparentSends[j].amount, parse[i].time, parse[i].sends.transparentSends[j].address, parse[i].txid));
                         }
-                    }
+                        for (int j = 0; j < parse[i].sends.saplingSends.Count; j++)
+                        {
+                            transactions.Add(new Types.Transaction("send", parse[i].confirmations, parse[i].sends.saplingSends[j].amount, parse[i].time, parse[i].sends.saplingSends[j].address, parse[i].txid));
+                        }
 
-                    sproutSends = -(vpub_old - vpub_new) + sproutSpends;
-                    if (sproutSends != 0)
-                    {
-                        transactions.Add(new Types.Transaction("send", parse[i].confirmations, Convert.ToString(Convert.ToDouble(sproutSends) / 10e8), parse[i].time, "Encypted Sprout Z Address", parse[i].txid));
-                    }
-                    // End Sprout
+                        //Sprout
+                        for (int j = 0; j < parse[i].sends.sproutSends.Count; j++)
+                        {
+                            vpub_old += Convert.ToInt64(Convert.ToDouble(parse[i].sends.sproutSends[j].vpub_old) * 10e8);
+                            vpub_new += Convert.ToInt64(Convert.ToDouble(parse[i].sends.sproutSends[j].vpub_new) * 10e8);
+                        }
 
-                    sends = sproutSends + Convert.ToInt64(Convert.ToDouble(parse[i].sends.totalSends) * 10e8);
+                        if (parse[i].sends.sproutSends.Count != 0)
+                        {
+                            for (int j = 0; j < parse[i].spends.sproutSpends.Count; j++)
+                            {
+                                sproutSpends = Convert.ToInt64(Convert.ToDouble(parse[i].spends.sproutSpends[j].amount) * 10e8);
+                            }
+                        }
 
-                    Int64 sendVariance = Convert.ToInt64(Convert.ToDouble(parse[i].spends.totalSpends) * 10e8) - sends;
+                        sproutSends = -(vpub_old - vpub_new) + sproutSpends;
+                        if (sproutSends != 0)
+                        {
+                            transactions.Add(new Types.Transaction("send", parse[i].confirmations, Convert.ToString(Convert.ToDouble(sproutSends) / 10e8), parse[i].time, "Encypted Sprout Z Address", parse[i].txid));
+                        }
+                        // End Sprout
 
-                    if (sendVariance != 0)
-                    {
-                        Boolean missingKey = Convert.ToBoolean(parse[i].spends.missingSpendingKeys);
-                        Boolean missingOVK = Convert.ToBoolean(parse[i].sends.missingSaplingOVK);    
+                        sends = sproutSends + Convert.ToInt64(Convert.ToDouble(parse[i].sends.totalSends) * 10e8);
+
+                        Int64 sendVariance = Convert.ToInt64(Convert.ToDouble(parse[i].spends.totalSpends) * 10e8) - sends;
+
+                        if (sendVariance != 0)
+                        {
+                            Boolean missingKey = Convert.ToBoolean(parse[i].spends.missingSpendingKeys);
+                            Boolean missingOVK = Convert.ToBoolean(parse[i].sends.missingSaplingOVK);
+                            varianceType = "receive";
+
+                            if (missingKey == false && missingOVK == false)
+                            {
+                                if (sendVariance < 0) { varianceType = "send"; }
+                                transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Transaction Fee", parse[i].txid));
+                                sends += sendVariance;
+                            }
+                            else if (missingKey == true && missingOVK == false)
+                            {
+                                transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Missing Spending Key Adj & Fee", parse[i].txid));
+                                sends += sendVariance;
+                            }
+                            else if (missingKey == false && missingOVK == true)
+                            {
+                                transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Encypted Sapling Z Address & Fee", parse[i].txid));
+                                sends += sendVariance;
+                            }
+
+                        }
+
+                        Int64 totalSpends = Convert.ToInt64(Convert.ToDouble(parse[i].spends.totalSpends) * 10e8);
                         varianceType = "receive";
+                        if (totalSpends - sends < 0) { varianceType = "send"; }
 
-                        if (missingKey == false && missingOVK == false) 
+                        if (sends != totalSpends)
                         {
-                            if (sendVariance < 0) { varianceType = "send";}
-                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Transaction Fee", parse[i].txid));
-                            sends += sendVariance;
+                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(totalSpends - sends) / 10e8), parse[i].time, "Multiple Issue Adjustment & Fee", parse[i].txid));
                         }
-                        else if (missingKey == true && missingOVK == false)
-                        {
-                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Missing Spending Key Adj & Fee", parse[i].txid));
-                            sends += sendVariance;
-                        }
-                        else if (missingKey == false && missingOVK == true)
-                        {
-                            transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(sendVariance) / 10e8), parse[i].time, "Encypted Sapling Z Address & Fee", parse[i].txid));
-                            sends += sendVariance;
-                        }
-
                     }
-                    
-                    Int64 totalSpends = Convert.ToInt64(Convert.ToDouble(parse[i].spends.totalSpends) * 10e8);
-                    varianceType = "receive";
-                    if (totalSpends - sends < 0) { varianceType = "send"; }
-
-                    if (sends != totalSpends)
+                    if (parse[i].received.totalReceived != "0.00000000")
                     {
-                        transactions.Add(new Types.Transaction(varianceType, parse[i].confirmations, Convert.ToString(Convert.ToDouble(totalSpends - sends) / 10e8), parse[i].time, "Multiple Issue Adjustment & Fee", parse[i].txid));
+                        String transType = "";
+                        if (Convert.ToBoolean(parse[i].coinbase) == true)
+                        {
+                            transType = parse[i].category;
+                        }
+                        else
+                        {
+                            transType = "receive";
+                        }
+                        for (int j = 0; j < parse[i].received.transparentReceived.Count; j++)
+                        {
+                            transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.transparentReceived[j].amount, parse[i].time, parse[i].received.transparentReceived[j].address, parse[i].txid));
+                        }
+                        for (int j = 0; j < parse[i].received.saplingReceived.Count; j++)
+                        {
+                            transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.saplingReceived[j].amount, parse[i].time, parse[i].received.saplingReceived[j].address, parse[i].txid));
+                        }
+                        for (int j = 0; j < parse[i].received.sproutReceived.Count; j++)
+                        {
+                            transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.sproutReceived[j].amount, parse[i].time, parse[i].received.sproutReceived[j].address, parse[i].txid));
+                        }
                     }
                 }
-                if (parse[i].received.totalReceived != "0.00000000") {
-                    String transType = "";
-                    if (Convert.ToBoolean(parse[i].coinbase) == true) {
-                        transType = parse[i].category;
-                    } else {
-                        transType = "receive";
-                    }
-                    for (int j = 0; j < parse[i].received.transparentReceived.Count; j++) {
-                        transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.transparentReceived[j].amount, parse[i].time, parse[i].received.transparentReceived[j].address, parse[i].txid));
-                    }
-                    for (int j = 0; j < parse[i].received.saplingReceived.Count; j++) {
-                        transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.saplingReceived[j].amount, parse[i].time, parse[i].received.saplingReceived[j].address, parse[i].txid));
-                    }
-                    for (int j = 0; j < parse[i].received.sproutReceived.Count; j++) {
-                        transactions.Add(new Types.Transaction(transType, parse[i].confirmations, parse[i].received.sproutReceived[j].amount, parse[i].time, parse[i].received.sproutReceived[j].address, parse[i].txid));
-                    }
+                catch
+                {
+
                 }
-             
             }
 
             return transactions;
