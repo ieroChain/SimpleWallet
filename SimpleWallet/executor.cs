@@ -324,7 +324,7 @@ namespace SimpleWallet
         public bool checkParamsFile(String file1, String file2, String file3, String file4, String file5)
         {
             bool ret = false;
-            String webLink = "https://z.cash/downloads/";
+            String webLink = "https://download.z.cash/downloads/";
             String file1Link = webLink + file1;
             String file2Link = webLink + file2;
             String file3Link = webLink + file3;
