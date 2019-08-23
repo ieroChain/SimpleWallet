@@ -54,7 +54,7 @@ namespace SimpleWallet
                                                   DaemonEventArgs e);
     public class Types
     {
-        public static String version = "Zero Simple Wallet - Version 2.0.1";
+        public static String version = "Zero Simple Wallet - Version 2.0.2";
 
         public static String startCommandsFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                         "\\zero\\simplewallet\\commands.dat";

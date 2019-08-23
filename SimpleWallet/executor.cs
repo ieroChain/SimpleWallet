@@ -443,7 +443,7 @@ namespace SimpleWallet
         public bool downloadParams(String file, Types.DownloadFileType downloadType)
         {
             bool shouldDownload = false;
-            String webLink = "https://z.cash/downloads/";
+            String webLink = "https://download.z.cash/downloads/";
             String fileLink = webLink + file;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             String fileLoc = appdata + "\\ZcashParams\\" + file;
