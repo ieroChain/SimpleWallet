@@ -324,7 +324,7 @@ namespace SimpleWallet
         public bool checkParamsFile(String file1, String file2, String file3, String file4, String file5)
         {
             bool ret = false;
-            String webLink = "https://download.z.cash/downloads/";
+            String webLink = "https://files.zeromachine.io/";
             String file1Link = webLink + file1;
             String file2Link = webLink + file2;
             String file3Link = webLink + file3;
@@ -443,7 +443,7 @@ namespace SimpleWallet
         public bool downloadParams(String file, Types.DownloadFileType downloadType)
         {
             bool shouldDownload = false;
-            String webLink = "https://download.z.cash/downloads/";
+            String webLink = "https://files.zeromachine.io/";
             String fileLink = webLink + file;
             String appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             String fileLoc = appdata + "\\ZcashParams\\" + file;
