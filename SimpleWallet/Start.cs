@@ -1092,7 +1092,8 @@ namespace SimpleWallet
                     }
                     if (nHeight > 800000 && nHeight <= 1600000)
                     {
-                        chainValue += (nHeight - 800000) * 10.8 / 2;
+                        chainValue += 4122990 + ((799999 - 412299) * 10.8);
+                        chainValue += (nHeight - 799999) * 10.8 / 2;
                     }
 
                 }
@@ -1225,10 +1226,10 @@ namespace SimpleWallet
                     String[] rowLockedPert = { "Locked Percent", String.Format("{0:0.00%}", Convert.ToDouble(Convert.ToUInt32(zeronodedata.total) * 10000) / chainValue) };
                     dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowLockedPert)));
 
-                    String[] rowROI = { "Current ROI", String.Format("{0:0.00%}", ((((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))) / 10000) * 365)) };
+                    String[] rowROI = { "Current ROI", String.Format("{0:0.00%}", ((((1.35 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))) / 10000) * 365)) };
                     dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowROI)));
 
-                    String[] rowIncome = { "Est. Daily Income (1 Node)", String.Format("{0:n8}", ((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total)))) };
+                    String[] rowIncome = { "Est. Daily Income (1 Node)", String.Format("{0:n8}", ((1.35 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total)))) };
                     dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows.Add(rowIncome)));
                         
                 }
@@ -1263,10 +1264,10 @@ namespace SimpleWallet
                     dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[8].Cells[1].Value = String.Format("{0:0.00%}", Convert.ToDouble(Convert.ToUInt32(zeronodedata.total) * 10000) / chainValue)));
 
                     dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[9].Cells[0].Value = "Current ROI"));
-                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[9].Cells[1].Value = String.Format("{0:0.00%}", ((((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))) / 10000) * 365))));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[9].Cells[1].Value = String.Format("{0:0.00%}", ((((1.35 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))) / 10000) * 365))));
 
                     dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[10].Cells[0].Value = "Est. Daily Income (1 Node)"));
-                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[10].Cells[1].Value = String.Format("{0:n8}", ((2.16 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))))));
+                    dtgZeroNode.Invoke(new Action(() => dtgZeroNode.Rows[10].Cells[1].Value = String.Format("{0:n8}", ((1.35 * 720) / Convert.ToDouble(Convert.ToUInt32(zeronodedata.total))))));
 
                 }
                 
