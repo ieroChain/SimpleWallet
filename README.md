@@ -1,4 +1,4 @@
-# Zero SimpleWallet - Andromeda:3.0.1
+# Zero SimpleWallet - Pegasus:3.1.0
 
 # Windows Only
 
@@ -8,4 +8,4 @@
 
 # MAKE SURE SIMPLE WALLET(exe file) & BINARIES("zerod.exe" & "zero-cli.exe") ARE IN THE SAME FOLDER, BEFORE LAUNCHING.
 
-# ZERO BINARIES - https://github.com/zerocurrencycoin/Zero/releases/tag/v3.0.1
+# ZERO BINARIES - https://github.com/zerocurrencycoin/Zero/releases/tag/v3.1.0
